@@ -1,0 +1,46 @@
+{
+  "name": "Alpine tsx",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      // Override default versions from Dockerfile
+      // "ALPINE_VERSION": "3.18",
+      "NODE_VERSION": "20",
+      "NPM_PACKAGES": "pnpm@latest"
+    }
+  },
+  "containerEnv": {
+    "LAUNCH_EDITOR": "code"
+  },
+
+  "customizations": {
+    "vscode": {
+      "terminal.integrated.profiles.linux": {
+        "zsh": {
+          "path": "/bin/zsh"
+        }
+      },
+      "terminal.integrated.defaultProfile.linux": "zsh",
+      "extensions": [
+        "astro-build.astro-vscode",
+        "brunnerh.insert-unicode",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "github.copilot",
+        "gruntfuggly.todo-tree",
+        "jock.svg",
+        "unifiedjs.vscode-mdx",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  },
+  // Use 'forwardPorts' to make ports inside the container available locally.
+  // "forwardPorts": [],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "uname -a",
+
+  // Use 'remoteUser' to connect as non-root.
+  // More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "node"
+}

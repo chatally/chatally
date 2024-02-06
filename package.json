@@ -1,0 +1,21 @@
+{
+  "name": "chatally-monorepo",
+  "version": "0.0.1",
+  "description": "Your toolbox for self-hosted chat services",
+  "private": true,
+  "scripts": {
+    "changeset:add": "changeset add",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
+  },
+  "keywords": [
+    "chat",
+    "whatsapp",
+    "signal"
+  ],
+  "author": "christian@chatally.org",
+  "license": "ISC",
+  "dependencies": {
+    "@changesets/cli": "^2.27.1"
+  }
+}
