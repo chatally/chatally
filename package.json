@@ -14,7 +14,7 @@
     "signal"
   ],
   "author": "christian@chatally.org",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@changesets/cli": "^2.27.1"
   }
