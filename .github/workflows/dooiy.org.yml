@@ -46,8 +46,9 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@1
         with:
+          wranglerVersion: "3"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: chatally
-          working-directory: ./apps/chatally.org
+          workingDirectory: ./apps/chatally.org
           directory: dist
