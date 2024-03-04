@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
+import blog from "starlight-blog";
 
 // https://astro.build/config
 export default defineConfig({
@@ -28,6 +29,18 @@ export default defineConfig({
           label: "Reference",
           autogenerate: { directory: "reference" },
         },
+      ],
+      plugins: [
+        blog({
+          title: "Blog",
+          authors: {
+            christian: {
+              name: "Christian Fuss",
+            },
+          },
+          postCount: 5,
+          recentPostCount: 5,
+        }),
       ],
     }),
   ],

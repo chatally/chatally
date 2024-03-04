@@ -26,6 +26,9 @@ importers:
       sharp:
         specifier: ^0.33.2
         version: 0.33.2
+      starlight-blog:
+        specifier: ^0.5.0
+        version: 0.5.0(@astrojs/starlight@0.21.0)(astro@4.4.9)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -5742,6 +5745,18 @@ packages:
       as-table: 1.0.55
       get-source: 2.0.12
     dev: true
+
+  /starlight-blog@0.5.0(@astrojs/starlight@0.21.0)(astro@4.4.9):
+    resolution: {integrity: sha512-3h/ZnUc9bIArxOnX4RuzscnS9aj5ilr9fD+GzGa1wJQwJhi6cmI/AnJdh0XG17C7OOl8xdBUjO5BLN/mP9R0uw==}
+    engines: {node: '>=18.14.1'}
+    peerDependencies:
+      '@astrojs/starlight': '>=0.19.0'
+      astro: '>=4.2.7'
+    dependencies:
+      '@astrojs/starlight': 0.21.0(astro@4.4.9)
+      astro: 4.4.9(typescript@5.3.3)
+      github-slugger: 2.0.0
+    dev: false
 
   /stdin-discarder@0.1.0:
     resolution: {integrity: sha512-xhV7w8S+bUwlPTb4bAOUQhv8/cSS5offJuX8GQGq32ONF0ZtDWKfkdomM3HMRA+LhX6um/FZ0COqlwsjD53LeQ==}

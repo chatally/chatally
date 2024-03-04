@@ -1,0 +1,45 @@
+---
+title: Milestones
+date: 2024-03-04
+authors:
+  - christian
+excerpt: Read about our milestones throughout the Prototype Fund phase from March '24 until August '24.
+tags:
+  - Planning
+---
+
+For our funding through the [Prototype Fund](https://prototypefund.de), we had to propose some milestones, which you can find below. We will break down these work packages in our [backlog](./backlog) and also continuously report our [sprint progress](./progress).
+
+import Milestones from "./milestones.astro";
+
+<Milestones />
+
+> I like milestones. It is always good to communicate your goals and at least be held responsible to communicate changes in your goals.\
+> _Christian from ChatAlly_
+
+## Work packages
+
+In order to allow for an easy application of the chatbot toolbox, we need a simple and flexible architecture together with some basic building blocks, e.g. connectors for common clients. But most importantly we need good documentation, hence a major focus of the whole project is on documentation. Each workpackage contains documentation efforts, but there is also an extra package for dissemination.
+
+These are the work packages:
+
+- Define a modular architecture: All layers and building blocks are well described, the interfaces are defined in such a way, that they allow easy integration with existing frameworks and libraries
+- Completion and documentation of the WhatsApp Cloud-Connector
+- Integration of the first modules (connector, NLU, logic) with the orchestrating middleware as a first example
+- Implementation and documentation of the Signal connector
+- Integration and documentation of more example scenarios/templates
+- Implementation and documentation of the WhatsApp web-connector
+
+## Timeline
+
+We plan to sketch the basic architecture until **end of March**, so that we can then select/adapt/implement the middleware and implement a proof of concept with the WhatsApp cloud-connector **in April**.
+
+From there on, we will implement different usage scenarios, that demonstrate the flexibility of the architecture. We will add further building blocks as required for the scenarios, e.g. a Signal connector or a WhatsApp web-connector. Throughout this phase, the architecture is refined.
+
+The results will be available as NPM packages for Javascript implementations and Docker containers and swarm configurations for integrations. We expect to finish all implementation results by **end of July**.
+
+Towards the end of the project **end of August**, we will finalize the documentation, present results and prepare the wrapup of the PrototypeFund project.
+
+## Demo Day
+
+Each round of the Prototype Fund ends with a demo day. We will present our project results there, it will be end of August. We will keep you updated, when the date is confirmed.
