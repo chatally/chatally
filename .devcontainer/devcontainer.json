@@ -1,30 +1,30 @@
 {
-  "name": "Alpine tsx",
+  "name": "node.js",
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      // Override default versions from Dockerfile
-      // "ALPINE_VERSION": "3.18",
-      "NODE_VERSION": "20",
-      "NPM_PACKAGES": "pnpm@latest"
+      "NPM_PACKAGES": "turbo nodemon"
     }
   },
+  "runArgs": ["--network=host"],
+  "mounts": [
+    "source=${localEnv:HOME}/.bashrc,target=/home/node/.bashrc,type=bind,consistency=cached"
+  ],
   "containerEnv": {
     "LAUNCH_EDITOR": "code"
   },
 
+  // Configure tool-specific properties.
   "customizations": {
+    // Configure properties specific to VS Code.
     "vscode": {
-      "terminal.integrated.profiles.linux": {
-        "zsh": {
-          "path": "/bin/zsh"
-        }
-      },
-      "terminal.integrated.defaultProfile.linux": "zsh",
+      // Add the IDs of extensions you want installed
       "extensions": [
         "astro-build.astro-vscode",
         "brunnerh.insert-unicode",
+        "davidanson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
         "esbenp.prettier-vscode",
         "gruntfuggly.todo-tree",
         "jock.svg",
@@ -33,13 +33,6 @@
       ]
     }
   },
-  // Use 'forwardPorts' to make ports inside the container available locally.
-  // "forwardPorts": [],
 
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "uname -a",
-
-  // Use 'remoteUser' to connect as non-root.
-  // More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "node"
 }

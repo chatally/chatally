@@ -1,3 +1,14 @@
 # dependencies
 node_modules/
 /.pnpm-store/
+
+# build output
+.turbo
+dist
+
+# ignore flag
+*_gitignore
+
+# Playgrounds
+/examples/playground
+repl.js

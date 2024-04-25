@@ -1,0 +1,29 @@
+{
+  "name": "@chatally/core",
+  "version": "0.0.1",
+  "description": "ChatAlly Core modules",
+  "license": "MIT",
+  "keywords": [],
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/types.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "test": "vitest",
+    "repl": "nodemon repl.js"
+  },
+  "dependencies": {
+    "@internal/utils": "*",
+    "@chatally/logger": "*"
+  },
+  "devDependencies": {
+    "@config/tsconfig": "*",
+    "@config/vitest": "*",
+    "vitest": "^1.5.0"
+  }
+}

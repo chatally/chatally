@@ -2,20 +2,37 @@
   "name": "chatally-monorepo",
   "version": "0.0.1",
   "description": "Your toolbox for self-hosted chat services",
+  "author": "info@chatally.org",
   "private": true,
-  "scripts": {
-    "changeset:add": "changeset add",
-    "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish"
-  },
+  "license": "MIT",
   "keywords": [
     "chat",
     "whatsapp",
     "signal"
   ],
-  "author": "christian@chatally.org",
-  "license": "MIT",
-  "dependencies": {
-    "@changesets/cli": "^2.27.1"
+  "workspaces": [
+    "apps/*",
+    "config/*",
+    "examples/*",
+    "internal/*",
+    "packages/*",
+    "scripts"
+  ],
+  "scripts": {
+    "build": "turbo run build --no-daemon",
+    "changeset:add": "changeset add",
+    "changeset:publish": "changeset publish",
+    "changeset:version": "changeset version",
+    "clean": "turbo run clean --no-daemon",
+    "dev": "turbo run dev --parallel --no-daemon",
+    "format": "prettier --write \"**/*.{d\\.ts,[c]js,md}\"",
+    "lint": "turbo run lint --no-daemon",
+    "test": "turbo run tes --no-daemont"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@config/eslint": "*",
+    "prettier": "^3.2.5",
+    "turbo": "^1.13.2"
   }
 }

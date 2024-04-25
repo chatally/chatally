@@ -1,0 +1,6 @@
+{
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "files.exclude": {
+    "**/.turbo": true
+  }
+}

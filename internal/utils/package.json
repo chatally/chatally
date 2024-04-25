@@ -1,0 +1,25 @@
+{
+  "name": "@internal/utils",
+  "description": "Common utils, only for internal use",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/types.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "test": "vitest"
+  },
+  "dependencies": {
+    "nanoid": "^5.0.7"
+  },
+  "devDependencies": {
+    "@config/tsconfig": "*",
+    "@config/vitest": "*",
+    "vitest": "^1.5.0"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@chatally/logger",
+  "version": "0.0.1",
+  "description": "ChatAlly Logger facade",
+  "license": "MIT",
+  "keywords": [],
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/types.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "test": "vitest",
+    "repl": "nodemon repl.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@config/tsconfig": "*",
+    "@config/vitest": "*",
+    "@internal/utils": "*",
+    "vitest": "^1.5.0"
+  }
+}
