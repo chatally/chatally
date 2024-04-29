@@ -5,9 +5,13 @@ node_modules/
 # build output
 .turbo
 dist
+typings/
 
-# ignore flag
+# general gitignore flag
 *_gitignore
+
+# subgits
+/ptf/
 
 # Playgrounds
 /examples/playground

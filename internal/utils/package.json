@@ -5,14 +5,13 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": {
-        "types": "./lib/types.d.ts",
-        "default": "./lib/index.js"
-      }
+      "import": "./lib/index.js",
+      "types": "./typings/index.d.ts"
     }
   },
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "types": "tsc -p ./tsconfig.types.json"
   },
   "dependencies": {
     "nanoid": "^5.0.7"

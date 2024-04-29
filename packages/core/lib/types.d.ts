@@ -1,15 +1,15 @@
 import { Logger } from "@chatally/logger";
 
-export interface Application<C = {}> {
+export interface Application<D extends Object> {
   /**
    * Register an event listener on the application
    *
    * @param event
    * @param listener
    */
-  on<E extends keyof ApplicationEvents>(
+  on<E extends keyof ApplicationEvents<D>>(
     event: E,
-    listener: ApplicationEvents[E]
+    listener: ApplicationEvents<D>[E]
   ): this;
 
   /**
@@ -21,7 +21,8 @@ export interface Application<C = {}> {
    * handling within a callback. The callback will resolve after the last
    * middleware finished.
    */
-  get callback(): Callback;
+  get dispatch(): Dispatch;
+
   /**
    * Register a middleware function
    *
@@ -34,68 +35,101 @@ export interface Application<C = {}> {
    * @param fn the middleware
    * @param name optional name
    */
-  use(fn: Middleware<C>, name?: string): this;
+  use(fn: Middleware<D>, name?: string): this;
 }
 
-interface ApplicationEvents {
-  error: (e: Error) => void;
+export class Application<D extends Object> {
+  constructor(options?: ApplicationOptions<D>);
 }
 
-export type Callback = (req: Request, res: Response) => Promise<void>;
-
-export interface Request {
-  readonly messages: IncomingMessage[];
-}
-export interface Response {
-  readonly messages: OutgoingMessage[];
-  readonly writableFinished: boolean;
-  write(msg: OutgoingMessage | OutgoingMessage[]): void;
-  end(msg?: OutgoingMessage | OutgoingMessage[]): void;
-  error?: ContextError;
+interface ApplicationEvents<D> {
+  error: (e: Error & Record<string, unknown>, ctx: ErrorContext<D>) => void;
 }
 
-export type IncomingMessage = string;
-export type OutgoingMessage = string;
+export type ErrorContext<D> = Omit<Context<D>, "next">;
 
-export type Middleware<C = {}> =
-  | ((ctx: Ctx<C>, next: NextFn, log: Logger) => void | any)
-  | ((ctx: Ctx<C>, next: NextFn, log: Logger) => Promise<void | any>);
-
-export type Ctx<C = {}> = Context & C;
-
-export interface Context {
-  /** Request that triggered the callback */
+export interface Context<D> {
+  readonly next: NextFn;
   readonly req: Request;
-  /** Response for this callback */
   readonly res: Response;
-  /** Throw an error with context specific information */
-  throw(msg: string, opt?: ContextErrorOptions): void;
-  /** Conditionally throw an error */
-  assert(condition: boolean, msg: string, opt?: ContextErrorOptions): void;
-}
-
-export interface ContextErrorOptions {
-  expose?: boolean;
-  statusCode?: number;
-  code?: string;
-}
-
-export interface ContextError extends Error, ContextErrorOptions {
-  ctx: Context;
+  readonly data: D;
+  readonly log: Logger;
 }
 
 export type NextFn = () => Promise<void>;
 
-export interface ApplicationOptions<C = {}> {
+export interface Request {
+  readonly message: IncomingMessage;
+  readonly text: string;
+}
+
+export class Request {
+  constructor(message: IncomingMessage | string);
+}
+
+export type IncomingMessage = {
+  readonly timestamp: number;
+  readonly id: string;
+  readonly from: string;
+  readonly replyTo?: string;
+} & MessageContent;
+
+export type MessageContent =
+  | {
+      readonly type: "text";
+      readonly text: string;
+    }
+  | {
+      readonly type: "image";
+      readonly image: {
+        url: string;
+        caption?: string;
+      };
+    };
+
+export interface Response {
+  readonly messages: OutgoingMessage[];
+  readonly isWritable: boolean;
+  readonly text: string[];
+  write(msg: Msg): void;
+  end(msg?: Msg): void;
+  /**
+   * Register an event listener on the application
+   *
+   * @param event
+   * @param listener
+   */
+  on<E extends keyof ResponseEvents>(
+    event: E,
+    listener: ResponseEvents[E]
+  ): this;
+}
+
+export class Response {
+  constructor(onFinished?: (res: Response) => void);
+}
+
+interface ResponseEvents {
+  finished: (res: Response) => void;
+  write: (res: Response, msg: OutgoingMessage) => void;
+}
+
+export type Msg = OutgoingMessage | OutgoingMessage[] | string;
+
+export type OutgoingMessage = {
+  readonly replyTo?: string;
+} & MessageContent;
+
+export type Dispatch = (req: Request, res: Response) => Promise<void>;
+
+export type Middleware<D> =
+  | ((params: Context<D>) => void | any)
+  | ((params: Context<D>) => Promise<void | any>);
+
+export interface ApplicationOptions<D extends Object> {
   dev?: boolean;
-  context?: C;
+  data?: D;
   log?: Logger | boolean;
 }
 
-export function createApplication<C = {}>(
-  opt?: ApplicationOptions<C>
-): Application;
-export function createRequest(
-  messages: IncomingMessage | IncomingMessage[]
-): Request;
-export function createResponse(): Response;
+export function getMessageText(msg: MessageContent): string;

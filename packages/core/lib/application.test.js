@@ -1,81 +1,122 @@
-import { getLogger, getNoLogger } from "@chatally/logger";
-import { createApplication } from "./application.js";
-import { createRequest as req } from "./request.js";
-import { createResponse } from "./response.js";
-import { StringWritable } from "@internal/utils";
+import { getLogger } from "@chatally/logger";
+import { StringWritable, XError } from "@internal/utils";
+import { Application } from "./application.js";
+import { Request } from "./request.js";
+import { Response } from "./response.js";
 
 /**
  * @type {import("./types.d.ts").Middleware<{}>}
  */
-const echo = (ctx) => {
-  ctx.req.messages.forEach((msg) => ctx.res.write(`Echo: '${msg}'`));
+const echo = ({ req, res }) => {
+  if (res.isWritable && req.message.type === "text") {
+    res.write(`Echo: '${req.message.text}'`);
+  }
 };
+
+/** @param {string} text */
+function req(text) {
+  return new Request(`test: ${text}`);
+}
+
+/** @param {Response} res */
+function messages(res) {
+  return res.messages.map((m) => (m.type === "text" ? m.text : m.image));
+}
 
 describe("Application", function () {
   it("dispatches to middleware", async () => {
-    const app = createApplication().use(echo);
+    const app = new Application().use(echo);
 
-    const res = createResponse();
-    await app.callback(req("foo"), res);
-    expect(res.messages).toStrictEqual(["Echo: 'foo'"]);
-    expect(res.error).toBe(undefined);
+    const res = new Response();
+    await app.dispatch(req("foo"), res);
+    expect(messages(res)).toStrictEqual(["Echo: 'foo'"]);
   });
 
   it("dispatches in order of registration", async () => {
-    const app = createApplication()
-      .use(function a(ctx) {
+    const app = new Application()
+      .use(function a({ res }) {
         // should run before all middlewares
-        ctx.res.write("a");
+        res.write("a");
       })
-      .use(async function b(ctx, next) {
+      .use(async function b({ res, next }) {
         // should run after all following middlewares
         await next();
-        ctx.res.write("b");
+        res.write("b");
       })
-      .use(async function c(ctx, next) {
+      .use(async function c({ res, next }) {
         // should run before and after all following middlewares
-        ctx.res.write("c-pre");
+        res.write("c-pre");
         await next();
-        ctx.res.write("c-post");
+        res.write("c-post");
       })
-      .use(async function d(ctx) {
+      .use(async function d({ res }) {
         await new Promise((resolve) => setTimeout(resolve, 1));
-        ctx.res.write("d");
+        res.write("d");
       })
-      .use(function e(ctx) {
-        ctx.res.write("e");
+      .use(function e({ res }) {
+        res.write("e");
       });
 
-    const res = createResponse();
-    await app.callback(req("foo"), res);
-    expect(res.messages).toStrictEqual(["a", "c-pre", "d", "e", "c-post", "b"]);
+    const res = new Response();
+    await app.dispatch(req("foo"), res);
+    expect(messages(res)).toStrictEqual([
+      "a",
+      "c-pre",
+      "d",
+      "e",
+      "c-post",
+      "b",
+    ]);
   });
 
-  it("catches all middleware errors", async () => {
-    const app = createApplication()
+  it("catches sync middleware errors", async () => {
+    /** @type {Error} */
+    let error = new Error("Init");
+    const app = new Application()
       .use(echo)
       .use(function throws() {
         throw new Error("Boom");
+      })
+      .on("error", (err) => {
+        error = err;
       });
+    const res = new Response();
+    await app.dispatch(req("foo"), res);
+    expect(messages(res)).toStrictEqual(["Echo: 'foo'"]);
+    expect(error?.message).toBe("Boom");
+  });
 
-    const res = createResponse();
-    await app.callback(req("foo"), res);
-    expect(res.messages).toStrictEqual(["Echo: 'foo'"]);
-    expect(res.error?.message).toBe("Boom");
+  it("catches async middleware errors", async () => {
+    async function throwsAsync() {
+      throw new Error("Boom Async");
+    }
+    const app = new Application().use(echo).use(function throws({ res }) {
+      throwsAsync().catch((e) => res.write(e.message));
+      res.write("First");
+    });
+    const res = new Response();
+    await app.dispatch(req("foo"), res);
+    expect(messages(res)).toStrictEqual(["Echo: 'foo'", "First", "Boom Async"]);
   });
 
   it("exposes errors if demanded", async () => {
-    const app = createApplication()
+    const app = new Application()
       .use(echo)
-      .use(function throws(ctx) {
-        ctx.throw("Boom", { expose: true, statusCode: 501 });
+      .use(function throws() {
+        throw new Error("Bang");
+      })
+      .use(function throws() {
+        throw new XError("Boom", { expose: true });
+      })
+      .on("error", (err, { res }) => {
+        if (err.expose) {
+          res.write(err.message);
+        }
       });
 
-    const res = createResponse();
-    await app.callback(req("foo"), res);
-    expect(res.error?.message).toBe("Boom");
-    expect(res.error?.statusCode).toBe(501);
-    expect(res.messages).toStrictEqual(["Echo: 'foo'", "Boom"]);
+    const res = new Response();
+    await app.dispatch(req("foo"), res);
+    expect(messages(res)).toStrictEqual(["Echo: 'foo'", "Boom"]);
   });
 
   it("warns about unnamed middleware", async () => {
@@ -84,7 +125,7 @@ describe("Application", function () {
     log.out = out;
     log.timestamps = false;
 
-    createApplication({ log })
+    new Application({ log })
       // unnamed middleware
       .use(() => {});
     expect(out.data.startsWith("WARN (root):")).toBeTruthy();
@@ -96,14 +137,14 @@ describe("Application", function () {
     log.out = out;
     log.timestamps = false;
 
-    const app = createApplication({ log }) //
-      .use(function logs(_ctx, _next, log) {
+    const app = new Application({ log }) //
+      .use(function logs({ log }) {
         log.level = "debug";
         log.debug("Hello");
       });
 
-    const res = createResponse();
-    await app.callback(req("foo"), res);
+    const res = new Response();
+    await app.dispatch(req("foo"), res);
     expect(out.data).toBe("DEBUG (logs): Hello\n");
   });
 });

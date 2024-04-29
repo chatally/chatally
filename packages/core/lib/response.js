@@ -1,53 +1,68 @@
 import { EventEmitter } from "node:events";
+import { getMessageText } from "./messages.js";
 
 /**
- * Create a request from the message(s)
+ * Response implementation
  *
+ * @typedef {import("./types.d.ts").Response} IResponse
  * @typedef {import("./types.d.ts").OutgoingMessage} OutgoingMessage
- * @returns {import("./types.d.ts").Response}
- */
-export function createResponse() {
-  return new Response();
-}
-
-/**
- * Response
+ * @typedef {import("./types.d.ts").Msg} Msg
  *
- * @extends EventEmitter
+ * @extends {EventEmitter}
+ * @implements {IResponse}
  */
-class Response extends EventEmitter {
-  #finished = false;
+export class Response extends EventEmitter {
   /** @type OutgoingMessage[] */
   #messages = [];
-
-  /** @type import("./types.d.ts").ContextError | undefined */
-  error = undefined;
-
-  get writableFinished() {
-    return this.#finished;
-  }
+  #finished = false;
 
   /**
-   * @param {OutgoingMessage} data
+   * Create a new response
+   *
+   * @param {((res: IResponse) => void)} [onFinished]
+   *   optional handler to be called, when response `end()` is called
    */
-  end(data) {
-    this.write(data);
-    this.#finished = true;
-  }
-
-  /**
-   * @param {OutgoingMessage} data
-   */
-  write(data) {
-    if (data) {
-      if (this.#finished) {
-        throw new Error("Cannot write anymore, response is finished.");
-      }
-      this.#messages.push(data);
+  constructor(onFinished) {
+    super();
+    if (onFinished) {
+      this.on("finished", onFinished);
     }
   }
 
   get messages() {
     return this.#messages;
+  }
+
+  get isWritable() {
+    return !this.#finished;
+  }
+
+  get text() {
+    return this.#messages.map(getMessageText);
+  }
+
+  /** @param {Msg} msg */
+  end(msg) {
+    this.write(msg);
+    this.#finished = true;
+    this.emit("finished", this);
+  }
+
+  /** @param {Msg} msg */
+  write(msg) {
+    if (!msg) return;
+
+    if (this.#finished) {
+      throw new Error("Cannot write anymore, response is finished.");
+    }
+    if (typeof msg === "string") {
+      msg = { type: "text", text: msg };
+    }
+    if (Array.isArray(msg)) {
+      this.#messages.push(...msg);
+    } else {
+      this.#messages.push(msg);
+    }
+    this.emit("write", this, msg);
   }
 }

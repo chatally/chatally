@@ -1,0 +1,8 @@
+{
+  "extends": "@config/tsconfig/tsconfig.types.json",
+  "compilerOptions": {
+    "outDir": "./types"
+  },
+  "include": ["lib/**/*"],
+  "exclude": ["**/*.test.js"]
+}

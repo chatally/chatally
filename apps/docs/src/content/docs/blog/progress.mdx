@@ -11,22 +11,76 @@ tags:
 
 Here you will find all information about our development sprints in chronologically reverse order, i.e. newest first. If you want to find out whats coming next, check out our [backlog](/blog/backlog).
 
+## Sprint 9 (CW 18, Apr 29-May 03)
+
+Goal: _A fully functional example including documentation_
+
+- [ ] Improve DX of monorepo in VS Code (so it is easier to convince collaborators)
+- [ ] integrate nlp.js
+- [ ] connect WhatsApp Cloud
+- [ ] update documentation site
+
+## Sprint 8 (CW 17, Apr 22-26)
+
+Goal: _Finalize integration layer und core middlewares_
+
+- [x] Abstract logger
+- [x] Console logger and configuration
+- [x] Error handling
+- [x] Event emitting
+
+WhatsApp cloud server and nlp.js middleware still need to be finalized.
+
+## Sprint 7 (CW 16, Apr 15-19)
+
+Goal: _Simple chatbot example according to framework architecture is implemented_
+
+- [x] Simple console chatbot and some sample middlewares are implemented
+
+## Sprint 6 (CW 15, Apr 08-12)
+
+Goal: _Align interfaces in architecture with common representatives of NLP frameworks (nlp.js, wit.ai, Rasa)_
+
+- [x] Define interfaces for context data and handover points for the flow through the message response
+- [x] Initial implementation for middleware dispatcher (similar to [Koa](https://koajs.com/) web framework architecture)
+- [x] Continue Whats-App-Cloud connector
+
+## Sprint 5 (CW 14, Apr 01-05)
+
+Goal: _Publish WhatsApp-Cloud-Connector, that is standalone usable in a node.js runtime_
+
+- Migration to node.js (80% done)
+  - [x] General migration of runtime dependencies
+  - [ ] Few dependencies (crypto, ...): Some more work required, will be done in course of example integration
+- Meeting with Tim Schupp from [Little World](https://home.little-world.com/) about their PTF application with a chatbot agent library and possibilities to integrate that with ChatAlly.
+
+## Sprint 4 (CW 13, Mar 25-29)
+
+_Vacation_
+
+## Sprint 3 (CW 12, Mar 18-22)
+
+Goal: _Identify usability gaps and derive requirements with Namibian youths._
+
+- [x] We tested the existing chat prototype for DIY instructions with some communities in Namibia: Compared to the website, the complexity of instructions in chat mode becomes more apparent. That also means that the length of messages should be even shorter and the support for streamed media (audio and video) is even more important.
+- [x] We interviewed some NUST (Namibian University of Science and Technology) students about their interest in a toolbox for chatbots and got vastly positive feedback.
+
 ## Sprint 2 (CW 11, Mar 11-15)
 
 Goal: _Identify benefits and challenges with respect to middleware candidates._
 
-Rationale: We want to identify the best middleware candidate for our chatbot platform. This sprint will be dedicated to evaluating the benefits and challenges of different middleware candidates. 
+Rationale: We want to identify the best middleware candidate for our chatbot platform. This sprint will be dedicated to evaluating the benefits and challenges of different middleware candidates.
 
 As a left-over from last sprint, we will also publish our current state of the Deno-based WhatsApp connector (not as an NPM package, though).
 
-- Publish WhatsApp Deno connector
-  - [ ] Create package `whatsapp-deno-connector` in mono repo
-  - [ ] Clean-up code
+- Publish [WhatsApp Deno connector](https://github.com/chatally/chatally/tree/main/packages/whatsapp-deno-server)
+  - [x] Create package `whatsapp-deno-connector` in mono repo
+  - [x] Clean-up code
 - Middleware candidates
-  - [ ] Analyze [Jovo](https://jovo.tech)
-  - [ ] Compare with other solutions
+  - [x] Analyze [Jovo](https://jovo.tech)
+  - [x] Compare with other solutions
 
-## Sprint 1 (CW 10, Mar 4-8)
+## Sprint 1 (CW 10, Mar 04-08)
 
 Goal: _Publish a first alpha version of the WhatsApp connector._
 

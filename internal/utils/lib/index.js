@@ -1,7 +1,5 @@
-export * from "./assert.js";
 export * from "./errors.js";
 export * from "./immutable.js";
-export * from "./only.js";
 export * from "./random-id.js";
 export * from "./string-writable.js";
 export * from "./time.js";

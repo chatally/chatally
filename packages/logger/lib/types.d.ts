@@ -1,7 +1,8 @@
 import { Writable } from "./base-logger.js";
 
 // This must be kept in sync with ./levels.js
-const methods = ["debug", "info", "warn", "error"] as const;
+// @ts-ignore
+export const methods = ["debug", "info", "warn", "error"] as const;
 
 /**
  * All log method names

@@ -1,74 +1,60 @@
 import { getLogger, getNoLogger } from "@chatally/logger";
 import { EventEmitter } from "node:events";
-import { Context, createContext } from "./context.js";
 
 /**
  * @typedef {import("./types.d.ts").Request} Request
  * @typedef {import("./types.d.ts").Response} Response
- * @typedef {import("./types.d.ts").Callback} Callback
+ * @typedef {import("./types.d.ts").Dispatch} Dispatch
  */
 
 /**
- * Create an application
- *
- * Configure the application by registering middleware with the `use` method,
- * registering event listeners with the `on` method and then use the callback
- * to handle requests and generate responses.
- *
- * @template [C = {}]
- * @param {import("./types.d.ts").ApplicationOptions<C>} [options]
- * @returns {import("./types.d.ts").Application<C>}
+ * @template {Object} D
+ * @typedef {import("./types.d.ts").Application<D>} IApplication<D>
  */
-export function createApplication(options = {}) {
-  return new Application(options);
-}
 
 /**
- * @typedef {import("./types.d.ts").Application} IApplication
- * @implements {IApplication}
+ * @template {Object} D
  * @extends {EventEmitter}
+ * @implements {IApplication<D>}
  */
-class Application extends EventEmitter {
+export class Application extends EventEmitter {
   /** @type {import("@chatally/logger").Logger} */
-  log;
-
-  /**
-   * @type {import("./types.d.ts").Middleware[]}
-   */
+  #log;
+  /** @type {import("./types.d.ts").Middleware<D>[]} */
   #middlewares = [];
   /** @type { import("@chatally/logger").Logger[] } */
   #middlewareLogs = [];
 
   /**
-   * Context prototype
+   * Data prototype
    *
    * Cloned for each callback before being dispatched to the middlewares.
    *
-   * @type {unknown}
+   * @type {D | undefined}
    */
-  #context;
+  #data;
 
   /**
    * @constructor
-   * @param {import("./types.d.ts").ApplicationOptions} [options={}]
+   * @param {import("./types.d.ts").ApplicationOptions<D>} [options={}]
    */
   constructor(options = {}) {
     super();
-    this.#context = options.context;
+    this.#data = options.data;
     if (options.log === true) {
       const level =
         options.dev || process.env.NODE_ENV === "development"
           ? "debug"
           : "info";
-      this.log = getLogger({ level, name: "@chatally/core" });
+      this.#log = getLogger({ level, name: "@chatally/core" });
     } else {
-      this.log = options.log || getNoLogger();
+      this.#log = options.log || getNoLogger();
     }
-    this.log.debug("Application logging level: %s", this.log.level);
+    this.#log.debug("Application logging level: %s", this.#log.level);
   }
 
   /**
-   * @param {import("./types.d.ts").Middleware} fn
+   * @param {import("./types.d.ts").Middleware<D>} fn
    * @param {String} [name]
    */
   use(fn, name) {
@@ -78,7 +64,7 @@ class Application extends EventEmitter {
     if (!name) name = fn.name;
     if (!name) {
       name = "=>";
-      this.log.warn(
+      this.#log.warn(
         `
 ⚠️ For better traceability, prefer using named functions
    instead of arrow functions or provide an optional 
@@ -86,16 +72,16 @@ class Application extends EventEmitter {
 `.trim()
       );
     }
-    this.log.info("Registering middleware '%s'", name);
+    this.#log.info("Registering middleware '%s'", name);
 
     this.#middlewares.push(fn);
-    this.#middlewareLogs.push(this.log.child({ name }));
+    this.#middlewareLogs.push(this.#log.child({ name }));
 
     return this;
   }
 
   /**
-   * Callback
+   * Dispatch
    *
    * Use this function to trigger handling of the request by the application.
    *
@@ -103,22 +89,16 @@ class Application extends EventEmitter {
    * and pass it to each middleware. The context is responsible for error
    * handling within a callback.
    *
-   * @type {Callback}
+   * @type {Dispatch}
    */
-  get callback() {
-    return async (/** @type {Request} */ req, /** @type {Response} */ res) => {
-      this.log.info({ req }, "Incoming request");
+  get dispatch() {
+    return async (req, res) => {
+      const data = Object.assign(Object.create(this.#data || {}), this.#data);
+      const log = this.#log.child({ name: "dispatch" });
       try {
-        const ctx = createContext(req, res, this.#context);
-        try {
-          await this.#dispatch(ctx);
-        } catch (err) {
-          this.log.error(err);
-          this.emit("error", err, ctx);
-        }
+        await this.#dispatch(req, res, data, log);
       } catch (err) {
-        this.log.error(err);
-        this.emit("error", err, req, res);
+        this.#handleError(err, { req, res, data, log });
       }
     };
   }
@@ -129,23 +109,46 @@ class Application extends EventEmitter {
    * The order is the order of registration. Middleware exceptions are
    * dispatched to the context. This method throws only, if the context throws.
    *
-   * @param {Context} ctx
+   * @param {Request} req
+   * @param {Response} res
+   * @param {D} data
+   * @param {import("@chatally/logger").Logger} log
    */
-  async #dispatch(ctx) {
+  async #dispatch(req, res, data, log) {
     let current = 0;
     const next = async () => {
       while (current < this.#middlewares.length) {
         try {
           const log = this.#middlewareLogs[current];
-          await this.#middlewares[current++](ctx, next, log);
+          await this.#middlewares[current++]({
+            req,
+            res,
+            data,
+            next,
+            log,
+          });
         } catch (err) {
-          ctx.handleError(err);
+          this.#handleError(err, { req, res, data, log });
         }
       }
     };
     await next();
-    if (ctx.res.writableFinished === false) {
-      ctx.res.end();
+    if (res.isWritable) {
+      res.end();
+    }
+  }
+
+  /**
+   * @param {unknown} err
+   * @param {import("./types.d.ts").ErrorContext<D>} context
+   */
+  #handleError(err, context) {
+    try {
+      if (!this.emit("error", err, context)) {
+        context.log.error(err);
+      }
+    } catch (err) {
+      context.log.error(err);
     }
   }
 }

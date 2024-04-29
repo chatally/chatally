@@ -14,7 +14,6 @@
     }
   },
   "scripts": {
-    "test": "vitest",
     "repl": "nodemon repl.js"
   },
   "dependencies": {

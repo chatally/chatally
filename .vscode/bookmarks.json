@@ -4,8 +4,18 @@
 			"path": "apps/docs/src/content/docs/blog/backlog.mdx",
 			"bookmarks": [
 				{
-					"line": 0,
+					"line": 1,
 					"column": 3,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "apps/docs/src/content/docs/blog/progress.mdx",
+			"bookmarks": [
+				{
+					"line": 1,
+					"column": 2,
 					"label": ""
 				}
 			]

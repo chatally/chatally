@@ -14,7 +14,16 @@ This is a breakdown of the work packages from our [milestones](/blog/milestones)
 ## Arc: Architecture
 
 - [x] Arc: webserver-like middleware
-- [ ] Arc: message interfaces
+- Arc: message interfaces
+  - [ ] Arc: Message interface "Status"
+  - [ ] Arc: Message interface "Button"
+  - [ ] Arc: Message interface "Image"
+  - [ ] Arc: Message interface "Reaction"
+  - [ ] Arc: Message interface "Location"
+  - [ ] Arc: Message interface "Audio"
+  - [ ] Arc: Message interface "Video"
+  - [ ] Arc: Message interface "Document"
+  - [ ] Arc: Message interface "Sticker"
 - [ ] Arc: content negotiation
 - [ ] Arc: documentation
 
@@ -22,8 +31,9 @@ This is a breakdown of the work packages from our [milestones](/blog/milestones)
 
 - [x] App: configuration
 - [x] App: dispatching
-- [ ] App: error handling
-- [ ] App: logging
+- [x] App: error handling
+- [x] App: logging
+- [ ] App: "stamps"
 
 ## Servers (formerly 'Connectors')
 
@@ -51,13 +61,17 @@ A console server to chat with your application on the console. This server is me
 
 ## GMwI: General Middleware & Integrations
 
-- [ ] GMwI: GDPR consent
 - [ ] GMwI: history
+- [ ] GMwI: GDPR consent
+- [ ] GMwI: DB logger
 - [ ] GMwI: error logger
 - [ ] GMwI: limit configuration
 - [ ] GMwI: whitelist/blacklist filter
+- [ ] GMwI: Generic repository storage (DB backed)
 
 ## NLP
+
+- [ ] integrate nlp.js
 
 ### NLU
 

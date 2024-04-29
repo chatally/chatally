@@ -4,7 +4,7 @@ import { StringDecoder } from "node:string_decoder";
 export class StringWritable extends Writable {
   data = "";
   /**
-   * @param {import("stream").WritableOptions | undefined} options
+   * @param {import("stream").WritableOptions} [options]
    */
   constructor(options) {
     super(options);

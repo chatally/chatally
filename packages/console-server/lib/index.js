@@ -1,5 +1,5 @@
+import { Request, Response } from "@chatally/core";
 import { createInterface as readline } from "node:readline";
-import { createRequest, createResponse } from "@chatally/core";
 
 const grey = 30;
 const green = 32;
@@ -62,16 +62,13 @@ Waiting for your messages...`;
    */
   goodBye = `Good bye.`;
 
-  /** @type {import("@chatally/core").Callback} */
+  /** @type {import("@chatally/core").Dispatch} */
   #respond = async (req, res) => {
-    const echo = req.messages.map((m) => `    > ${m}`).join("\n");
     res.end(`You said:
-${echo}`);
+    > ${req.message}`);
   };
 
-  /**
-   * @param {import("@chatally/core").Callback} responder
-   */
+  /** @param {import("@chatally/core").Dispatch} responder */
   set respond(responder) {
     this.#respond = responder;
   }
@@ -79,8 +76,8 @@ ${echo}`);
   listen() {
     this.#printGreeting();
     readline(process.stdin)
-      .on("line", this.#printResponse.bind(this))
-      .on("close", this.#printGoodBye.bind(this));
+      .on("line", (input) => this.#printResponse(input))
+      .on("close", () => this.#printGoodBye());
   }
 
   #printGreeting() {
@@ -94,12 +91,12 @@ ${echo}`);
    * @param {String} line
    */
   async #printResponse(line) {
-    const req = createRequest(line);
-    const res = createResponse();
+    const req = new Request(line);
+    const res = new Response();
     await this.#respond(req, res);
-    for (let message of res.messages) {
+    for (let text of res.text) {
       this.#printName();
-      process.stdout.write(`${color(message, this.responseColor)}\n`);
+      process.stdout.write(`${color(text, this.responseColor)}\n`);
     }
     this.#printPrompt();
   }

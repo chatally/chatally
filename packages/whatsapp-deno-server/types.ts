@@ -15,39 +15,39 @@ type JsonValue =
   | undefined;
 
 export class SemanticVersion {
-  #major: number;
-  #minor: number;
-  #patch: number;
-  #label: SemanticVersionLabel | undefined;
+  _major: number;
+  _minor: number;
+  _patch: number;
+  _label: SemanticVersionLabel | undefined;
 
   constructor(
     major: number,
     minor: number,
     patch: number,
-    label?: SemanticVersionLabel,
+    label?: SemanticVersionLabel
   ) {
-    this.#major = major;
-    this.#minor = minor;
-    this.#patch = patch;
-    this.#label = label;
+    this._major = major;
+    this._minor = minor;
+    this._patch = patch;
+    this._label = label;
   }
 
   get major() {
-    return this.#major;
+    return this._major;
   }
   get minor() {
-    return this.#minor;
+    return this._minor;
   }
   get patch() {
-    return this.#patch;
+    return this._patch;
   }
   get label() {
-    return this.#label;
+    return this._label;
   }
 
   toString(): string {
-    const label = this.#label ? `-${this.#label}` : "";
-    return `${this.#major}.${this.#minor}.${this.#patch}${label}`;
+    const label = this._label ? `-${this._label}` : "";
+    return `${this._major}.${this._minor}.${this._patch}${label}`;
   }
 
   static fromString(version: string): SemanticVersion {
@@ -57,7 +57,7 @@ export class SemanticVersion {
       parseInt(major),
       parseInt(minor),
       parseInt(patch),
-      label as SemanticVersionLabel,
+      label as SemanticVersionLabel
     );
   }
 }

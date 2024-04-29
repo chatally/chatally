@@ -1,7 +1,6 @@
 import { getCurrentTime } from "@internal/utils";
 import { format } from "node:util";
 import { levels } from "./levels.js";
-
 const DEFAULT_LEVEL = levels[Math.min(1, levels.length - 1)];
 
 /**

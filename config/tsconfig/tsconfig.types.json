@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    // until Typescript 5.5 this needs to be set in the referencing project
+    "outDir": "${configDir}/types"
+  },
+  "include": ["${configDir}/lib/**/*"],
+  "exclude": ["${configDir}/**/*.test.js"]
+}

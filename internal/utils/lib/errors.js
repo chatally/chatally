@@ -1,14 +1,15 @@
+const docsUrl = "https://chatally.org/docs/errors";
+
 export class DocumentedError extends Error {
   /**
    *
-   * @param {{message: string, href: string}} params
+   * @param {string} message
+   * @param {string} href
    */
-  constructor({ message, href }) {
+  constructor(message, href) {
     super(generateMessage(message, href));
   }
 }
-
-const baseUrl = "https://chatally.org/docs/errors";
 
 /**
  * @param {string} message
@@ -18,6 +19,20 @@ function generateMessage(message, href) {
   return `
 ${message}
 
-For details see ${baseUrl}${href}
+For details see ${docsUrl}${href}
   `.trim();
+}
+
+export class XError extends Error {
+  /**
+   *
+   * @param {string} message
+   * @param {Object} [x]
+   */
+  constructor(message, x) {
+    super(message);
+    if (x) {
+      Object.assign(this, x);
+    }
+  }
 }
