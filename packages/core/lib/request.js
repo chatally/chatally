@@ -2,10 +2,13 @@ import { randomId } from "@internal/utils";
 import { getMessageText } from "./messages.js";
 
 /**
- * Create a request from the message(s)
- *
  * @typedef {import("./types.d.ts").Request} IRequest
  * @typedef {import("./types.d.ts").IncomingMessage} Message
+ */
+
+/**
+ * Request with incoming message
+ *
  * @class
  * @param {Message | String} message
  * @implements {IRequest}
@@ -16,7 +19,7 @@ export class Request {
 
   /**
    *
-   * @param {Message|String} message
+   * @param {Message | String} message
    */
   constructor(message) {
     if (typeof message === "string") {

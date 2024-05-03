@@ -4,12 +4,13 @@ import { StringDecoder } from "node:string_decoder";
 export class StringWritable extends Writable {
   data = "";
   /**
-   * @param {import("stream").WritableOptions} [options]
+   * @param {import("node:stream").WritableOptions} [options]
    */
   constructor(options) {
     super(options);
-    this._decoder = new StringDecoder(options && options.defaultEncoding);
+    this._decoder = new StringDecoder(options?.defaultEncoding);
   }
+
   /**
    * @param {Buffer} chunk
    * @param {string} encoding

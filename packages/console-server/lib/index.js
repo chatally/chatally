@@ -15,7 +15,11 @@ function color(text, color) {
   return `\u001b[${color}m${text}\u001b[0m`;
 }
 
-export class Console {
+/**
+ * Console server
+ * @class
+ */
+export class ConsoleServer {
   /**
    * The name displayed before each message from your bot.
    */
@@ -51,10 +55,17 @@ export class Console {
   responseColor = grey;
 
   /**
+   * Optional token, that user can type to stop the console server.
+   *
+   * Default is '/quit'
+   */
+  stopToken = "/quit";
+
+  /**
    * The greeting displayed when the console channel starts listening.
    */
   greeting = `${color(" ChatAlly ", onGreen)} ${color("Console Server", green)}
-Quit with 'Ctrl+c'.
+Quit with 'Ctrl+c'${this.stopToken ? `or type '${this.stopToken}'` : ""}.
 Waiting for your messages...`;
 
   /**
@@ -63,24 +74,29 @@ Waiting for your messages...`;
   goodBye = `Good bye.`;
 
   /** @type {import("@chatally/core").Dispatch} */
-  #respond = async (req, res) => {
+  #dispatch = async (req, res) => {
     res.end(`You said:
-    > ${req.message}`);
+    > ${req.text}`);
   };
 
-  /** @param {import("@chatally/core").Dispatch} responder */
-  set respond(responder) {
-    this.#respond = responder;
+  /** @param {import("@chatally/core").Dispatch} dispatch */
+  set dispatch(dispatch) {
+    this.#dispatch = dispatch;
   }
 
   listen() {
     this.#printGreeting();
-    readline(process.stdin)
+    this._interface = readline(process.stdin);
+
+    this._interface
       .on("line", (input) => this.#printResponse(input))
       .on("close", () => this.#printGoodBye());
   }
 
   #printGreeting() {
+    // TODO: Can this be done on arbitrary streams?
+    process.stdout.write(" ");
+    console.clear();
     if (this.greeting) {
       process.stdout.write(`${this.greeting}\n\n`);
     }
@@ -91,9 +107,12 @@ Waiting for your messages...`;
    * @param {String} line
    */
   async #printResponse(line) {
+    if (this.stopToken && line === this.stopToken) {
+      return this._interface?.close();
+    }
     const req = new Request(line);
     const res = new Response();
-    await this.#respond(req, res);
+    await this.#dispatch(req, res);
     for (let text of res.text) {
       this.#printName();
       process.stdout.write(`${color(text, this.responseColor)}\n`);
@@ -106,6 +125,7 @@ Waiting for your messages...`;
       process.stdout.write(`\n${this.goodBye}`);
     }
     process.stdout.write("\n");
+    process.exit();
   }
 
   #printName() {

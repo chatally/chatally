@@ -1,0 +1,27 @@
+{
+  "name": "@chatally/nlpjs",
+  "version": "0.0.1",
+  "description": "ChatAlly nlp.js middleware",
+  "license": "MIT",
+  "keywords": [],
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/types.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "repl": "nodemon repl.js"
+  },
+  "dependencies": {
+    "@chatally/core": "*",
+    "@nlpjs/basic": "^4.27.0",
+    "@nlpjs/nlp": "^4.27.0"
+  },
+  "devDependencies": {
+    "@chatally/console-server": "*"
+  }
+}

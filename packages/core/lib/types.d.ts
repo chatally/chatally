@@ -1,60 +1,23 @@
 import { Logger } from "@chatally/logger";
 
-export interface Application<D extends Object> {
-  /**
-   * Register an event listener on the application
-   *
-   * @param event
-   * @param listener
-   */
-  on<E extends keyof ApplicationEvents<D>>(
-    event: E,
-    listener: ApplicationEvents<D>[E]
-  ): this;
+export { Application } from "./application.js";
+export { getMessageText } from "./messages.js";
 
-  /**
-   * Use the asynchronous callback function to trigger handling of the request
-   * by the application.
-   *
-   * The application will create a fresh context from request and response and
-   * pass it to each middleware. The context is responsible for error
-   * handling within a callback. The callback will resolve after the last
-   * middleware finished.
-   */
-  get dispatch(): Dispatch;
+export type Dispatch = (req: Request, res: Response) => Promise<void>;
 
-  /**
-   * Register a middleware function
-   *
-   * Middlewares are executed in order of registration, but can `await next()`
-   * to wait for the following middlewares to finish.
-   *
-   * It is preferrable to use a named function over an arrow function, because
-   * the name is used to identify child loggers. Optionally, you can provide a
-   * name for the middleware.
-   * @param fn the middleware
-   * @param name optional name
-   */
-  use(fn: Middleware<D>, name?: string): this;
-}
-
-export class Application<D extends Object> {
-  constructor(options?: ApplicationOptions<D>);
-}
-
-interface ApplicationEvents<D> {
-  error: (e: Error & Record<string, unknown>, ctx: ErrorContext<D>) => void;
-}
-
-export type ErrorContext<D> = Omit<Context<D>, "next">;
+export type Middleware<D> =
+  | ((params: Context<D>) => void | any)
+  | ((params: Context<D>) => Promise<void | any>);
 
 export interface Context<D> {
   readonly next: NextFn;
   readonly req: Request;
   readonly res: Response;
-  readonly data: D;
+  readonly data: D & Record<string, unknown>;
   readonly log: Logger;
 }
+
+export type ErrorContext<D> = Omit<Context<D>, "next">;
 
 export type NextFn = () => Promise<void>;
 
@@ -120,16 +83,8 @@ export type OutgoingMessage = {
   readonly replyTo?: string;
 } & MessageContent;
 
-export type Dispatch = (req: Request, res: Response) => Promise<void>;
-
-export type Middleware<D> =
-  | ((params: Context<D>) => void | any)
-  | ((params: Context<D>) => Promise<void | any>);
-
-export interface ApplicationOptions<D extends Object> {
-  dev?: boolean;
-  data?: D;
-  log?: Logger | boolean;
+export interface Server {
+  name: string;
+  set dispatch(d: Dispatch);
+  listen(): void;
 }
-
-export function getMessageText(msg: MessageContent): string;
