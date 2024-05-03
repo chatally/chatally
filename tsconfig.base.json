@@ -5,6 +5,7 @@
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "checkJs": true,
     "composite": false,
     "esModuleInterop": true,
@@ -16,6 +17,10 @@
     "noEmit": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "paths": {
+      "@internal/*": ["internal/*/lib/index.js"],
+      "@chatally/*": ["packages/*/lib/types.d.ts"]
+    },
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
     "skipLibCheck": false,

@@ -1,140 +1,79 @@
 import { getCurrentTime } from "@internal/utils";
-import { format } from "node:util";
-import { levels } from "./levels.js";
-const DEFAULT_LEVEL = levels[Math.min(1, levels.length - 1)];
+import { format, inspect } from "node:util";
+import { getLevelIndex, levels } from "./levels.js";
 
 /**
  * @typedef {import("node:stream").Writable} Writable
  * @typedef {import("./types.d.ts").Logger} Logger
  * @typedef {import("./types.d.ts").LoggerOptions} LoggerOptions
  * @typedef {import("./types.d.ts").Level} Level
+ * @typedef {(data: unknown, msg?: string, ...args: any[]) => void} LogMethod
  */
 
-/**
- * @class
- */
-function LogMethods() {
-  /** @type {Writable | undefined} */
-  this.out = undefined;
-  this.timestamps = true;
-
-  /**
-   * Numeric value of the level
-   *
-   * The index of the level in the `levels` array.
-   *
-   * Defaults to 1.
-   */
-  this._level = Math.min(1, levels.length - 1);
-
-  /** @type {String | undefined} */
-  this.name = undefined;
-
-  /** @type {Object|undefined} */
-  this.data = undefined;
-
-  this._log = function (
-    /** @type {Number} */ level,
-    /** @type {Object | String} */ data,
-    /** @type {String | undefined} */ msg,
-    /** @type {any[]} */ ...args
-  ) {
-    if (this._level < 0 || level < this._level) {
-      return;
-    }
-    if (typeof data === "string") {
-      // no additional data to log
-      if (!msg) {
-        // no arguments for format string
-        return this.log(level, undefined, data);
-      }
-      // msg is already the first argument for the format string
-      return this.log(level, undefined, data, ...[msg, ...args]);
-    }
-    this.log(level, data, msg, ...args);
-  };
-
-  this.log = function (
-    /** @type {Number} */ level,
-    /** @type {Object | undefined} */ data,
-    /** @type {String} */ msg = "",
-    /** @type {any[]} */ ...args
-  ) {
-    const level_ = levels[level]?.toUpperCase() || "?????";
-    const msg_ = format(msg, ...args);
-
-    let line = this.name
-      ? format("%s (%s): %s", level_, this.name, msg_)
-      : format("%s: %s", level_, msg_);
-
-    if (this.timestamps) {
-      line = `[${getCurrentTime()}] ${line}`;
-    }
-    line = line.trim();
-
-    if (this.data) {
-      data = { ...this.data, ...data };
-    }
-
-    if (this.out) {
-      this.out.write(line + "\n");
-      if (data) {
-        this.out.write(JSON.stringify(data, null, 2) + "\n");
-      }
-    } else {
-      console.log(line);
-      if (data) {
-        console.log(data);
-      }
-    }
-  };
-}
+/** @type Level */
+const DEFAULT_LEVEL = "info";
+const DEBUG = getLevelIndex("debug");
+const INFO = getLevelIndex("info");
+const WARN = getLevelIndex("warn");
+const ERROR = getLevelIndex("error");
 
 /**
- * Add log functions for all levels
- */
-for (let i = 0; i < levels.length; i++) {
-  LogMethods.prototype[levels[i]] = function (
-    /** @type {Object | String} */ data,
-    /** @type {String | undefined} */ msg,
-    /** @type {any} */ ...args
-  ) {
-    this._log(i, data, msg, ...args);
-  };
-}
-
-/**
+ * Basic logger implementation, that logs to the console by default.
+ *
+ * This logger is not optimized and should only be used for development.
+ *
+ * For test purposes, the output can be redirected to any `Writable` by setting
+ * the `out` property. Also for test purposes you can turn off the timestamps,
+ * by setting the `timestamps`property to false.
+ *
  * @class
  * @implements {Logger}
  */
-// @ts-ignore
-export class BaseLogger extends LogMethods {
-  /** @param {LoggerOptions} [options={}] */
-  constructor(options = {}) {
-    super();
+export class BaseLogger {
+  /**
+   * Output writable, default is the console
+   *
+   * @type {Writable | undefined}
+   */
+  out = undefined;
+
+  /**
+   * Print timestamps
+   */
+  timestamps = true;
+
+  /**
+   * Numeric level of this logger
+   *
+   * @type {number}
+   */
+  _level = 1;
+
+  /**
+   * @param {LoggerOptions} [options={}]
+   */
+  constructor(options = {}, levelMethods = levels) {
+    // because this is used in the following setters, we need to set it first
+    this.levels = levelMethods;
     this.level = options.level || DEFAULT_LEVEL;
     this.name = options.name;
+    /** @type {unknown} */
     this.data = options.data;
   }
 
   /** @returns {Level} */
   get level() {
-    return (
-      levels[this._level] ||
-      (this._level < 0 ? "silent" : levels[levels.length - 1])
-    );
+    return this.levels.text(this._level);
   }
 
   /** @param {Level} level */
   set level(level) {
-    // @ts-ignore
-    this._level = levels.indexOf(level);
+    this._level = this.levels.index(level);
   }
 
   /** @param {Level} level */
   isLevel(level) {
-    // @ts-ignore
-    return this._level >= levels.indexOf(level);
+    return this._level >= this.levels.index(level);
   }
 
   /**
@@ -148,26 +87,132 @@ export class BaseLogger extends LogMethods {
     } else {
       name = options.name;
     }
-    let data = this.data;
-    if (data && options.data) {
-      data = { ...data, ...options.data };
-    } else {
-      data = options.data;
-    }
     return Object.assign(Object.create(this), {
       ...this,
       ...options,
       name,
-      data,
+      data: mergeData(this.data, options.data),
     });
+  }
+
+  /** @type {LogMethod} */
+  debug(data, msg, ...args) {
+    this.log(DEBUG, data, msg, ...args);
+  }
+
+  /** @type {LogMethod} */
+  info(data, msg, ...args) {
+    this.log(INFO, data, msg, ...args);
+  }
+
+  /** @type {LogMethod} */
+  warn(data, msg, ...args) {
+    this.log(WARN, data, msg, ...args);
+  }
+
+  /** @type {LogMethod} */
+  error(data, msg, ...args) {
+    this.log(ERROR, data, msg, ...args);
+  }
+
+  /**
+   * @param {Level | number} level
+   * @param {unknown} [data]
+   * @param {string} [msg]
+   * @param {any[]} args
+   */
+  log(level, data, msg, ...args) {
+    if (this._level < 0) {
+      return;
+    }
+    /** @type {number} */
+    let nLevel;
+    if (typeof level === "number") {
+      if (level < this._level) {
+        return;
+      }
+      nLevel = level;
+    } else {
+      nLevel = this.levels.index(level);
+      if (nLevel < this._level) {
+        return;
+      }
+    }
+    if (typeof data === "string") {
+      // data is the message
+      if (msg) {
+        args = [msg, ...args];
+      }
+      msg = data;
+      data = undefined;
+    }
+    this._log(nLevel, data, msg, ...args);
+  }
+
+  /**
+   * @param {number} nLevel
+   * @param {unknown} data
+   * @param {string | undefined} msg
+   * @param {any[]} args
+   */
+  _log(nLevel, data, msg, ...args) {
+    data = mergeData(this.data, data);
+    if (!msg && data instanceof Error && Object.keys(data).length === 0) {
+      msg = data.message;
+      data = undefined;
+    }
+    const msg_ = format(msg || "", ...args);
+    const sLevel = this.levels.text(nLevel).toUpperCase();
+    let line = this.name
+      ? format("%s (%s): %s", sLevel, this.name, msg_)
+      : format("%s: %s", sLevel, msg_);
+
+    if (this.timestamps) {
+      line = `[${getCurrentTime()}] ${line}`;
+    }
+    line = line.trim();
+
+    if (this.out) {
+      this.out.write(line + "\n");
+      if (data) {
+        this.out.write(JSON.stringify(data, stringifyError, 2) + "\n");
+      }
+    } else {
+      console.log(line);
+      if (data) {
+        console.log(data);
+      }
+    }
   }
 }
 
 /**
- * @param {LoggerOptions | undefined} options
- * @returns {Logger & BaseLogger}
+ * @param {string} key
+ * @param {unknown} value
  */
-export function newBaseLogger(options) {
+function stringifyError(key, value) {
   // @ts-ignore
-  return new BaseLogger(options);
+  return value instanceof Error ? { message: value.message, ...value } : value;
+}
+
+/**
+ * @param {unknown} a
+ * @param {unknown} b
+ */
+function mergeData(a, b) {
+  if (!a) return b;
+  if (!b) return a;
+  if (a instanceof Error) {
+    if (typeof b === "object") {
+      return { error: a, ...b };
+    }
+  } else if (typeof a === "object") {
+    if (b instanceof Error) {
+      return { ...a, error: b };
+    }
+    if (typeof b === "object") {
+      return { ...a, ...b };
+    }
+  }
+  return [a, b];
 }

@@ -5,20 +5,18 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "types": "./typings/index.d.ts"
+      "import": {
+        "types": "./lib/types.d.ts",
+        "default": "./lib/index.js"
+      }
     }
   },
   "scripts": {
-    "test": "vitest",
-    "types": "tsc -p ./tsconfig.types.json"
+    "repl": "nodemon repl.js",
+    "test": "vitest"
   },
   "dependencies": {
     "nanoid": "^5.0.7"
   },
-  "devDependencies": {
-    "@config/tsconfig": "*",
-    "@config/vitest": "*",
-    "vitest": "^1.5.0"
-  }
+  "devDependencies": {}
 }

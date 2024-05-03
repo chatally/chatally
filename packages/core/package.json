@@ -14,16 +14,12 @@
     }
   },
   "scripts": {
-    "test": "vitest",
-    "repl": "nodemon repl.js"
+    "repl": "nodemon repl.js",
+    "test": "vitest"
   },
   "dependencies": {
-    "@internal/utils": "*",
-    "@chatally/logger": "*"
+    "@chatally/logger": "*",
+    "@internal/utils": "*"
   },
-  "devDependencies": {
-    "@config/tsconfig": "*",
-    "@config/vitest": "*",
-    "vitest": "^1.5.0"
-  }
+  "devDependencies": {}
 }

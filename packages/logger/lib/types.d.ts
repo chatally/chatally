@@ -1,11 +1,14 @@
+/**
+ * Names of all log methods (correspond to the log levels)
+ */
+
 import { Writable } from "./base-logger.js";
 
-// This must be kept in sync with ./levels.js
 // @ts-ignore
 export const methods = ["debug", "info", "warn", "error"] as const;
 
 /**
- * All log method names
+ * String union type of all log method names
  */
 export type Method = (typeof methods)[number];
 
@@ -29,16 +32,21 @@ export interface Logger extends Record<Method, LogMethod> {
   level: Level;
 
   /**
+   * Optional name of this logger
+   */
+  name?: string;
+
+  /**
+   * Optional data of this logger
+   */
+  data?: unknown;
+
+  /**
    * Check if this logger is active on the given level
    *
    * @param level
    */
   isLevel(level: Level): boolean;
-
-  /**
-   * Optional name of this logger
-   */
-  name?: string;
 
   /**
    * Create a child logger
@@ -87,33 +95,22 @@ export interface LoggerOptions {
   /**
    * Additional data to log with each call to a log method
    */
-  data?: Object;
+  data?: unknown;
 }
 
 /**
- * Get a basic logger
+ * Get a development logger
  *
- * This logger will by default log to the console. It is not optimized and
- * should be used only for development.
+ * This logger is not optimized for production use and outputs everything to
+ * the console.
  *
- * @param options Options to initialize the logger
+ * For test purposes, you can redirect the output and log without timestamps.
+ *
+ * @param options
  */
-export function getLogger(options?: LoggerOptions): Logger & {
-  /**
-   * Optional writable to output the log messages to (use for testing)
-   */
+export function getLogger(options?: LoggerOptions | "nologger"): Logger & {
+  /** Redirect output to the writable instead of the console*/
   out?: Writable;
-  /**
-   * Set to false to turn off the timestamps in log messages (use for testing)
-   */
+  /** Disable timestamps in output */
   timestamps: boolean;
 };
-
-/**
- * Get a no-op logger
- *
- * This logger does nothing.
- *
- * @param options Ignored
- */
-export function getNoLogger(options?: LoggerOptions): Logger;

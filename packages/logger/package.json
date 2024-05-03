@@ -11,17 +11,20 @@
         "types": "./lib/types.d.ts",
         "default": "./lib/index.js"
       }
+    },
+    "./base-logger": {
+      "import": {
+        "types": "./lib/types.d.ts",
+        "default": "./lib/base-logger.js"
+      }
     }
   },
   "scripts": {
-    "test": "vitest",
-    "repl": "nodemon repl.js"
+    "repl": "nodemon repl.js",
+    "test": "vitest"
   },
   "dependencies": {},
   "devDependencies": {
-    "@config/tsconfig": "*",
-    "@config/vitest": "*",
-    "@internal/utils": "*",
-    "vitest": "^1.5.0"
+    "@internal/utils": "*"
   }
 }
