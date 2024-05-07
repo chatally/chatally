@@ -19,8 +19,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@chatally/logger": "*",
-    "@internal/utils": "*"
+    "@chatally/logger": "*"
   },
   "devDependencies": {}
 }

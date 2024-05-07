@@ -18,9 +18,7 @@
     "repl": "nodemon repl.js",
     "test": "vitest"
   },
-  "dependencies": {
-    "@internal/utils": "*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "tsup": "^8.0.2"
   }
