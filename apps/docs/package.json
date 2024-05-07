@@ -1,6 +1,5 @@
 {
-  "name": "docs",
-  "version": "0.0.1",
+  "name": "@apps/docs",
   "description": "Docs website",
   "private": true,
   "type": "module",
