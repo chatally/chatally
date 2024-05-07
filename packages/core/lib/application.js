@@ -1,55 +1,32 @@
-import { getLogger } from "@chatally/logger";
+import { BaseLogger, NoLogger } from "@chatally/logger";
 import { hasProperty } from "@internal/utils";
 import { EventEmitter } from "node:events";
 
 /**
- * @typedef {import("./types.d.ts").Request} Request
- * @typedef {import("./types.d.ts").Response} Response
- * @typedef {import("./types.d.ts").Dispatch} Dispatch
- * @typedef {import("./types.d.ts").Server} Server
- * @typedef {import("@chatally/logger").Logger} Logger
- */
-
-/**
  * @template {Object} D
- * @typedef {import("./types.d.ts").Middleware<D>} Middleware<D>
- */
-
-/**
- * @template {Object} D
- * @typedef {import("./types.d.ts").ErrorContext<D>} ErrorContext<D>
- */
-
-/**
- * @template {Object} D
- * @typedef {{error: [Error & Record<string, unknown>, ErrorContext<D>]}} ApplicationEvents<D>
- */
-
-/**
- * @template {Object} D
- * @extends {EventEmitter<ApplicationEvents<D>>}
+ * @extends {EventEmitter<{error: [Error & Record<string, unknown>, import("./types.d.ts").ErrorContext<D>]}>}
  */
 export class Application extends EventEmitter {
   /**
    * Main logger for the application
-   * @type {Logger} */
+   * @type {import("@chatally/logger").Logger} */
   #log;
 
   /**
    * Middlewares in order of registration
-   * @type {Middleware<D>[]}
+   * @type {import("./types.d.ts").Middleware<D>[]}
    */
   #middlewares = [];
 
   /**
    * Servers
-   * @type {Server[]}
+   * @type {import("./types.d.ts").Server[]}
    */
   #servers = [];
 
   /**
    * Child loggers, one for each middleware
-   * @type { Logger[] } */
+   * @type { import("@chatally/logger").Logger[] } */
   #middlewareLogs = [];
 
   /**
@@ -62,7 +39,7 @@ export class Application extends EventEmitter {
    * @constructor
    * @param {Object} [options={}]
    * @param {D} [options.data]
-   * @param {Logger | boolean} [options.log]
+   * @param {import("@chatally/logger").Logger | boolean} [options.log]
    * @param {boolean} [options.dev]
    */
   constructor(options = {}) {
@@ -90,7 +67,7 @@ export class Application extends EventEmitter {
    * the name is used to identify child loggers. Optionally, you can provide a
    * name for the middleware.
    *
-   * @param {Middleware<D> | Server} m
+   * @param {import("./types.d.ts").Middleware<D> | import("./types.d.ts").Server} m
    * @param {String} [name]
    */
   use(m, name) {
@@ -131,7 +108,7 @@ export class Application extends EventEmitter {
    * but a server could send responses earlier, by registering the
    * `on("finish")` event on the response.
    *
-   * @type {Dispatch}
+   * @type {import("./types.d.ts").Dispatch}
    */
   get dispatch() {
     return async (req, res) => {
@@ -151,10 +128,10 @@ export class Application extends EventEmitter {
    * The order is the order of registration. Middleware exceptions are
    * dispatched to the context. This method throws only, if the context throws.
    *
-   * @param {Request} req
-   * @param {Response} res
+   * @param {import("./types.d.ts").Request} req
+   * @param {import("./types.d.ts").Response} res
    * @param {D & Record<string, unknown>} data
-   * @param {Logger} log
+   * @param {import("@chatally/logger").Logger} log
    */
   async #dispatch(req, res, data, log) {
     let current = 0;
@@ -182,7 +159,7 @@ export class Application extends EventEmitter {
 
   /**
    * @param {unknown} err
-   * @param {ErrorContext<D>} context
+   * @param {import("./types.d.ts").ErrorContext<D>} context
    */
   #handleError(err, context) {
     try {
@@ -196,6 +173,7 @@ export class Application extends EventEmitter {
       }
     } catch (err) {
       context.log.error(err);
+      throw err;
     }
   }
 
@@ -210,22 +188,22 @@ export class Application extends EventEmitter {
 }
 
 /**
- * @param {boolean | Logger} [log]
+ * @param {boolean | import("@chatally/logger").Logger} [log]
  * @param {boolean} [dev]
  */
 function initLog(log, dev) {
   if (log === true) {
     const level =
       dev || process.env.NODE_ENV === "development" ? "debug" : "info";
-    return getLogger({ level, name: "@chatally/core" });
+    return new BaseLogger({ level, name: "@chatally/core" });
   } else {
-    return log || getLogger("nologger");
+    return log || new NoLogger();
   }
 }
 
 /**
  * @param {any} object
- * @returns {object is Server}
+ * @returns {object is import("./types.d.ts").Server}
  */
 function isServer(object) {
   if (!object) return false;

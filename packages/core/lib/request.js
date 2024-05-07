@@ -2,24 +2,19 @@ import { randomId } from "@internal/utils";
 import { getMessageText } from "./messages.js";
 
 /**
- * @typedef {import("./types.d.ts").Request} IRequest
- * @typedef {import("./types.d.ts").IncomingMessage} Message
- */
-
-/**
  * Request with incoming message
  *
  * @class
- * @param {Message | String} message
+ * @typedef {import("./types.d.ts").Request} IRequest
  * @implements {IRequest}
  */
 export class Request {
-  /** @type {Message} */
+  /** @type {import("./types.d.ts").IncomingMessage} */
   #message;
 
   /**
    *
-   * @param {Message | String} message
+   * @param {import("./types.d.ts").IncomingMessage | String} message
    */
   constructor(message) {
     if (typeof message === "string") {

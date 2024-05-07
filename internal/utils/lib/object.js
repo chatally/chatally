@@ -28,7 +28,7 @@ export function hasProperty(o, p, c) {
     if (c.writable !== undefined && c.writable !== prop.writable) {
       return false;
     }
-    if (c.settable === true && (!prop.set || !prop.writable)) {
+    if (c.settable === true && !prop.set && !prop.writable) {
       return false;
     }
     if (c.settable === false && (!!prop.set || !!prop.writable)) {

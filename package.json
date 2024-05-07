@@ -28,6 +28,11 @@
     "dev": "turbo run dev --parallel --no-daemon",
     "format": "prettier --write \"**/*.{d\\.ts,[c]js,md}\"",
     "lint": "turbo run lint --no-daemon",
+    "prepare:release": "npm run clean && npm run release:build && npm run release:check",
+    "release:build": "turbo run build --filter=!./apps/* --no-daemon",
+    "release:check": "npm run release:lint && npm run release:test",
+    "release:lint": "turbo run lint --filter=!./apps/* --no-daemon",
+    "release:test": "turbo run test --filter=!./apps/* -- run",
     "test": "turbo run test -- run"
   },
   "devDependencies": {

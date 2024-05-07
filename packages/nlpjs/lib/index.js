@@ -2,18 +2,9 @@ import { dockStart } from "@nlpjs/basic";
 import { existsSync } from "node:fs";
 
 /**
- * @typedef {import("@chatally/logger").Logger} Logger
- * @typedef {import("@chatally/core").Middleware<{}>} Middleware
- * @typedef {import("@chatally/core").Context<{}>} Context
- * @typedef {import("@nlpjs/basic").Nlp} Nlp
- * @typedef {import("@nlpjs/basic").Plugin} Plugin
- * @typedef {import("@nlpjs/basic").Configuration} Configuration
- */
-
-/**
  * @typedef {Object} Options
  * @property {string[]} [options.corpora] Corpora to train the NLP on
- * @property {Logger} [options.logger] Optional logger to use
+ * @property {import("@chatally/logger").Logger} [options.logger] Optional logger to use
  */
 
 /**
@@ -29,9 +20,9 @@ import { existsSync } from "node:fs";
  * For ease of use you can also provide a configuration object programmatically
  * or an array of strings with path names pointing to your training corpora.
  *
- * @param {Logger | Configuration | string[]} [logger]
- * @param {Configuration | string[]} [configuration]
- * @returns {Promise<Nlp>} The trained NLP module
+ * @param {import("@chatally/logger").Logger | import("@nlpjs/basic").Configuration | string[]} [logger]
+ * @param {import("@nlpjs/basic").Configuration | string[]} [configuration]
+ * @returns {Promise<import("@nlpjs/basic").Nlp>} The trained NLP module
  */
 export async function trainNlp(logger, configuration) {
   if (!isLogger(logger)) {
@@ -84,7 +75,7 @@ export async function trainNlp(logger, configuration) {
 
 /**
  * @param {any} obj
- * @returns {obj is Logger}
+ * @returns {obj is import("@chatally/logger").Logger}
  */
 function isLogger(obj) {
   return !!obj && obj.level && typeof obj.child === "function";
@@ -96,14 +87,14 @@ function isLogger(obj) {
  * It will write the answer to the response only, if it is above the configured
  * threshold. It will not end the response.
  *
- * @param {Nlp} nlp The trained NLP module
+ * @param {import("@nlpjs/basic").Nlp} nlp The trained NLP module
  * @param {Object} [options] Options
  * @param {string} [options.name="nlp.js"] Optional name for the middleware
  *   function. Default is 'nlp.js'. NOTE: Result data from the NLP process will
  *   be put into the context under this name.
  * @param {boolean} [options.end] Indicates, whether an answer above the
  *   threshold should end the response
- * @returns {Middleware}
+ * @returns {import("@chatally/core").Middleware<{}>}
  */
 export function nlpjsMiddleware(nlp, options) {
   const { name = "nlp.js", end = false } = options || {};
@@ -114,7 +105,9 @@ export function nlpjsMiddleware(nlp, options) {
       (res, msg) => res.write(msg);
 
   const obj = {
-    [name]: async function (/** @type {Context} */ { req, res, data }) {
+    [name]: async function (
+      /** @type {import("@chatally/core").Context<{}>} */ { req, res, data }
+    ) {
       if (!res.isWritable) return;
       const result = await nlp.process("en", req.text);
       data[name] = result;

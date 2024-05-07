@@ -16,8 +16,11 @@ function color(text, color) {
 }
 
 /**
- * Console server
  * @class
+ * Console server
+ *
+ * @typedef {import("@chatally/core").Server} Server
+ * @implements {Server}
  */
 export class ConsoleServer {
   /**

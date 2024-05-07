@@ -1,4 +1,4 @@
-import { getLogger } from "@chatally/logger";
+import { BaseLogger } from "@chatally/logger";
 import { StringWritable, XError } from "@internal/utils";
 import { Application } from "./application.js";
 import { Request } from "./request.js";
@@ -21,6 +21,13 @@ function req(text) {
 /** @param {Response} res */
 function messages(res) {
   return res.messages.map((m) => (m.type === "text" ? m.text : m.image));
+}
+
+/**
+ * @param {import("packages/logger/lib/types.js").LoggerOptions | undefined} options
+ */
+function getLogger(options) {
+  return new BaseLogger(options);
 }
 
 describe("Application", function () {

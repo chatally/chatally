@@ -23,11 +23,50 @@ export default defineConfig({
       sidebar: [
         {
           label: "Guides",
-          autogenerate: { directory: "guides" },
+          items: [
+            { label: "Getting Started", link: "guides" },
+            { label: "Writing Middleware", link: "guides/middleware" },
+            { label: "Writing Servers", link: "guides/servers" },
+          ],
         },
         {
           label: "Reference",
-          autogenerate: { directory: "reference" },
+          items: [
+            {
+              label: "Core",
+              items: [
+                { label: "Overview", link: "reference/core" },
+                { label: "Application", link: "reference/core/application" },
+                { label: "Middleware", link: "reference/core/middleware" },
+                {
+                  label: "Request/Response",
+                  link: "reference/core/request-response",
+                },
+                { label: "Messages", link: "reference/core/messages" },
+                { label: "Logger", link: "reference/core/logger" },
+              ],
+            },
+            {
+              label: "Middleware",
+              autogenerate: { directory: "reference/middleware" },
+            },
+            {
+              label: "Servers",
+              autogenerate: { directory: "reference/servers" },
+            },
+          ],
+        },
+        {
+          label: "Examples",
+          items: [
+            { label: "Overview", link: "examples" },
+            { label: "Console Chat", link: "guides/console-chat" },
+            { label: "nlp.js Web Chat", link: "guides/nlpjs-web-chat" },
+            {
+              label: "Group Moderation with TensorFlow",
+              link: "guides/group-moderation",
+            },
+          ],
         },
       ],
       plugins: [
@@ -42,6 +81,9 @@ export default defineConfig({
           recentPostCount: 5,
         }),
       ],
+      components: {
+        ThemeSelect: "./src/overrides/ThemeSelect.astro",
+      },
     }),
   ],
 });

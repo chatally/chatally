@@ -1,9 +1,6 @@
 /**
  * Names of all log methods (correspond to the log levels)
  */
-
-import { Writable } from "./base-logger.js";
-
 // @ts-ignore
 export const methods = ["debug", "info", "warn", "error"] as const;
 
@@ -97,20 +94,3 @@ export interface LoggerOptions {
    */
   data?: unknown;
 }
-
-/**
- * Get a development logger
- *
- * This logger is not optimized for production use and outputs everything to
- * the console.
- *
- * For test purposes, you can redirect the output and log without timestamps.
- *
- * @param options
- */
-export function getLogger(options?: LoggerOptions | "nologger"): Logger & {
-  /** Redirect output to the writable instead of the console*/
-  out?: Writable;
-  /** Disable timestamps in output */
-  timestamps: boolean;
-};

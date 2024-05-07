@@ -1,30 +1,27 @@
 {
   "name": "@chatally/logger",
   "version": "0.0.1",
-  "description": "ChatAlly Logger facade",
+  "description": "ChatAlly Logger Facade",
   "license": "MIT",
   "keywords": [],
   "type": "module",
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/types.d.ts",
-        "default": "./lib/index.js"
-      }
-    },
-    "./base-logger": {
-      "import": {
-        "types": "./lib/types.d.ts",
-        "default": "./lib/base-logger.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       }
     }
   },
   "scripts": {
+    "build": "tsup",
     "repl": "nodemon repl.js",
     "test": "vitest"
   },
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "@internal/utils": "*"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.2"
   }
 }

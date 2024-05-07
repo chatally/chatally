@@ -19,7 +19,7 @@
     "noUnusedParameters": false,
     "paths": {
       "@internal/*": ["internal/*/lib/index.js"],
-      "@chatally/*": ["packages/*/lib/types.d.ts"]
+      "@chatally/*": ["packages/*/lib/index.js"]
     },
     "preserveWatchOutput": true,
     "resolveJsonModule": true,
@@ -27,5 +27,6 @@
     "strict": true,
     "target": "ES2022",
     "types": ["vitest/globals"]
-  }
+  },
+  "exclude": ["**/dist"]
 }

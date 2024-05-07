@@ -7,8 +7,8 @@ hero:
   image:
     file: ../../assets/green-bot.png
   actions:
-    - text: Just getting started
-      link: /guides/getting-started/
+    - text: Getting started
+      link: /guides/
       icon: rocket
       variant: primary
     - text: Read our blog
@@ -20,7 +20,7 @@ import { Card, CardGrid } from "@astrojs/starlight/components";
 
 ## Where we come from
 
-The non-profit organization [dooiy](https://dooiy.org) provides step-by-step instructions for _good hacks, that make life easier_. Their focus audience are users in underserved communities. In this context, for a few reasons, we were looking for an easy way to distribute their instructions via WhatsApp. Only to find out, that this becomes very expensive or complicated, if you want to do it right and according to European data protection laws. Because of lack of money, we chose the difficult route and implemented our own solution that allows us, to (fairly) easily create chatbots from Markdown files. It is currently being prototyped in Mali with an instruction from [CoolVeg](https://www.coolveg.org/) for a [clay pot cooler](https://wa.me/491744899585/?text=%2Fcarl).
+The non-profit organization [dooiy](https://dooiy.org) provides step-by-step instructions for _good hacks, that make life easier_. Their focus audience are users in underserved communities. In this context, for a few reasons, we were looking for an easy way to distribute these instructions via WhatsApp. Only to find out, that this becomes very expensive or complicated, if you want to do it right and according to European data protection laws. Because of lack of money, we chose the difficult route and implemented our own solution that allows us, to (fairly) easily create chatbots from Markdown files. It is currently being prototyped in Mali with an instruction from [CoolVeg](https://www.coolveg.org/) for a [clay pot cooler](https://wa.me/491744899585/?text=%2Fcarl).
 
 We proposed to the [Prototype Fund](https://prototypefund.de) to enhance this solution and make it free open-source. This is how ChatAlly was born. We are currently in the process of developing the first version of ChatAlly and are looking for contributors and users to help us make it a success.
 
@@ -30,28 +30,28 @@ ChatAlly is supposed to work a bit like Lego blocks.
 
 <CardGrid stagger>
   <Card title="The base plate" icon="base">
-    The ChatAlly platform is like the base plate where you start to assemble your chatbot from the
-    different bricks. It also defines the shape of the nubs (interfaces) that the bricks have to
-    implement to fit into the system.
+    The ChatAlly platform is like the base plate where you start to assemble
+    your chatbot from the different bricks. It also defines the shape of the
+    nubs (interfaces) that the bricks have to implement to fit into the system.
   </Card>
   <Card title="The bricks" icon="brick">
-    The ChatAlly module collection is a collection of bricks that you need to build a chatbot, e.g.
-    for NLU (natural language understanding), STT (speech to text), etc. We will not implement
-    everything ourselves, but rather wrap well established solutions to integrate well with the
-    platform.
+    The ChatAlly module collection is a collection of bricks that you need to
+    build a chatbot, e.g. for NLU (natural language understanding), STT (speech
+    to text), etc. We will not implement everything ourselves, but rather wrap
+    well established solutions to integrate well with the platform.
   </Card>
   <Card title="The manual" icon="manual">
-    We know, that documentation is essential, that is why it is an explicit work package in our
-    project and will acoount for at least half of the effort.
+    We know, that documentation is essential, that is why it is an explicit work
+    package in our project and will acoount for at least half of the effort.
   </Card>
   <Card title="Examples" icon="example">
-    For most people, also for us, it is easiest to understand concepts from examples. They also
-    provide a good starting point for your own chatbot. That is, why we will provide a set of easy
-    to deploy and understand examples.
+    For most people, also for us, it is easiest to understand concepts from
+    examples. They also provide a good starting point for your own chatbot. That
+    is, why we will provide a set of easy to deploy and understand examples.
   </Card>
   <Card title="A community" icon="community">
-    Hopefully, these efforts will carry fruit and we can find an interested community that helps us
-    and each other to improve the platform and the chatbots. We will provide a forum on Discord to
-    facilitate this.
+    Hopefully, these efforts will carry fruit and we can find an interested
+    community that helps us and each other to improve the platform and the
+    chatbots. We will provide a forum on Discord to facilitate this.
   </Card>
 </CardGrid>

@@ -8,12 +8,13 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/types.d.ts",
-        "default": "./lib/index.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       }
     }
   },
   "scripts": {
+    "build": "tsup",
     "repl": "nodemon repl.js"
   },
   "dependencies": {

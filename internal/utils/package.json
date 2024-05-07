@@ -6,7 +6,6 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/types.d.ts",
         "default": "./lib/index.js"
       }
     }

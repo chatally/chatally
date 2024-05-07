@@ -1,19 +1,15 @@
 /**
- * Type definitions
+ * Default implementation of Logger interface with all no-ops.
  *
- * @typedef {import("./types.d.ts").Logger} Logger
- * @typedef {import("./types.d.ts").Level} Level
- */
-
-/**
  * @class
+ * @typedef {import("./types.js").Logger} Logger
  * @implements {Logger}
  */
 export class NoLogger {
   /**
    * This loggers log level is always "silent"
    *
-   * @type {Level}
+   * @type {import("./types.js").Level}
    */
   get level() {
     return "silent";
@@ -22,38 +18,48 @@ export class NoLogger {
   /**
    * This logger is not active on any level
    *
+   * @param {import("./types.js").Level} level
    * @returns always false
    */
-  isLevel() {
+  isLevel(level) {
     return false;
   }
 
   /**
    * This logger does not create children
+   *
+   * @param {any} options
    * @returns always this
    */
-  child() {
+  child(options) {
     return this;
   }
 
   /**
    * Never logs anything
+   *
    * @param {any[]} args
    */
   debug(...args) {}
 
   /**
    * Never logs anything
+   *
+   * @param {any[]} args
    */
-  info() {}
+  info(...args) {}
 
   /**
    * Never logs anything
+   *
+   * @param {any[]} args
    */
-  warn() {}
+  warn(...args) {}
 
   /**
    * Never logs anything
+   *
+   * @param {any[]} args
    */
-  error() {}
+  error(...args) {}
 }

@@ -1,19 +1,8 @@
-import { BaseLogger } from "./base-logger.js";
-import { NoLogger } from "./no-logger.js";
+export { BaseLogger } from "./base-logger.js";
+export { NoLogger } from "./no-logger.js";
 
 /**
- * @typedef {import("./base-logger.js").LoggerOptions} LoggerOptions
+ * @typedef {import("./types.d.ts").Logger} Logger
+ * @typedef {import("./types.d.ts").Level} Level
+ * @typedef {import("./types.d.ts").LoggerOptions} LoggerOptions
  */
-
-/**
- * @param {LoggerOptions | "nologger"} options
- */
-export function getLogger(options) {
-  if (typeof options === "string") {
-    if (options === "nologger") {
-      return new NoLogger();
-    }
-    return new BaseLogger({ name: options });
-  }
-  return new BaseLogger(options);
-}

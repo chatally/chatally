@@ -1,4 +1,4 @@
-# Build and deploy the docs website (chatally.org)
+# Build and deploy the docs website
 name: docs
 
 on:
@@ -13,34 +13,30 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
   cancel-in-progress: true
 
-env:
-  NODE_VERSION: 20
-
 jobs:
   publish:
-    name: Publish chatally.org site
-    runs-on: ubuntu-20.04
+    name: Publish docs site
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
+        uses: actions/checkout@v4
         with:
-          version: 8
+          sparse-checkout: |
+            apps/docs
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Setup node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
+          node-version: 20
+          cache: npm
 
       - name: Install Dependencies
-        run: pnpm i
+        working-directory: ./apps/docs
+        run: npm install
 
-      - name: Build astro site
-        working-directory: ./apps/chatally.org
-        run: pnpm build
+      - name: Build site
+        working-directory: ./apps/docs
+        run: npm run build
         env:
           CHECK_LINKS: true
 
@@ -51,5 +47,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: chatally
-          workingDirectory: ./apps/chatally.org
+          workingDirectory: ./apps/docs
           directory: dist

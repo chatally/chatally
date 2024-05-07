@@ -2,7 +2,7 @@ import { StringWritable, XError } from "@internal/utils";
 import { BaseLogger } from "./base-logger.js";
 
 /**
- * @param {import("./types.d.ts").LoggerOptions | undefined} [options]
+ * @param {import("./index.js").LoggerOptions | undefined} [options]
  */
 function getLogger(options) {
   const actual = new StringWritable();

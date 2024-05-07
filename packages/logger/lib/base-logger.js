@@ -1,21 +1,17 @@
 import { getCurrentTime } from "@internal/utils";
-import { format, inspect } from "node:util";
+import { format } from "node:util";
 import { getLevelIndex, levels } from "./levels.js";
 
-/**
- * @typedef {import("node:stream").Writable} Writable
- * @typedef {import("./types.d.ts").Logger} Logger
- * @typedef {import("./types.d.ts").LoggerOptions} LoggerOptions
- * @typedef {import("./types.d.ts").Level} Level
- * @typedef {(data: unknown, msg?: string, ...args: any[]) => void} LogMethod
- */
-
-/** @type Level */
+/** @type {import("./index.js").Level} */
 const DEFAULT_LEVEL = "info";
 const DEBUG = getLevelIndex("debug");
 const INFO = getLevelIndex("info");
 const WARN = getLevelIndex("warn");
 const ERROR = getLevelIndex("error");
+
+/**
+ * @typedef {(data: unknown, msg?: string, ...args: any[]) => void} LogMethod
+ */
 
 /**
  * Basic logger implementation, that logs to the console by default.
@@ -24,16 +20,17 @@ const ERROR = getLevelIndex("error");
  *
  * For test purposes, the output can be redirected to any `Writable` by setting
  * the `out` property. Also for test purposes you can turn off the timestamps,
- * by setting the `timestamps`property to false.
+ * by setting the `timestamps` property to false.
  *
  * @class
+ * @typedef {import("./types.js").Logger} Logger
  * @implements {Logger}
  */
 export class BaseLogger {
   /**
    * Output writable, default is the console
    *
-   * @type {Writable | undefined}
+   * @type {import("node:stream").Writable | undefined}
    */
   out = undefined;
 
@@ -50,7 +47,7 @@ export class BaseLogger {
   _level = 1;
 
   /**
-   * @param {LoggerOptions} [options={}]
+   * @param {import("./index.js").LoggerOptions} [options={}]
    */
   constructor(options = {}, levelMethods = levels) {
     // because this is used in the following setters, we need to set it first
@@ -61,24 +58,24 @@ export class BaseLogger {
     this.data = options.data;
   }
 
-  /** @returns {Level} */
+  /** @returns {import("./index.js").Level} */
   get level() {
     return this.levels.text(this._level);
   }
 
-  /** @param {Level} level */
+  /** @param {import("./index.js").Level} level */
   set level(level) {
     this._level = this.levels.index(level);
   }
 
-  /** @param {Level} level */
+  /** @param {import("./index.js").Level} level */
   isLevel(level) {
     return this._level >= this.levels.index(level);
   }
 
   /**
-   * @param {LoggerOptions} [options={}]
-   * @returns {Logger}
+   * @param {import("./index.js").LoggerOptions} [options={}]
+   * @returns {import("./types.js").Logger}
    */
   child(options = {}) {
     let name = this.name;
@@ -116,7 +113,7 @@ export class BaseLogger {
   }
 
   /**
-   * @param {Level | number} level
+   * @param {import("./index.js").Level | number} level
    * @param {unknown} [data]
    * @param {string} [msg]
    * @param {any[]} args
