@@ -27,6 +27,7 @@ export default defineConfig({
             { label: "Getting Started", link: "guides" },
             { label: "Writing Middleware", link: "guides/middleware" },
             { label: "Writing Servers", link: "guides/servers" },
+            { label: "Deploy your Application", link: "guides/deployment" },
           ],
         },
         {
@@ -39,8 +40,8 @@ export default defineConfig({
                 { label: "Application", link: "reference/core/application" },
                 { label: "Middleware", link: "reference/core/middleware" },
                 {
-                  label: "Request/Response",
-                  link: "reference/core/request-response",
+                  label: "Context",
+                  link: "reference/core/context",
                 },
                 { label: "Messages", link: "reference/core/messages" },
                 { label: "Logger", link: "reference/core/logger" },
@@ -60,12 +61,12 @@ export default defineConfig({
           label: "Examples",
           items: [
             { label: "Overview", link: "examples" },
-            { label: "Console Chat", link: "guides/console-chat" },
-            { label: "nlp.js Web Chat", link: "guides/nlpjs-web-chat" },
-            {
-              label: "Group Moderation with TensorFlow",
-              link: "guides/group-moderation",
-            },
+            { label: "Console Chat", link: "examples/console-chat" },
+            { label: "nlp.js Web Chat", link: "examples/nlpjs-web-chat" },
+            // {
+            //   label: "Group Moderation with TensorFlow",
+            //   link: "examples/group-moderation",
+            // },
           ],
         },
       ],

@@ -8,15 +8,14 @@ A ChatAlly chat application is very similar: It starts off with a chat server th
 
 ## Installation
 
-To get started, with the simplest possible chat application, you need to install the core library, a chat server and implement some middleware. As chat server for development you can use the `ConsoleServer`.
-
-Install the core library and the console server
+To get started, with the simplest possible chat application, you need create an npm ESM project , install the core library, a chat server, e.g. the `ConsoleServer` and implement some middleware.
 
 ```sh
+npm init esnext -y
 npm install @chatally/core @chatally/console
 ```
 
-## Configure the application
+## Create the application
 
 Create a file `index.js` in which you configure your application
 
@@ -25,7 +24,6 @@ Create a file `index.js` in which you configure your application
 import { Application } from "@chatally/core";
 import { ConsoleServer } from "@chatally/console";
 
-// Configure the application
 new Application({ log: false }) //
   .use(new ConsoleServer())
   .use(function echo({ req, res }) {
@@ -36,7 +34,9 @@ new Application({ log: false }) //
   .listen();
 ```
 
-Here we create a new chat application, register the `ConsoleServer` and a very simple middleware, that just echoes the user input. ChatAlly is fully typed, so you get full support from your code editor. See the guide [Writing Middleware](/guides/middleware) for details on how to write your own middleware.
+Here we create a new chat application, register the `ConsoleServer` and implement a very simple middleware, that just echoes the user input.
+
+ChatAlly is fully typed, so you can get full support from your code editor (you might need to setup a tsconfig.json file). See the guide [Writing Middleware](/guides/middleware) for details on how to write your own middleware.
 
 You can now start the application by running
 
@@ -71,14 +71,12 @@ app //
   .listen();
 ```
 
-The function `trainNlp` creates a trained NLP module and expects a training corpus at `corpus.json`. For this example you can [download a corpus.json](https://raw.githubusercontent.com/axa-group/nlp.js/master/examples/04-qna-web/corpus.json) from nlp.js' Github. We integrate nlp.js' logging with ChatAlly's by passing a logger from the application.
+The function `trainNlp` creates a trained NLP module and expects a training corpus at `corpus.json`. For this example you can [download a corpus.json](https://raw.githubusercontent.com/axa-group/nlp.js/master/examples/04-qna-web/corpus.json) from nlp.js' Github. We integrate nlp.js' logging with ChatAlly's by passing a logger from the application to nlp.js.
 
-The function `nlpjsMiddleware` wraps the nlp.js `process` method in a ChatAlly middleware function.
+The function `nlpjsMiddleware` wraps the nlp.js `Nlp.process(...)` method in a ChatAlly middleware function.
 
 Now it should be a bit more fun talking to your chatbot.
 
-## Passing data
+## Where to go next
 
-## Error handling
-
-## Logging
+You could now improve your application and change the server to one from the **Servers** section in the sidebar. You could add more or different middleware, explore the **Middleware** section in the sidebar. [Deploy your application](/guides/deployment), or start writing your own middleware to add any missing piece...

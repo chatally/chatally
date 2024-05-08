@@ -28,5 +28,5 @@
     "target": "ES2022",
     "types": ["vitest/globals"]
   },
-  "exclude": ["**/dist"]
+  "exclude": ["**/dist", "**/node_modules"]
 }

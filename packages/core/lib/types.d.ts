@@ -10,11 +10,11 @@ export type Middleware<D> =
   | ((params: Context<D>) => Promise<void | any>);
 
 export interface Context<D> {
-  readonly next: NextFn;
   readonly req: Request;
   readonly res: Response;
-  readonly data: D & Record<string, unknown>;
+  readonly next: NextFn;
   readonly log: Logger;
+  readonly data: D & Record<string, unknown>;
 }
 
 export type ErrorContext<D> = Omit<Context<D>, "next">;
