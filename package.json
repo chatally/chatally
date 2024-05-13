@@ -26,6 +26,7 @@
     "changeset:version": "changeset version",
     "clean": "turbo run clean --no-daemon",
     "dev": "turbo run dev --parallel --no-daemon",
+    "docs": "npm run -w @apps/docs dev",
     "format": "prettier --write \"**/*.{d\\.ts,[c]js,md}\"",
     "lint": "turbo run lint --no-daemon",
     "prepare:release": "npm run clean && npm run release:build && npm run release:check",

@@ -1,61 +1,73 @@
 ---
 title: Chatbots made easy
-description: Your toolbox for self-hosted chat services.
+description: Your toolbox for self-hosted chat services
 template: splash
 hero:
   tagline: ChatAlly | Your toolbox for self-hosted chat services
   image:
     file: ../../assets/green-bot.png
   actions:
-    - text: Getting started
+    - text: Get started
       link: /guides/
       icon: rocket
       variant: primary
-    - text: Read our blog
+    - text: Read the blog
       link: /blog
       icon: seti:notebook
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-ChatAlly empowers small organizations and communities to deploy their own chatbots affordably and GDPR-compliant. While there may seem to be open-source or free platforms at first glance, the quotas of free offerings are severely limited, and open-source typically only refers to the Software Development Kit (SDK). Data control usually lies with the platform providers.
-
-While there are FOSS alternatives such as frameworks and libraries for chatbots, they are complex to set up and do not support seamless integration with popular messenger clients. With ChatAlly, our aim is to bring these components together into a plug-and-play solution that can be easily self-hosted.
-
-## What we provide
-
-ChatAlly is supposed to work a bit like Lego blocks.
+ChatAlly is a [collection of modules](https://www.npmjs.com/search?q=%40chatally) that help you build your own self-hosted chatbots. If you know, how to build websites you won't have much trouble to build chatbots with ChatAlly. It is implemented in JavaScript, so you do not have to learn another language when already learning a new technology. But we also support integrating solutions written in Python or other languages.
 
 <CardGrid stagger>
-  <Card title="The base plate" icon="base">
-    The ChatAlly platform is like the base plate where you start to assemble
-    your chatbot from the different bricks. It also defines the shape of the
-    nubs (interfaces) that the bricks have to implement to fit into the system.
+  <Card title="Integration" icon="integration">
+    ChatAlly is all about integration: Use your machine learning framework of
+    choice to create a natural chat experience, e.g. Huggingface's
+    [transformers.js](https://huggingface.co/docs/transformers.js/en/index),
+    [TensorFlow.js](https://www.tensorflow.org/js) or other more dedicated chat
+    frameworks like
+    [nlp.js](https://github.com/axa-group/nlp.js?tab=readme-ov-file#nlpjs).
   </Card>
-  <Card title="The bricks" icon="brick">
-    The ChatAlly module collection is a collection of bricks that you need to
-    build a chatbot, e.g. for NLU (natural language understanding), STT (speech
-    to text), etc. We will not implement everything ourselves, but rather wrap
-    well established solutions to integrate well with the platform.
+  <Card title="Documentation" icon="docs">
+    ChatAlly gives you all the tools to [get started quickly](/guides) and
+    evolve your chatbot into your very own support character for your users. To
+    support you on your journey, documentation is essential, that is why it is
+    an explicit work package in our project and will account for at least half
+    of the effort. Check out our guides and [examples](/examples).
   </Card>
-  <Card title="The manual" icon="manual">
-    We know, that documentation is essential, that is why it is an explicit work
-    package in our project and will acoount for at least half of the effort.
+  <Card title="Servers" icon="server">
+    Connecting your chatbot to the channels that your users use is often a
+    challenging task in the beginning, because of the proprietary protocols
+    being used. That's why we offer reference implementation of
+    [servers](/reference/servers), talking to your WhatsApp, Signal or web
+    channels.
   </Card>
-  <Card title="Examples" icon="example">
-    For most people, also for us, it is easiest to understand concepts from
-    examples. They also provide a good starting point for your own chatbot. That
-    is, why we will provide a set of easy to deploy and understand examples.
+  <Card title="Middleware" icon="middleware">
+    Easily integrate all kinds of [middleware](/reference/middleware) to create
+    a rich user experience. Natural language processing is only one part, add a
+    consent manager, log training data from real chats, integrate your knowledge
+    base or speech features. If you can't find, what you need, [write your own
+    middleware](/guides/middleware) easily.
   </Card>
-  <Card title="A community" icon="community">
-    Hopefully, these efforts will carry fruit and we can find an interested
-    community that helps us and each other to improve the platform and the
-    chatbots. We will provide a forum on Discord to facilitate this.
+  <Card title="Community" icon="community">
+    Share your own middlware with others, get help from experienced users, share
+    ideas for new features or fix a bug. Checkout our [Github
+    project](https://github.com/orgs/chatally/projects/1/views/3) or join our
+    Discord server (soon to come).
   </Card>
 </CardGrid>
 
-## Where we come from
+## Who is behind ChatAlly
 
-The non-profit organization [dooiy](https://dooiy.org) provides step-by-step instructions for _good hacks, that make life easier_. Their focus audience are users in underserved communities. In this context, for a few reasons, we were looking for an easy way to distribute these instructions via WhatsApp. Only to find out, that this becomes very expensive or complicated, if you want to do it right and according to European data protection laws. Because of lack of money, we chose the difficult route and implemented our own solution that allows us, to (fairly) easily create chatbots from Markdown files. It is currently being prototyped in Mali with an instruction from [CoolVeg](https://www.coolveg.org/) for a [clay pot cooler](https://wa.me/491744899585/?text=%2Fcarl).
+For now it is only me, Christian, co-founder of the non-profit organization [dooiy](https://dooiy.org), that provides step-by-step instructions for _good hacks, that make life easier_. dooiy's focus audience are users in underserved communities, i.e. mainly people in slums or rural areas living in extreme poverty.
 
-We proposed to the [Prototype Fund](https://prototypefund.de) to enhance this solution and make it free open-source. This is how ChatAlly was born. We are currently in the process of developing the first version of ChatAlly and are looking for contributors and users to help us make it a success.
+In this context, for a few reasons, we were looking for an easy way to distribute these instructions via WhatsApp. Only to find out, that this becomes very expensive or complicated, if you want to do it right and according to European data protection laws. Because of lack of money, we chose the difficult route and implemented our own solution that allows us, to (fairly) easily create chatbots from Markdown files. It is currently being prototyped in Mali with an instruction from [CoolVeg](https://www.coolveg.org/) for a [clay pot cooler](https://wa.me/491744899585/?text=%2Fcarl).
+
+I proposed to the [Prototype Fund](https://prototypefund.de) to enhance this solution and make it free open-source. This is how ChatAlly was born. I am currently in the process of developing the first version of ChatAlly and am looking for contributors and users to help make it a success, so that it can empower small organizations and communities to deploy their own chatbots affordably and GDPR-compliant.
+
+While there may seem to be open-source or free platforms at first glance, the quotas of free offerings are severely limited, and open-source typically only refers to the Software Development Kit (SDK). Data control usually lies with the platform providers. True FOSS alternatives such as frameworks and libraries for chatbots are complex to set up and do not support seamless integration with popular messenger clients.
+
+With ChatAlly, our aim is to bring these components together into a plug-and-play solution that can be easily self-hosted.
+
+[Impressum](/impressum)

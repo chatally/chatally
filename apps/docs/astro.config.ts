@@ -49,16 +49,25 @@ export default defineConfig({
             },
             {
               label: "Middleware",
-              autogenerate: { directory: "reference/middleware" },
+              collapsed: true,
+              autogenerate: {
+                directory: "reference/middleware",
+                collapsed: true,
+              },
             },
             {
               label: "Servers",
-              autogenerate: { directory: "reference/servers" },
+              collapsed: true,
+              autogenerate: {
+                directory: "reference/servers",
+                collapsed: true,
+              },
             },
           ],
         },
         {
           label: "Examples",
+          collapsed: true,
           items: [
             { label: "Overview", link: "examples" },
             { label: "Console Chat", link: "examples/console-chat" },

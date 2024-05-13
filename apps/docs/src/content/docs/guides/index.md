@@ -8,7 +8,7 @@ A ChatAlly chat application is very similar: It starts off with a chat server th
 
 ## Installation
 
-To get started, with the simplest possible chat application, you need create an npm ESM project , install the core library, a chat server, e.g. the `ConsoleServer` and implement some middleware.
+To get started, with the simplest possible chat application, you need create an npm ESM project, install the core library, a chat server, e.g. the `ConsoleServer` and implement some middleware.
 
 ```sh
 npm init esnext -y
@@ -77,6 +77,8 @@ The function `nlpjsMiddleware` wraps the nlp.js `Nlp.process(...)` method in a C
 
 Now it should be a bit more fun talking to your chatbot.
 
-## Where to go next
+## What next 👉
 
-You could now improve your application and change the server to one from the **Servers** section in the sidebar. You could add more or different middleware, explore the **Middleware** section in the sidebar. [Deploy your application](/guides/deployment), or start writing your own middleware to add any missing piece...
+You could now improve your application and change the server to one from the [servers](/reference/servers) section in the sidebar. You could add more or different middleware, explore the [middleware](/reference/middleware) section in the sidebar. [Deploy your application](/guides/deployment), or start writing your own middleware to add any missing piece.
+
+If you first want to learn more about the core concepts, check out the [reference documentation](/reference/core).
