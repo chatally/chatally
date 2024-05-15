@@ -3,7 +3,16 @@
   "version": "0.0.3",
   "description": "ChatAlly nlp.js middleware",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "chat",
+    "intent recognition",
+    "middleware",
+    "natural language processing",
+    "nlp.js",
+    "nlp",
+    "nlu",
+    "wrapper"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -23,6 +32,6 @@
     "@nlpjs/nlp": "^4.27.0"
   },
   "devDependencies": {
-    "@chatally/console-server": "*"
+    "@chatally/console": "*"
   }
 }

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@chatally/core": "*",
-    "@chatally/console-server": "*",
+    "@chatally/console": "*",
     "@chatally/nlpjs": "*"
   },
   "devDependencies": {}

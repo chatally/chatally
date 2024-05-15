@@ -3,7 +3,13 @@
   "version": "0.0.3",
   "description": "ChatAlly Console Server",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "chat",
+    "console",
+    "prompt",
+    "readline",
+    "server"
+  ],
   "type": "module",
   "exports": {
     ".": {

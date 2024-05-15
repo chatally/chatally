@@ -3,7 +3,14 @@
   "version": "0.0.4",
   "description": "ChatAlly Core Modules",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "app",
+    "application",
+    "chat",
+    "chatbot",
+    "framework",
+    "middleware"
+  ],
   "type": "module",
   "exports": {
     ".": {

@@ -6,7 +6,7 @@ Simple logger facade that can be used in libraries to use any logging framework 
 
 The facade can be easily implemented with popular frameworks like [Pino](https://github.com/pinojs/pino), [Winston](https://github.com/winstonjs/winston) or [log4js](https://log4js-node.github.io/log4js-node/).
 
-The main intrface of the facade is `Logger`, it supports typical log methods (debug, info, warn, error), logging of messages, format strings and data objects including errors, and creating named child loggers.
+The main interface of the facade is `Logger`, it supports typical log methods (debug, info, warn, error), logging of messages, format strings and data objects including errors, and creating named child loggers.
 
 ## Getting started
 

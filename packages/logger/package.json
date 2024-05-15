@@ -3,7 +3,16 @@
   "version": "0.0.4",
   "description": "ChatAlly Logger Facade",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "chat",
+    "facade",
+    "log",
+    "log4js",
+    "logger",
+    "logging",
+    "pino",
+    "winston"
+  ],
   "type": "module",
   "exports": {
     ".": {
