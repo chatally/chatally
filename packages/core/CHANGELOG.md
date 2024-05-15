@@ -1,5 +1,13 @@
 # @chatally/core
 
+## 0.0.4
+
+### Patch Changes
+
+- 1ca4df5: Updated types and documentation
+- Updated dependencies [1ca4df5]
+  - @chatally/logger@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
