@@ -5,7 +5,7 @@ import { Request } from "./request.js";
 import { Response } from "./response.js";
 
 /**
- * @type {import("./types.d.ts").Middleware<{}>}
+ * @type {import("./middleware.js").Middleware<{}>}
  */
 const echo = ({ req, res }) => {
   if (res.isWritable && req.message.type === "text") {
@@ -24,10 +24,10 @@ function messages(res) {
 }
 
 /**
- * @param {import("packages/logger/lib/types.js").LoggerOptions | undefined} options
+ * @param {import("@chatally/logger").LoggerOptions | undefined} options
  */
 function getLogger(options) {
-  return new BaseLogger(options);
+  return BaseLogger.create(options);
 }
 
 describe("Application", function () {

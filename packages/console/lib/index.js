@@ -23,6 +23,27 @@ function color(text, color) {
  * @implements {Server}
  */
 export class ConsoleServer {
+  /** @type {import("@chatally/core").Dispatch} */
+  dispatch;
+
+  /**
+   * Create a console server that reads input from the console, dispatches it
+   * to a chat application and outputs responses on the console.
+   *
+   * You can configure the `name`, `prompt`, `greeting`, `goodBye` and the
+   * `stopToken` simply by setting these properties. There are also some colors
+   * you can configure: `nameColor`, `promptColor` and `responseColor`.
+   *
+   * @param {import("@chatally/core").Dispatch} [dispatch]
+   */
+  constructor(
+    dispatch = async (req, res) => {
+      res.end(`You said:
+    > ${req.text}`);
+    }
+  ) {
+    this.dispatch = dispatch;
+  }
   /**
    * The name displayed before each message from your bot.
    */
@@ -76,17 +97,6 @@ Waiting for your messages...`;
    */
   goodBye = `Good bye.`;
 
-  /** @type {import("@chatally/core").Dispatch} */
-  #dispatch = async (req, res) => {
-    res.end(`You said:
-    > ${req.text}`);
-  };
-
-  /** @param {import("@chatally/core").Dispatch} dispatch */
-  set dispatch(dispatch) {
-    this.#dispatch = dispatch;
-  }
-
   listen() {
     this.#printGreeting();
     this._interface = readline(process.stdin);
@@ -97,13 +107,13 @@ Waiting for your messages...`;
   }
 
   #printGreeting() {
-    // TODO: Can this be done on arbitrary streams?
-    process.stdout.write(" ");
-    console.clear();
-    if (this.greeting) {
-      process.stdout.write(`${this.greeting}\n\n`);
-    }
-    this.#printPrompt();
+    process.nextTick(() => {
+      console.clear();
+      if (this.greeting) {
+        process.stdout.write(`${this.greeting}\n\n`);
+      }
+      this.#printPrompt();
+    });
   }
 
   /**
@@ -115,7 +125,7 @@ Waiting for your messages...`;
     }
     const req = new Request(line);
     const res = new Response();
-    await this.#dispatch(req, res);
+    await this.dispatch(req, res);
     for (let text of res.text) {
       this.#printName();
       process.stdout.write(`${color(text, this.responseColor)}\n`);

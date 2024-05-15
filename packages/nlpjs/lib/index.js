@@ -8,7 +8,7 @@ import { existsSync } from "node:fs";
  */
 
 /**
- * Create a trained nlp.js NLP (Natural Language Processing) module
+ * Create a trained nlp.js NLP (Natural Language Processing) module.
  *
  * For better integration you should pass it a logger from your ChatAlly app as
  * first parameter.
@@ -99,9 +99,9 @@ function isLogger(obj) {
 export function nlpjsMiddleware(nlp, options) {
   const { name = "nlp.js", end = false } = options || {};
   const write = end //
-    ? // @ts-ignore
+    ? // @ts-expect-error No typing required
       (res, msg) => res.end(msg)
-    : // @ts-ignore
+    : // @ts-expect-error No typing required
       (res, msg) => res.write(msg);
 
   const obj = {

@@ -1,6 +1,5 @@
 {
   "name": "chatally-monorepo",
-  "version": "0.0.1",
   "description": "Your toolbox for self-hosted chat services",
   "author": "info@chatally.org",
   "private": true,
@@ -38,15 +37,18 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@typescript-eslint/eslint-plugin": "^7.6.0",
-    "@typescript-eslint/parser": "^7.6.0",
+    "@types/eslint": "^8.56.10",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-config-turbo": "^1.13.3",
     "eslint-plugin-only-warn": "^1.1.0",
     "prettier": "^3.2.5",
     "typescript": "^5.4.4",
-    "vitest": "^1.5.0"
+    "vitest": "^1.6.0"
   },
   "dependencies": {
+    "eslint": "^8.57.0",
     "turbo": "^1.13.3"
   }
 }

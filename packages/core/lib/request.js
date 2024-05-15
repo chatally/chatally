@@ -1,20 +1,41 @@
-import { randomId } from "@internal/utils";
-import { getMessageText } from "./messages.js";
+import { nanoid } from "nanoid";
+import { text } from "./text.js";
 
 /**
- * Request with incoming message
+ * Chat request with incoming message
+ *
+ * @typedef IRequest
+ * @property {Readonly<IncomingMessage>} message Incoming message
+ * @property {Readonly<string>} text Textual content of incoming message
+ */
+
+/**
+ * Incoming message
+ *
+ * @typedef {(Incoming & import("./messages.d.ts").Message)} IncomingMessage
+ *
+ * @typedef {object} Incoming
+ * @property {number} IncomingMessage.timestamp Arrival time of message
+ * @property {string} IncomingMessage.id Id of message
+ * @property {string} IncomingMessage.from Id of sender
+ * @property {string} [IncomingMessage.replyTo] Id of message that this message
+ *    is a reply to
+ */
+
+/**
+ * Chat request with incoming message
  *
  * @class
- * @typedef {import("./types.d.ts").Request} IRequest
  * @implements {IRequest}
  */
 export class Request {
-  /** @type {import("./types.d.ts").IncomingMessage} */
+  /** @type {IncomingMessage} */
   #message;
 
   /**
    *
-   * @param {import("./types.d.ts").IncomingMessage | String} message
+   * @param {IncomingMessage | string} message Fully typed message or a string
+   *    that can optionally contain a "sender:" before a colon
    */
   constructor(message) {
     if (typeof message === "string") {
@@ -28,7 +49,7 @@ export class Request {
         text,
         timestamp: Date.now(),
         from,
-        id: randomId(),
+        id: nanoid(),
       };
     }
     this.#message = message;
@@ -39,6 +60,6 @@ export class Request {
   }
 
   get text() {
-    return getMessageText(this.message);
+    return text(this.message);
   }
 }

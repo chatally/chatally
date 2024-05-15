@@ -8,18 +8,16 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./lib/types.d.ts",
+        "default": "./lib/index.js"
       }
     }
   },
   "scripts": {
-    "build": "tsup",
+    "lint": "eslint .",
     "repl": "nodemon repl.js",
     "test": "vitest"
   },
   "dependencies": {},
-  "devDependencies": {
-    "tsup": "^8.0.2"
-  }
+  "devDependencies": {}
 }

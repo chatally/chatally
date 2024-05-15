@@ -1,8 +1,8 @@
 /**
- * @param {import("./types.js").MessageContent} msg
+ * @param {import("./messages.js").Message} msg
  * @returns {string}
  */
-export function getMessageText(msg) {
+export function text(msg) {
   switch (msg.type) {
     case "text":
       return msg.text;

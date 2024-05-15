@@ -18,8 +18,8 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "paths": {
-      "@internal/*": ["internal/*/lib/index.js"],
-      "@chatally/*": ["packages/*/lib/index.js"]
+      "@internal/*": ["internal/*/lib/types.d.ts"],
+      "@chatally/*": ["packages/*/lib/types.d.ts"]
     },
     "preserveWatchOutput": true,
     "resolveJsonModule": true,

@@ -1,10 +1,13 @@
 import { BaseLogger, NoLogger } from "@chatally/logger";
-import { hasProperty } from "@internal/utils";
 import { EventEmitter } from "node:events";
+import { isServer } from "./server.js";
 
 /**
+ * ChatAlly Application that dispatches incoming requests from all registered
+ * servers to all registered middleware.
+ *
  * @template {Object} D
- * @extends {EventEmitter<{error: [Error & Record<string, unknown>, import("./types.d.ts").ErrorContext<D>]}>}
+ * @extends {EventEmitter<{error: [Error & Record<string, unknown>, Omit<import("./middleware.d.ts").Context<D>, "next">]}>}
  */
 export class Application extends EventEmitter {
   /**
@@ -14,19 +17,20 @@ export class Application extends EventEmitter {
 
   /**
    * Middlewares in order of registration
-   * @type {import("./types.d.ts").Middleware<D>[]}
+   * @type {import("./middleware.d.ts").Middleware<D>[]}
    */
   #middlewares = [];
 
   /**
    * Servers
-   * @type {import("./types.d.ts").Server[]}
+   * @type {import("./server.js").Server[]}
    */
   #servers = [];
 
   /**
    * Child loggers, one for each middleware
-   * @type { import("@chatally/logger").Logger[] } */
+   * @type {import("@chatally/logger").Logger[]}
+   */
   #middlewareLogs = [];
 
   /**
@@ -36,11 +40,17 @@ export class Application extends EventEmitter {
   #data;
 
   /**
-   * @constructor
-   * @param {Object} [options={}]
+   * Create an application that dispatches incoming chat requests from all
+   * registered servers to all registered middleware.
+   *
+   * @param {Object} [options={}] Optional options
    * @param {D} [options.data]
+   *    Arbitrary data to put into the context for each request
    * @param {import("@chatally/logger").Logger | boolean} [options.log]
+   *    Your logger or flag if you want to use a default logger,
+   *    default is the BaseLogger
    * @param {boolean} [options.dev]
+   *    Run in development mode
    */
   constructor(options = {}) {
     super();
@@ -67,7 +77,7 @@ export class Application extends EventEmitter {
    * the name is used to identify child loggers. Optionally, you can provide a
    * name for the middleware.
    *
-   * @param {import("./types.d.ts").Middleware<D> | import("./types.d.ts").Server} m
+   * @param {import("./middleware.d.ts").Middleware<D> | import("./server.js").Server} m
    * @param {String} [name]
    */
   use(m, name) {
@@ -108,7 +118,7 @@ export class Application extends EventEmitter {
    * but a server could send responses earlier, by registering the
    * `on("finish")` event on the response.
    *
-   * @type {import("./types.d.ts").Dispatch}
+   * @type {import("./server.js").Dispatch}
    */
   get dispatch() {
     return async (req, res) => {
@@ -128,8 +138,8 @@ export class Application extends EventEmitter {
    * The order is the order of registration. Middleware exceptions are
    * dispatched to the context. This method throws only, if the context throws.
    *
-   * @param {import("./types.d.ts").Request} req
-   * @param {import("./types.d.ts").Response} res
+   * @param {import("./request.js").IRequest} req
+   * @param {import("./response.js").IResponse} res
    * @param {D & Record<string, unknown>} data
    * @param {import("@chatally/logger").Logger} log
    */
@@ -159,12 +169,12 @@ export class Application extends EventEmitter {
 
   /**
    * @param {unknown} err
-   * @param {import("./types.d.ts").ErrorContext<D>} context
+   * @param {Omit<import("./middleware.d.ts").Context<D>, "next">} context
    */
   #handleError(err, context) {
     try {
       if (err instanceof Error) {
-        // @ts-ignore
+        // @ts-expect-error For better DX, we pass down an error that behaves like "any"
         if (!this.emit("error", err, context)) {
           context.log.error(err);
         }
@@ -179,7 +189,7 @@ export class Application extends EventEmitter {
 
   listen() {
     for (let server of this.#servers) {
-      new Promise((res, rej) => {
+      new Promise((res) => {
         server.listen();
         res(undefined);
       }).catch((reason) => this.#log.error(reason));
@@ -190,25 +200,15 @@ export class Application extends EventEmitter {
 /**
  * @param {boolean | import("@chatally/logger").Logger} [log]
  * @param {boolean} [dev]
+ * @returns {import("@chatally/logger").Logger}
  */
 function initLog(log, dev) {
   if (log === true) {
     const level =
+      // eslint-disable-next-line turbo/no-undeclared-env-vars
       dev || process.env.NODE_ENV === "development" ? "debug" : "info";
-    return new BaseLogger({ level, name: "@chatally/core" });
+    return BaseLogger.create({ level, name: "@chatally/core" });
   } else {
-    return log || new NoLogger();
+    return log || NoLogger.create();
   }
-}
-
-/**
- * @param {any} object
- * @returns {object is import("./types.d.ts").Server}
- */
-function isServer(object) {
-  if (!object) return false;
-  return (
-    hasProperty(object, "dispatch", { settable: true }) &&
-    typeof object.listen === "function"
-  );
 }
