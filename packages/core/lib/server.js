@@ -1,6 +1,6 @@
 /**
  * Dispatch function provided by ChatAlly application.
- * @typedef {(req: import("./request.js").IRequest, res: import("./response.js").IResponse) => Promise<void>} Dispatch
+ * @typedef {((req: import("./request.js").IRequest, res: import("./response.js").IResponse) => Promise<void>) | ((req: import("./request.js").IRequest, res: import("./response.js").IResponse) => void)} Dispatch
  */
 
 /**

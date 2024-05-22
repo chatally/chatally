@@ -8,5 +8,7 @@ export function text(msg) {
       return msg.text;
     case "image":
       return msg.image.caption || "<image>";
+    case "audio":
+      return msg.audio.transcript || "<audio>";
   }
 }

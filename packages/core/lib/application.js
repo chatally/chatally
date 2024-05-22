@@ -187,12 +187,17 @@ export class Application extends EventEmitter {
     }
   }
 
+  /**
+   * Start all registered servers in parallel.
+   */
   listen() {
     for (let server of this.#servers) {
+      // overcome blocking `listen()` calls
       new Promise((res) => {
         server.listen();
         res(undefined);
-      }).catch((reason) => this.#log.error(reason));
+        // TODO: Use this.#handleError instead
+      }).catch((err) => this.#log.error(err));
     }
   }
 }

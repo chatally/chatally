@@ -20,7 +20,9 @@ function req(text) {
 
 /** @param {Response} res */
 function messages(res) {
-  return res.messages.map((m) => (m.type === "text" ? m.text : m.image));
+  return res.messages.map((m) =>
+    m.type === "text" ? m.text : JSON.stringify(m)
+  );
 }
 
 /**
