@@ -1,5 +1,11 @@
 # @chatally/core
 
+## 0.0.5
+
+### Patch Changes
+
+- 877bb39: Added message type "audio"
+
 ## 0.0.4
 
 ### Patch Changes
