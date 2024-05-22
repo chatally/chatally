@@ -1,6 +1,6 @@
----
-title: WhatsApp Cloud
----
+# @chatally/whatsapp-cloud
+
+## WhatsApp Cloud Server
 
 WhatsApp Cloud is a ChatAlly server that integrates the WhatsApp endpoints
 [Webhooks](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks),

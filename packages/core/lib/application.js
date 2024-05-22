@@ -43,14 +43,16 @@ export class Application extends EventEmitter {
    * Create an application that dispatches incoming chat requests from all
    * registered servers to all registered middleware.
    *
-   * @param {Object} [options={}] Optional options
+   * @param {Object} [options={}]
    * @param {D} [options.data]
-   *    Arbitrary data to put into the context for each request
+   *    [Optional] Arbitrary data to put into the context for each request
+   *    [`default=undefined`]
    * @param {import("@chatally/logger").Logger | boolean} [options.log]
-   *    Your logger or flag if you want to use a default logger,
-   *    default is the BaseLogger
+   *    [Optional] Custom logger or flag if you want to use a default logger
+   *    [`default=new BaseLogger()`]
    * @param {boolean} [options.dev]
-   *    Run in development mode
+   *    [Optional] Flag to run application in development mode
+   *    [`default=false`]
    */
   constructor(options = {}) {
     super();
@@ -68,7 +70,7 @@ export class Application extends EventEmitter {
   }
 
   /**
-   * Register a middleware function
+   * Register a middleware function or a server
    *
    * Middlewares are executed in order of registration, but can `await next()`
    * to wait for the following middlewares to finish.
@@ -84,6 +86,9 @@ export class Application extends EventEmitter {
     if (!name) name = m.name;
     if (isServer(m)) {
       m.dispatch = this.dispatch;
+      if (m.log === undefined || m.log === true) {
+        m.log = this.#log.child({ name: m.name });
+      }
       this.#servers.push(m);
       this.#log.info("Registered server '%s'", name);
     } else if (typeof m === "function") {

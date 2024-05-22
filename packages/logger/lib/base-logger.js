@@ -45,8 +45,8 @@ export class BaseLogger {
    */
 
   /**
-   * Protected constructor for subclasses, use `BaseLogger.new()` instead,
-   * it gives youz better typing.
+   * Protected constructor for subclasses, use `BaseLogger.create()` instead,
+   * it gives you better typing.
    *
    * @constructor
    * @protected
