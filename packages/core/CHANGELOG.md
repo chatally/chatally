@@ -1,5 +1,11 @@
 # @chatally/core
 
+## 0.0.6
+
+### Patch Changes
+
+- cd44088: WhatsApp Cloud server implementation
+
 ## 0.0.5
 
 ### Patch Changes
