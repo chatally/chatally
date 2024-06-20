@@ -10,7 +10,9 @@ Detailed documentation and descriptions of examples and much more can be found a
 
 All code for the documentation website can be found in [app/docs](https://github.com/chatally/chatally/tree/main/apps/docs).
 
-The different modules (npm packages) can be found in [packages](https://github.com/chatally/chatally/tree/main/packages).
+The source for the different modules (npm packages) can be found in [packages](https://github.com/chatally/chatally/tree/main/packages).
+
+Installable packages are deployed to [npmjs.com](https://www.npmjs.com/search?q=%40chatally).
 
 ## Contribute
 

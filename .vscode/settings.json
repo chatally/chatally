@@ -1,7 +1,7 @@
 {
-  "js/ts.implicitProjectConfig.checkJs": true,
   "files.exclude": {
     "**/.turbo": true
   },
+  "js/ts.implicitProjectConfig.checkJs": true,
   "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

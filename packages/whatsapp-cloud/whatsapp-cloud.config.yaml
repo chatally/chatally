@@ -1,0 +1,33 @@
+# name: WhatsAppCloud
+# immediate: false
+webhooks:
+  # [Optional] Port to listen on [`default=3000`]
+  # port: 3000
+  # [Optional] directory to static assets to be served at assetsPath
+  # assetsDir: ./assets
+  # [Optional] file path to static assets, has no effect if assetsDir is not set
+  # assetsPath: "/assets"
+  # Look these up in your WhatsApp Business settings
+  # Token to verify webhooks registration
+  verifyToken: <YOUR VERIFY TOKEN>
+  # Secret to verify payload signatures
+  secret: <YOUR SECRET>
+graphApi:
+  # [Optional] Base URL for Meta GraphAPI
+  # baseUrl: "graph.facebook.com"
+  # [Optional] Port at which to reach Meta GraphAPI
+  # basePort: undefined
+  # [Optional] Version of the Meta GraphAPI
+  # version: 20
+  # Look these up in your WhatsApp Business settings
+  # the phone number id of the WhatsApp business account
+  phoneNumberId: <YOUR PHONE NUMBER>
+  # Access token to use as authorization bearer.
+  accessToken: <YOUR ACCESS TOKEN>
+media:
+  # [Optional] Path to a directory where to store downloaded media assets
+  # [default="media"]
+  downloadDir: ./wa-media
+  # [Optional] Path to the database to store media ids
+  # [default="media.db"]
+  dbPath: ./wa-media/media-ids.db

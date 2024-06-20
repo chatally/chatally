@@ -12,6 +12,10 @@
  * @typedef {object} Server
  * @property {string} name The server's name
  * @property {Dispatch} dispatch Registers the application as dispatcher
+ * @property {import("@chatally/logger").Logger | boolean | undefined} log
+ *    The logger to use during runtime. Set this explicitly to false or
+ *    NoLogger, if the registered server shall not log, otherwise the
+ *    application will register a child logger
  * @property {() => void} listen Starts the server
  */
 
