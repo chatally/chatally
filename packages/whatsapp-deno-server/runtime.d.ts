@@ -68,14 +68,8 @@ interface WriteFileOptions {
 
 type CryptoSign = (data: string, secret: string) => string;
 
-type HttpFetch = (
-  url: string,
-  request?: RequestInit,
-) => Promise<Response>;
+type HttpFetch = (url: string, request?: RequestInit) => Promise<Response>;
 
-type HttpServe = (
-  port: number,
-  handler: HttpHandler,
-) => Promise<void>;
+type HttpServe = (port: number, handler: HttpHandler) => Promise<void>;
 
 type HttpHandler = (request: Request) => Response | Promise<Response>;

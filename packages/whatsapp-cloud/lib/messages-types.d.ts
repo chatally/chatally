@@ -1,18 +1,18 @@
 export type Message = {
   id?: string;
 } & (
-    | AudioMessage
-    | ContactsMessage
-    | DocumentMessage
-    | ImageMessage
-    | InteractiveMessage
-    | LocationMessage
-    | ReactionMessage
-    | StickerMessage
-    | TemplateMessage
-    | TextMessage
-    | VideoMessage
-  );
+  | AudioMessage
+  | ContactsMessage
+  | DocumentMessage
+  | ImageMessage
+  | InteractiveMessage
+  | LocationMessage
+  | ReactionMessage
+  | StickerMessage
+  | TemplateMessage
+  | TextMessage
+  | VideoMessage
+);
 
 /**
  * Response from the Graph API when sending a message.
