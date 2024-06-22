@@ -20,7 +20,7 @@ import { Configuration, Nlp } from "@nlpjs/basic";
  */
 export declare function trainNlp(
   logger?: Logger,
-  configuration?: Configuration | string[],
+  configuration?: Configuration | string[]
 ): Promise<Nlp>;
 
 /**
@@ -38,7 +38,7 @@ export declare function trainNlp(
  * @returns The trained NLP module
  */
 export declare function trainNlp(
-  configuration?: Configuration | string[],
+  configuration?: Configuration | string[]
 ): Promise<Nlp>;
 
 /**
@@ -51,7 +51,10 @@ export declare function trainNlp(
  * @param options Options
  * @returns a ChatAlly middleware function
  */
-export function nlpjsMiddleware(nlp: Nlp, options?: Options): Middleware<{}>;
+export function nlpjsMiddleware(
+  nlp: Nlp,
+  options?: Options
+): Middleware<unknown>;
 
 interface Options {
   /**

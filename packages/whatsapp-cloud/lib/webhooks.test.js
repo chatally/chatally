@@ -2,7 +2,7 @@ import supertest from "supertest";
 import { Webhooks } from "./webhooks.js";
 
 class Webhooks_ extends Webhooks {
-  /** @param {import("./webhooks.js").WebhooksConfig} [config] */
+  /** @param {import("./index.d.ts").WebhooksConfig} [config] */
   constructor(config) {
     super(config);
     this.test = supertest(this._server);

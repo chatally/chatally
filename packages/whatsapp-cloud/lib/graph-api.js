@@ -25,11 +25,11 @@ export class GraphApi {
 
   /**
    * @protected
-   * @type {import("./index.js").RequestFn}
+   * @type {import("./index.d.ts").RequestFn}
    */
   _request;
 
-  /** @param {import("./index.js").GraphApiConfig} config */
+  /** @param {import("./index.d.ts").GraphApiConfig} config */
   constructor(config) {
     const {
       basePort,
@@ -63,11 +63,12 @@ export class GraphApi {
   }
 
   /**
-   * @param {string|FormData|Record<string,unknown>} body
    * @param {string} endpoint
+   * @param {string|FormData|Record<string,unknown>} body
+   * @param {Record<string, string>} [headers]
    */
-  async post(body, endpoint) {
-    const headers = this.#headers();
+  async post(endpoint, body, headers) {
+    headers = this.#headers(headers);
     if (typeof body === "string") {
       headers["Content-Type"] = "text/plain";
     } else if (body instanceof FormData) {
@@ -88,10 +89,8 @@ export class GraphApi {
    * @param {Record<string, string>} [headers]
    */
   async get(endpoint, headers) {
-    return await this.#request(
-      { method: "GET", headers: this.#headers(headers) },
-      endpoint
-    );
+    headers = this.#headers(headers);
+    return await this.#request({ method: "GET", headers }, endpoint);
   }
 
   /**
@@ -99,16 +98,14 @@ export class GraphApi {
    * @param {Record<string, string>} [headers]
    */
   async delete(endpoint, headers) {
-    return await this.#request(
-      { method: "DELETE", headers: this.#headers(headers) },
-      endpoint
-    );
+    headers = this.#headers(headers);
+    return await this.#request({ method: "DELETE", headers }, endpoint);
   }
 
   /**
    * @param {import("./index.d.ts").RequestInit} request
    * @param {string} endpoint
-   * @returns {Promise<import("./index.js").GraphApiResult>}
+   * @returns {Promise<import("./index.d.ts").GraphApiResult>}
    */
   async #request(request, endpoint) {
     if (!endpoint || endpoint.length === 0) {
@@ -130,7 +127,7 @@ export class GraphApi {
     const contentType =
       /** @type {string} */ (response.headers["content-type"]) || "unknown";
 
-    /** @type {import("./index.js").GraphApiResult} */
+    /** @type {import("./index.d.ts").GraphApiResult} */
     const result = {
       contentType,
       text: undefined,

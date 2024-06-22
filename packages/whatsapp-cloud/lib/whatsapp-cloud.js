@@ -107,7 +107,7 @@ export class WhatsAppCloud {
     this.#messages.waitForDelivered(this.#webhooks);
   }
 
-  /** @param {import("./index.js").WebhooksNotification} n */
+  /** @param {import("./index.d.ts").WebhooksNotification} n */
   async #handleNotification({ messages }) {
     if (!this.#dispatch) {
       throw new Error("Set this.dispatch before listening to notifications");
@@ -216,7 +216,7 @@ function readConfigFromEnv(prefix) {
     if (name) config.name = name;
     config.immediate = envBoolean(`${prefix}IMMEDIATE`);
 
-    /** @type {import("./index.js").WebhooksConfig} */
+    /** @type {import("./index.d.ts").WebhooksConfig} */
     const webhooks = {};
     webhooks.port = envNumber(`${prefix}WEBHOOKS_PORT`);
     webhooks.verifyToken = process.env[`${prefix}WEBHOOKS_VERIFY_TOKEN`];
@@ -225,17 +225,17 @@ function readConfigFromEnv(prefix) {
     webhooks.assetsPath = process.env[`${prefix}WEBHOOKS_ASSETS_PATH`];
     config.webhooks = webhooks;
 
-    /** @type {Partial<import("./index.js").GraphApiConfig>} */
+    /** @type {Partial<import("./index.d.ts").GraphApiConfig>} */
     const graphApi = {};
     graphApi.phoneNumberId = process.env[`${prefix}GRAPHAPI_PHONE_NUMBER_ID`];
     graphApi.accessToken = process.env[`${prefix}GRAPHAPI_ACCESS_TOKEN`];
     graphApi.baseUrl = process.env[`${prefix}GRAPHAPI_BASE_URL`];
     graphApi.basePort = envNumber(`${prefix}GRAPHAPI_BASE_PORT`);
     graphApi.version = envNumber(`${prefix}GRAPHAPI_VERSION`);
-    // @ts-ignore
+    // @ts-expect-error Partial configurations are ok here
     config.graphApi = graphApi;
 
-    /** @type {import("./index.js").MediaConfig} */
+    /** @type {import("./index.d.ts").MediaConfig} */
     const media = {};
     media.downloadDir = process.env[`${prefix}MEDIA_DOWNLOAD_DIR`];
     media.dbPath = process.env[`${prefix}MEDIA_DB_PATH`];

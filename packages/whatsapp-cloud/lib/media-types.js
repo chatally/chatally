@@ -135,7 +135,7 @@ const mediaTypes = {
  * @returns {string}
  */
 export function getSuffixFromMediaType(mediaType) {
-  // @ts-ignore
+  // @ts-expect-error We catch unknown media types
   return mediaTypes[mediaType]?.suffix || "unknown";
 }
 

@@ -39,6 +39,7 @@ export function getLevel(numeric) {
  * @returns {number} index of level; -1 ("silent") for unknown levels
  */
 export function getLevelIndex(level) {
-  // @ts-ignore
+  // @ts-expect-error Just make the level more error-proof for users not using
+  // Typescript
   return logMethodNames.indexOf(level.toLowerCase());
 }

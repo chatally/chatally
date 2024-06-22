@@ -16,3 +16,6 @@ typings/
 # Playgrounds
 /examples/playground
 repl.js
+
+# Environment variables
+.env*

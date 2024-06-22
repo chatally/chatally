@@ -1,10 +1,11 @@
 import { Dispatch, OutgoingMessage, Server } from "@chatally/core";
 import { Logger } from "@chatally/logger";
+import { Express } from "express-serve-static-core";
 import { EventEmitter } from "node:events";
-import { Error, IncomingMessage, Status } from "./webhooks-types.js";
 import { Message } from "./messages-types.js";
+import { Error, IncomingMessage, Status } from "./webhooks-types.js";
 
-export * from "./messages-types.js";
+export type * from "./messages-types.d.ts";
 
 /**
  * WhatsApp Cloud Server Class
@@ -63,7 +64,7 @@ export declare class WhatsAppCloud implements Server {
    * **Media**
    * - https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media
    */
-  constructor(configObj: Partial<WhatsAppCloudConfig>);
+  constructor(configObj?: Partial<WhatsAppCloudConfig>);
 
   /**
    * The server's name.
@@ -209,7 +210,7 @@ export declare class Webhooks extends EventEmitter<WebhooksEvents> {
    * Access to the underlying express server for testing purposes or in derived
    * classes.
    */
-  protected _server: any;
+  protected _server: Express;
 
   /**
    * Create a WhatsApp Webhooks server.
@@ -235,7 +236,7 @@ type WebhooksEvents = {
   notification: WebhooksNotification[];
 };
 
-interface WebhooksNotification {
+export interface WebhooksNotification {
   messages: IncomingMessage[];
   statuses: Status[];
   errors: Error[];
@@ -285,18 +286,19 @@ export interface WebhooksConfig {
 export declare class GraphApi {
   constructor(config: GraphApiConfig);
   post(
+    endpoint: string,
     body: string | FormData | Record<string, unknown>,
-    endpoint: string
+    headers?: Record<string, string>
   ): Promise<GraphApiResult>;
 
   get(
     endpoint: string,
-    headers: Record<string, string>
+    headers?: Record<string, string>
   ): Promise<GraphApiResult>;
 
   delete(
     endpoint: string,
-    headers: Record<string, string>
+    headers?: Record<string, string>
   ): Promise<GraphApiResult>;
 }
 
@@ -316,35 +318,35 @@ export interface GraphApiConfig {
    *
    * [default="graph.facebook.com"]
    */
-  baseUrl: string;
+  baseUrl?: string;
 
   /**
    * [Optional] Port at which to reach Meta GraphAPI
    *
    * [default=undefined]
    */
-  basePort: number;
+  basePort?: number;
 
   /**
    * [Optional] Version of the Meta GraphAPI
    *
    * [default=20]
    */
-  version: number;
+  version?: number;
 
   /**
    * [Optional] Logger to use
    *
    * [default=undefined]
    */
-  log: Logger;
+  log?: Logger;
 
   /**
    * [Optional] Allows to override the internal HTTP request for testing
    *
    * [default=undici.request]
    */
-  _request: RequestFn;
+  _request?: RequestFn;
 }
 
 export interface GraphApiResult {

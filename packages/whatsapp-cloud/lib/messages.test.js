@@ -106,7 +106,6 @@ describe("messages", function () {
         messages: [],
         errors: [],
         statuses: [
-          // @ts-expect-error Incomplete status is ok
           { recipient_id: to, id: texts[0].id || "", status: "delivered" },
         ],
       });
