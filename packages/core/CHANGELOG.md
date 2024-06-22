@@ -1,5 +1,13 @@
 # @chatally/core
 
+## 0.0.8
+
+### Patch Changes
+
+- 6693266: Fixed some more typing issues
+- Updated dependencies [6693266]
+  - @chatally/logger@0.0.6
+
 ## 0.0.7
 
 ### Patch Changes

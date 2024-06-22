@@ -1,5 +1,11 @@
 # @chatally/logger
 
+## 0.0.6
+
+### Patch Changes
+
+- 6693266: Fixed some more typing issues
+
 ## 0.0.5
 
 ### Patch Changes

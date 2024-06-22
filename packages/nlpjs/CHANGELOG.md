@@ -1,5 +1,13 @@
 # @chatally/nlpjs
 
+## 0.0.5
+
+### Patch Changes
+
+- 6693266: Fixed some more typing issues
+- Updated dependencies [6693266]
+  - @chatally/core@0.0.8
+
 ## 0.0.4
 
 ### Patch Changes
