@@ -3,64 +3,15 @@ import crypto from "node:crypto";
 import { EventEmitter } from "node:events";
 import { HttpError } from "./errors.js";
 
-/**
- * @typedef WebhooksConfig
- * @property {import("@chatally/logger").Logger} [log]
- *    [Optional] Logger to use instead of console
- *    [`default=undefined`]
- * @property {number} [port=3000]
- *    [Optional] Port to listen on
- *    [`default=3000`]
- * @property {string|undefined} [verifyToken]
- *    [Optional] token to verify webhooks registration, if not provided
- *    webhooks cannot be registered with WhatsApp business account
- *    [`default=undefined`]
- * @property {string} [secret]
- *    [Optional] secret to verify payload signatures, if not provided thet
- *    payload is not verified
- *    [`default=undefined`]
- * @property {string} [assetsDir]
- *    [Optional] directory to static assets to be served at assetsPath
- *    [`default=undefined`]
- * @property {string} [assetsPath]
- *    [Optional] path to access static assets, has no effect if assetsDir is not
- *    set
- *    [`default="/assets"`]
- */
-
-/**
- * @typedef Notification
- * @property {import("./webhooks-types.d.ts").IncomingMessage[]} messages
- * @property {import("./webhooks-types.d.ts").Status[]} statuses
- * @property {import("./webhooks-types.d.ts").Error[]} errors
- */
-
-/**
- * @typedef {object} Events
- * @property {Notification[]} notification
- * @extends {EventEmitter<Events>}
- */
+/** @type {import("./index.d.ts").Webhooks} */
 export class Webhooks extends EventEmitter {
   /** @type {number} */
   #port;
 
-  /**
-   * @protected
-   * Access to the underlying express server for testing purposes or in derived
-   * classes
-   */
+  /** @protected */
   _server;
-  /**
-   * Create a WhatsApp Webhooks server.
-   *
-   * The server implements EventEmitter, you can register the event
-   * `notification`, it gives you notification with incoming messages,
-   * statuses, and errors.
-   *
-   * @see https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks
-   *
-   * @param {WebhooksConfig} [config]
-   */
+
+  /** @param {import("./index.js").WebhooksConfig} [config] */
   constructor(config = {}) {
     super();
     const { port, verifyToken, secret, log, assetsDir, assetsPath } = config;
@@ -87,10 +38,7 @@ export class Webhooks extends EventEmitter {
     }
   }
 
-  /**
-   * Start the server
-   * @param {number} [port] Optional port to listen on [`default=this.port=3000`]
-   */
+  /** @param {number} [port] */
   listen(port) {
     this._server.listen(port || this.#port);
   }
@@ -163,7 +111,7 @@ function verifySignature(req, secret) {
 /**
  * Parse the payload
  * @param {import("express").Request} req
- * @returns {Notification}
+ * @returns {import("./index.d.ts").WebhooksNotification}
  */
 function parse(req) {
   const body = req.body;

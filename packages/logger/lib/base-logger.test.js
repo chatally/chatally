@@ -1,12 +1,12 @@
-import { StringWritable, XError } from "@internal/utils";
+import { StringWritable, TestError } from "@internal/test-utils";
 import { BaseLogger } from "./base-logger.js";
 
-/** @param {import("./logger.d.ts").LoggerOptions | undefined} [options] */
+/** @param {import("./index.js").LoggerOptions | undefined} [options] */
 function getLogger(options) {
   const actual = new StringWritable();
-  const log = BaseLogger.create(options);
+  const log = new BaseLogger(options);
   log.out = actual;
-  log.timestamps = false;
+  log.timestamp = false;
   return { log, actual };
 }
 
@@ -80,7 +80,7 @@ describe("BaseLogger", function () {
 
   it("merges logger data and logged error", () => {
     const { log, actual } = getLogger({ data: { foo: "foo" } });
-    log.error(new XError("Boom", { test: "Test" }), "Expected");
+    log.error(new TestError("Boom", { test: "Test" }), "Expected");
 
     expect(actual.data).toBe(`ERROR: Expected
 {
@@ -103,7 +103,7 @@ describe("BaseLogger", function () {
 
   it("logs an error with properties", () => {
     const { log, actual } = getLogger();
-    log.error(new XError("Boom", { prop: "Prop" }));
+    log.error(new TestError("Boom", { prop: "Prop" }));
 
     expect(actual.data).toBe(`ERROR:
 {

@@ -1,11 +1,11 @@
 import { BaseLogger } from "@chatally/logger";
-import { StringWritable, XError } from "@internal/utils";
+import { StringWritable, TestError } from "@internal/test-utils";
 import { Application } from "./application.js";
 import { Request } from "./request.js";
 import { Response } from "./response.js";
 
 /**
- * @type {import("./middleware.js").Middleware<{}>}
+ * @type {import("./index.d.ts").Middleware<{}>}
  */
 const echo = ({ req, res }) => {
   if (res.isWritable && req.message.type === "text") {
@@ -29,7 +29,7 @@ function messages(res) {
  * @param {import("@chatally/logger").LoggerOptions | undefined} options
  */
 function getLogger(options) {
-  return BaseLogger.create(options);
+  return new BaseLogger(options);
 }
 
 describe("Application", function () {
@@ -115,7 +115,7 @@ describe("Application", function () {
         throw new Error("Bang");
       })
       .use(function throws() {
-        throw new XError("Boom", { expose: true });
+        throw new TestError("Boom", { expose: true });
       })
       .on("error", (err, { res }) => {
         if (err.expose) {
@@ -132,7 +132,7 @@ describe("Application", function () {
     const out = new StringWritable();
     const log = getLogger({ name: "root", level: "warn" });
     log.out = out;
-    log.timestamps = false;
+    log.timestamp = false;
 
     new Application({ log })
       // unnamed middleware
@@ -144,7 +144,7 @@ describe("Application", function () {
     const out = new StringWritable();
     const log = getLogger({ level: "warn" });
     log.out = out;
-    log.timestamps = false;
+    log.timestamp = false;
 
     const app = new Application({ log }) //
       .use(function logs({ log }) {

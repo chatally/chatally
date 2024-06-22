@@ -1,26 +1,13 @@
 /**
- * Default implementation of Logger interface with all no-ops.
- *
- * @typedef {import("./logger.d.ts").Logger} Logger
- * @implements {Logger}
+ * @type {import("./index.d.ts").NoLogger}
  */
 export class NoLogger {
-  /**
-   * @private
-   */
-  constructor() {}
-  /**
-   * Create a no-op logger implementation, that does nothing.
-   *
-   * This logger causes no overhead, as it does nothing.
-   *
-   * @returns {import("./logger.d.ts").Logger}
-   */
-  static create() {
-    return new NoLogger();
-  }
+  name = "NoLogger";
+  data = undefined;
 
-  /** @returns {import("./levels.js").Level} */
+  constructor() {}
+
+  /** @returns {import("./index.d.ts").Level} */
   get level() {
     return "silent";
   }

@@ -2,41 +2,13 @@ import { nanoid } from "nanoid";
 import { text } from "./text.js";
 
 /**
- * Chat request with incoming message
- *
- * @typedef IRequest
- * @property {Readonly<IncomingMessage>} message Incoming message
- * @property {Readonly<string>} text Textual content of incoming message
- */
-
-/**
- * Incoming message
- *
- * @typedef {(Incoming & import("./messages.d.ts").Message)} IncomingMessage
- *
- * @typedef {object} Incoming
- * @property {number} IncomingMessage.timestamp Arrival time of message
- * @property {string} IncomingMessage.id Id of message
- * @property {string} IncomingMessage.from Id of sender
- * @property {string} [IncomingMessage.replyTo] Id of message that this message
- *    is a reply to
- */
-
-/**
- * Chat request with incoming message
- *
- * @class
- * @implements {IRequest}
+ * @type {import("./index.d.ts").Request}
  */
 export class Request {
-  /** @type {IncomingMessage} */
+  /** @type {import("./index.d.ts").IncomingMessage} */
   #message;
 
-  /**
-   *
-   * @param {IncomingMessage | string} message Fully typed message or a string
-   *    that can optionally contain a "sender:" before a colon
-   */
+  /** @param {import("./index.d.ts").IncomingMessage | string} message */
   constructor(message) {
     if (typeof message === "string") {
       let [from, text] = message.split(": ");
@@ -44,15 +16,16 @@ export class Request {
         text = from;
         from = "";
       }
-      message = {
+      this.#message = {
         type: "text",
         text,
         timestamp: Date.now(),
         from,
         id: nanoid(),
       };
+    } else {
+      this.#message = message;
     }
-    this.#message = message;
   }
 
   get message() {

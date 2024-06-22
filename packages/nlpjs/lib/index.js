@@ -2,27 +2,10 @@ import { dockStart } from "@nlpjs/basic";
 import { existsSync } from "node:fs";
 
 /**
- * @typedef {Object} Options
- * @property {string[]} [options.corpora] Corpora to train the NLP on
- * @property {import("@chatally/logger").Logger} [options.logger] Optional logger to use
- */
-
-/**
- * Create a trained nlp.js NLP (Natural Language Processing) module.
- *
- * For better integration you should pass it a logger from your ChatAlly app as
- * first parameter.
- *
- * Otherwise it is best practice to provide your NLP configuration as file
- * 'conf.json' in your current working directory. See https://github.com/jesus-seijas-sp/nlpjs-examples/tree/master/01.quickstart/03.config
- * for examples.
- *
- * For ease of use you can also provide a configuration object programmatically
- * or an array of strings with path names pointing to your training corpora.
- *
- * @param {import("@chatally/logger").Logger | import("@nlpjs/basic").Configuration | string[]} [logger]
+ * @param {import("@chatally/logger").Logger
+ *    | import("@nlpjs/basic").Configuration | string[]} [logger]
  * @param {import("@nlpjs/basic").Configuration | string[]} [configuration]
- * @returns {Promise<import("@nlpjs/basic").Nlp>} The trained NLP module
+ * @returns {Promise<import("@nlpjs/basic").Nlp>}
  */
 export async function trainNlp(logger, configuration) {
   if (!isLogger(logger)) {

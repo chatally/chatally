@@ -1,6 +1,6 @@
 {
-  "name": "@internal/utils",
-  "description": "Common utils, only for internal use",
+  "name": "@internal/test-utils",
+  "description": "Project private utils for testing",
   "private": true,
   "type": "module",
   "exports": {
@@ -11,7 +11,8 @@
     }
   },
   "scripts": {
-    "repl": "nodemon repl.js"
+    "repl": "nodemon repl.js",
+    "test": "vitest"
   },
   "dependencies": {
     "nanoid": "^5.0.7"

@@ -1,38 +1,44 @@
-import { methods } from "./methods.js";
+/**
+ * Helper object that detects missing proerties and typos with respect to the
+ * type defining all log methods
+ * @type {Record<keyof import("./index.d.ts").LogMethods, undefined>}
+ */
+const logMethods = {
+  debug: undefined,
+  info: undefined,
+  warn: undefined,
+  error: undefined,
+};
 
 /**
- * All log levels, i.e. all log method names plus "silent".
- * @typedef {"silent" | import("./methods.js").Method} Level
+ * Names of all log methods (correspond to the log levels)
+ * @type {import("./index.d.ts").Level[]}
  */
-
-/**
- * All log levels, i.e. all log method names plus "silent".
- * @type {Level[]}
- */
-export const levels = ["silent", ...methods];
-
-const last = methods.length - 1;
+// @ts-expect-error This will always contain all log methods
+const logMethodNames = Object.keys(logMethods);
+const last = logMethodNames.length - 1;
 
 /**
  * Get the textual representation of a numeric log level.
  *
  * @param {number} numeric
- * @returns {Level}
+ * @returns {import("./index.d.ts").Level}
  *   the textual level; "silent" for < 0, and maximum the highest level,
  *   e.g. "error"
  */
 export function getLevel(numeric) {
-  return methods[numeric] || (numeric < 0 ? "silent" : methods[last]);
+  if (numeric < 0) return "silent";
+  return logMethodNames[Math.min(numeric, last)];
 }
 
 /**
  * Get index of textual representation of the level
  *
- * @param {Level} level
+ * @param {import("./index.d.ts").Level} level
  *   textual representation of the level, e.g. "debug"
  * @returns {number} index of level; -1 ("silent") for unknown levels
  */
 export function getLevelIndex(level) {
-  // @ts-expect-error Level is a string union type
-  return methods.indexOf(level.toLowerCase());
+  // @ts-ignore
+  return logMethodNames.indexOf(level.toLowerCase());
 }

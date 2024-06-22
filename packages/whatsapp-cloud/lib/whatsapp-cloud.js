@@ -2,82 +2,19 @@ import {
   Request as ChatRequest,
   Response as ChatResponse,
 } from "@chatally/core";
-import { GraphApi } from "./graph-api.js";
-import { Media } from "./media.js";
-import { Messages } from "./messages.js";
+import { GraphApi, Media, Messages, Webhooks } from "./index.js";
 import { toChatallyMessage } from "./to-chatally-message.js";
 import { toWhatsAppMessage } from "./to-whatsapp-message.js";
 import { deepMerge } from "./utils/deep-merge.js";
 import { envBoolean, envNumber } from "./utils/env.js";
 import { readJsonOrYamlFile } from "./utils/read-json-or-yaml.js";
-import { Webhooks } from "./webhooks.js";
 
 /**
- * @typedef WhatsAppCloudConfig
- * @property {string|boolean} [file]
- *    [Optional] Use a file for server configuration.
- *
- *    If a `string` is provided, it will be interpreted as path to a JSON or
- *    YAML file, which will be read for configuration values.
- *
- *    If `undefined` or `true`, the following paths are searched in the current
- *    working directory in this order
- *
- *    - `whatsapp-cloud.config`
- *    - `whatsapp-cloud.config.json`
- *    - `whatsapp-cloud.config.yaml`
- *    - `whatsapp-cloud.config.yml`
- *
- *    If `false`, no file will be read.
- *
- *    [default=undefined]
- * @property {string|boolean} [env]
- *    [Optional] Use environment variables for server configuration.
- *
- *    If a string is provided, environment variables with this prefix will be
- *    used for configuration.
- *
- *    If `undefined` or `true`, environment variables with the prefix
- *    `WHATSAPP_CLOUD_` will be used.
- *
- *    If `false`, no environment variables will be read.
- *
- *    [default=undefined]
- * @property {string} [name="WhatsAppCloud"]
- *    [Optional] Name of the server
- *
- *    [default="WhatsAppCloud"]
- * @property {boolean} [immediate=false]
- *    [Optional] Flag indicating, whether messages should be send before
- *    `response.end()`
- *
- *    [default=false]
- * @property {import("@chatally/logger").Logger | boolean} [log]
- *    [Optional] Logger to use
- *
- *    [default=undefined]
- * @property {Webhooks | import("./webhooks.js").WebhooksConfig} [webhooks]
- *    Webhooks instance or configuration
- * @property {GraphApi | import("./graph-api.js").GraphApiConfig} graphApi
- *    GraphApi instance or configuration
- * @property {Messages | import("./messages.js").MessagesConfig} [messages]
- *    Messages instance or configuration
- * @property {Media | import("./media.js").MediaConfig} [media]
- *    Media instance or configuration
- */
-
-/**
- * WhatsApp Cloud Server
- *
  * @typedef {import("@chatally/core").Server} Server
  * @implements {Server}
  */
 export class WhatsAppCloud {
-  /**
-   * Name of this server
-   * [default="WhatsAppCloud"]
-   * @type {string}
-   */
+  /** @type {string} */
   name;
 
   /**
@@ -117,59 +54,7 @@ export class WhatsAppCloud {
   }
 
   /**
-   * [🌐 *Read the docs*](https://chatally.org/reference/servers/whatsapp-cloud/)
-   *
-   * Create a WhatsApp Cloud server that integrates the WhatsApp endpoints
-   * [Webhooks](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks),
-   * [Messages](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages) and
-   * [Media](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media).
-   *
-   * You must provide some configuration, either explicitly as a Javascript
-   * object, a configuration file, environment variables or a combination of it.
-   * A minimal configuration must contain:
-   *
-   * - `graphApi.phoneNumberId`: The id of the registered WhatsApp number.
-   * - `graphApi.accessToken`: A cryptographic token used as
-   *   `Authorization: Bearer` in each call to an endpoint. See the Facebook documentation on [how to create access tokens](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started#access-tokens).
-   * - `webhooks.verifyToken`: A shared secret used to
-   *   [register the webhooks endpoint](https://developers.facebook.com/docs/graph-api/webhooks/getting-started#verification-requests)
-   *   with your WhatsApp business account.
-   * - `webhooks.secret`: A cryptographic token to verify the payload of
-   *   received [event notifications](https://developers.facebook.com/docs/graph-api/webhooks/getting-started#event-notifications) on the webhooks
-   *   endpoint.
-   *
-   * `use(...)` the WhatsApp cloud server as a
-   * [server](https://chatally.org/reference/core/servers) in your ChatAlly
-   * application and hence connect it with your response-generating middleware.
-   * The ChatAlly application will be calling the method `listen(...)` to start
-   * the integrated Webhooks endpoint. Once this is started, you can
-   * [register your WhatsApp business account](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks)
-   * to receive notifications, whenever your WhatsApp phone number receives a
-   * message or a status update. Registration is only required once.
-   *
-   * You can also use some functionality of the integrated endpoints explicitly:
-   *
-   * - Send messages using the Messages API by calling `send(...)`.
-   * - Upload and download media files to the Meta servers by calling
-   *   `upload(...)` and `download(...)`.
-   *
-   * **Cloud API**
-   *
-   * - https://developers.facebook.com/docs/whatsapp/cloud-api
-   *
-   * **Webhooks**
-   * - https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/components
-   * - https://developers.facebook.com/docs/graph-api/webhooks
-   * - https://developers.facebook.com/docs/graph-api/webhooks/getting-started/webhooks-for-whatsapp
-   *
-   * **Messages**
-   * - https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages
-   * - https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-messages
-   *
-   * **Media**
-   * - https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media
-   *
-   * @param {Partial<WhatsAppCloudConfig>} [configObj]
+   * @param {Partial<import("./index.d.ts").WhatsAppCloudConfig>} [configObj]
    */
   constructor(configObj) {
     const config = readConfigs(configObj);
@@ -210,18 +95,7 @@ export class WhatsAppCloud {
     }
   }
 
-  /**
-   * Start the underlying Webhooks API server.
-   *
-   * This call is long-running and will only return, once the server has
-   * stopped. You must set `dispatch` before starting to listen, otherwise
-   * notifications would have no effect.
-   *
-   * @see https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks
-   *
-   * @param {number} [port]
-   *    [Optional] Port to listen on with the Webhooks server
-   */
+  /** @param {number} [port] */
   listen(port) {
     if (!this.#dispatch) {
       throw new Error(
@@ -233,12 +107,7 @@ export class WhatsAppCloud {
     this.#messages.waitForDelivered(this.#webhooks);
   }
 
-  /**
-   * @param {object} n
-   * @param {import("./webhooks-types.js").Error[]} n.errors
-   * @param {import("./webhooks-types.js").Status[]} n.statuses
-   * @param {import("./webhooks-types.js").IncomingMessage[]} n.messages
-   */
+  /** @param {import("./index.js").WebhooksNotification} n */
   async #handleNotification({ messages }) {
     if (!this.#dispatch) {
       throw new Error("Set this.dispatch before listening to notifications");
@@ -269,12 +138,6 @@ export class WhatsAppCloud {
   }
 
   /**
-   * Send message(s) to recipient.
-   *
-   * Messages are sent "in order" once the Webhooks server has been started
-   * with a call to `listen()`, i.e. the next message to the same recipient is
-   * only sent out, once a `delivered` status has been received.
-   *
    * @param {string} to recipient
    * @param {...import("@chatally/core").OutgoingMessage} outgoing
    */
@@ -300,8 +163,8 @@ export class WhatsAppCloud {
 }
 
 /**
- * @param {Partial<WhatsAppCloudConfig>} [config = {}]
- * @returns {WhatsAppCloudConfig}
+ * @param {Partial<import("./index.d.ts").WhatsAppCloudConfig>} [config = {}]
+ * @returns {import("./index.d.ts").WhatsAppCloudConfig}
  */
 function readConfigs(config = {}) {
   const file = readConfigFromFile(config.file);
@@ -340,19 +203,20 @@ function readConfigFromFile(path) {
 
 /**
  * @param {string | boolean | undefined} prefix
- * @returns {Partial<WhatsAppCloudConfig>}
+ * @returns {Partial<import("./index.d.ts").WhatsAppCloudConfig>}
  */
 function readConfigFromEnv(prefix) {
   if (prefix !== false) {
     if (prefix === true || prefix === undefined) {
       prefix = "WHATSAPP_CLOUD_";
     }
-    /** @type {WhatsAppCloudConfig} */
+    /** @type {import("./index.d.ts").WhatsAppCloudConfig} */
     const config = {};
-    config.name = process.env[`${prefix}NAME`];
+    const name = process.env[`${prefix}NAME`];
+    if (name) config.name = name;
     config.immediate = envBoolean(`${prefix}IMMEDIATE`);
 
-    /** @type {import("./webhooks.js").WebhooksConfig} */
+    /** @type {import("./index.js").WebhooksConfig} */
     const webhooks = {};
     webhooks.port = envNumber(`${prefix}WEBHOOKS_PORT`);
     webhooks.verifyToken = process.env[`${prefix}WEBHOOKS_VERIFY_TOKEN`];
@@ -361,7 +225,7 @@ function readConfigFromEnv(prefix) {
     webhooks.assetsPath = process.env[`${prefix}WEBHOOKS_ASSETS_PATH`];
     config.webhooks = webhooks;
 
-    /** @type {Partial<import("./graph-api.js").GraphApiConfig>} */
+    /** @type {Partial<import("./index.js").GraphApiConfig>} */
     const graphApi = {};
     graphApi.phoneNumberId = process.env[`${prefix}GRAPHAPI_PHONE_NUMBER_ID`];
     graphApi.accessToken = process.env[`${prefix}GRAPHAPI_ACCESS_TOKEN`];
@@ -371,7 +235,7 @@ function readConfigFromEnv(prefix) {
     // @ts-ignore
     config.graphApi = graphApi;
 
-    /** @type {import("./media.js").MediaConfig} */
+    /** @type {import("./index.js").MediaConfig} */
     const media = {};
     media.downloadDir = process.env[`${prefix}MEDIA_DOWNLOAD_DIR`];
     media.dbPath = process.env[`${prefix}MEDIA_DB_PATH`];

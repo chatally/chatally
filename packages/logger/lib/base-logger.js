@@ -1,25 +1,14 @@
 import { format } from "node:util";
 import { getLevel, getLevelIndex } from "./levels.js";
 
-/** @type {import("./levels.js").Level} */
+/** @type {import("./index.d.ts").Level} */
 const DEFAULT_LEVEL = "info";
 const DEBUG = getLevelIndex("debug");
 const INFO = getLevelIndex("info");
 const WARN = getLevelIndex("warn");
 const ERROR = getLevelIndex("error");
 
-/**
- * Basic logger implementation, that logs to the console by default.
- *
- * This logger is not optimized and should only be used for development.
- *
- * For test purposes, the output can be redirected to any `Writable` by setting
- * the `out` property. Also for test purposes you can turn off the timestamps,
- * by setting the `timestamps` property to false.
- *
- * @typedef {import("./logger.d.ts").Logger} Logger
- * @implements {Logger}
- */
+/** @type {import("./index.d.ts").BaseLogger} */
 export class BaseLogger {
   /**
    * Output writable, default is the console
@@ -28,8 +17,11 @@ export class BaseLogger {
    */
   out = undefined;
 
-  /** Print timestamps */
-  timestamps = true;
+  /** @type {undefined | false | (() => string)} Return the time part of an ISO-formatted date. */
+  timestamp = () => {
+    const iso = new Date().toISOString();
+    return iso.split("T")[1].slice(0, -1);
+  };
 
   /**
    * Numeric level of this logger
@@ -40,8 +32,8 @@ export class BaseLogger {
 
   /**
    * @typedef LevelsFn
-   * @property {(level: import("./levels.js").Level) => number} index
-   * @property {(level: number) => import("./levels.js").Level} text
+   * @property {(level: import("./index.d.ts").Level) => number} index
+   * @property {(level: number) => import("./index.d.ts").Level} text
    */
 
   /**
@@ -49,8 +41,7 @@ export class BaseLogger {
    * it gives you better typing.
    *
    * @constructor
-   * @protected
-   * @param {import("./logger.d.ts").LoggerOptions} [options={}]
+   * @param {import("./index.d.ts").LoggerOptions} [options={}]
    * @param {LevelsFn} [levelsFn]
    */
   constructor(
@@ -68,48 +59,24 @@ export class BaseLogger {
     this.data = options.data;
   }
 
-  /**
-   * @typedef Base
-   * @property {import("node:stream").Writable} [out]
-   *    Output writable, default is the console
-   * @property {boolean} timestamps If true, print timestamps
-   */
-
-  /**
-   * Create a basic logger implementation, that logs to the console by default.
-   *
-   * This logger is not optimized and should only be used for development.
-   *
-   * For test purposes, the output can be redirected to any `Writable` by
-   * setting the `out` property. Also for test purposes you can turn off the
-   * timestamps, by setting the `timestamps` property to false.
-   *
-   * @param {import("./logger.d.ts").LoggerOptions} [options]
-   * @param {LevelsFn} [levelsFn]
-   * @returns {import("./logger.d.ts").Logger & Base}
-   */
-  static create(options, levelsFn) {
-    return new BaseLogger(options, levelsFn);
-  }
-
-  /** @returns {import("./levels.js").Level} */
+  /** @returns {import("./index.d.ts").Level} */
   get level() {
     return this.levels.text(this._level);
   }
 
-  /** @param {import("./levels.js").Level} level */
+  /** @param {import("./index.d.ts").Level} level */
   set level(level) {
     this._level = this.levels.index(level);
   }
 
-  /** @param {import("./levels.js").Level} level */
+  /** @param {import("./index.d.ts").Level} level */
   isLevel(level) {
     return this._level >= this.levels.index(level);
   }
 
   /**
-   * @param {import("./logger.d.ts").LoggerOptions} [options={}]
-   * @returns {import("./logger.d.ts").Logger}
+   * @param {import("./index.d.ts").LoggerOptions} [options={}]
+   * @returns {import("./index.d.ts").Logger}
    */
   child(options = {}) {
     let name = this.name;
@@ -153,7 +120,7 @@ export class BaseLogger {
    * to generate and write a log message to `this.out`. Overwrite `this._log`
    * in your own logger.
    *
-   * @param {import("./levels.js").Level | number} level
+   * @param {import("./index.d.ts").Level | number} level
    *    The log level for the message
    * @param {unknown} [data] Optional data to log
    * @param {string} [msg] Message to log, optionally a format string
@@ -204,8 +171,8 @@ export class BaseLogger {
       ? format("%s (%s): %s", sLevel, this.name, msg_)
       : format("%s: %s", sLevel, msg_);
 
-    if (this.timestamps) {
-      line = `[${this._timestamp()}] ${line}`;
+    if (this.timestamp) {
+      line = `[${this.timestamp()}] ${line}`;
     }
     line = line.trim();
 
@@ -220,15 +187,6 @@ export class BaseLogger {
         console.log(data);
       }
     }
-  }
-
-  /**
-   * @protected
-   * @returns {string} Time part of an ISO-formatted date
-   */
-  _timestamp() {
-    const iso = new Date().toISOString();
-    return iso.split("T")[1].slice(0, -1);
   }
 }
 

@@ -1,13 +1,13 @@
 import { BaseLogger, NoLogger } from "@chatally/logger";
 import { EventEmitter } from "node:events";
-import { isServer } from "./server.js";
+import { isServer } from "./is-server.js";
 
 /**
  * ChatAlly Application that dispatches incoming requests from all registered
  * servers to all registered middleware.
  *
- * @template {Object} D
- * @extends {EventEmitter<{error: [Error & Record<string, unknown>, Omit<import("./middleware.d.ts").Context<D>, "next">]}>}
+ * @template {object} D
+ * @type {import("./index.d.ts").Application<D>}
  */
 export class Application extends EventEmitter {
   /**
@@ -17,13 +17,13 @@ export class Application extends EventEmitter {
 
   /**
    * Middlewares in order of registration
-   * @type {import("./middleware.d.ts").Middleware<D>[]}
+   * @type {import("./index.d.ts").Middleware<D>[]}
    */
   #middlewares = [];
 
   /**
    * Servers
-   * @type {import("./server.js").Server[]}
+   * @type {import("./index.d.ts").Server[]}
    */
   #servers = [];
 
@@ -40,19 +40,10 @@ export class Application extends EventEmitter {
   #data;
 
   /**
-   * Create an application that dispatches incoming chat requests from all
-   * registered servers to all registered middleware.
-   *
    * @param {Object} [options={}]
    * @param {D} [options.data]
-   *    [Optional] Arbitrary data to put into the context for each request
-   *    [`default=undefined`]
    * @param {import("@chatally/logger").Logger | boolean} [options.log]
-   *    [Optional] Custom logger or flag if you want to use a default logger
-   *    [`default=new BaseLogger()`]
    * @param {boolean} [options.dev]
-   *    [Optional] Flag to run application in development mode
-   *    [`default=false`]
    */
   constructor(options = {}) {
     super();
@@ -70,16 +61,7 @@ export class Application extends EventEmitter {
   }
 
   /**
-   * Register a middleware function or a server
-   *
-   * Middlewares are executed in order of registration, but can `await next()`
-   * to wait for the following middlewares to finish.
-   *
-   * It is preferrable to use a named function over an arrow function, because
-   * the name is used to identify child loggers. Optionally, you can provide a
-   * name for the middleware.
-   *
-   * @param {import("./middleware.d.ts").Middleware<D> | import("./server.js").Server} m
+   * @param {import("./index.d.ts").Middleware<D> | import("./index.d.ts").Server} m
    * @param {String} [name]
    */
   use(m, name) {
@@ -123,7 +105,7 @@ export class Application extends EventEmitter {
    * but a server could send responses earlier, by registering the
    * `on("finish")` event on the response.
    *
-   * @type {import("./server.js").Dispatch}
+   * @type {import("./index.d.ts").Dispatch}
    */
   get dispatch() {
     return async (req, res) => {
@@ -143,8 +125,8 @@ export class Application extends EventEmitter {
    * The order is the order of registration. Middleware exceptions are
    * dispatched to the context. This method throws only, if the context throws.
    *
-   * @param {import("./request.js").IRequest} req
-   * @param {import("./response.js").IResponse} res
+   * @param {import("./index.d.ts").IRequest} req
+   * @param {import("./index.d.ts").IResponse} res
    * @param {D & Record<string, unknown>} data
    * @param {import("@chatally/logger").Logger} log
    */
@@ -174,12 +156,11 @@ export class Application extends EventEmitter {
 
   /**
    * @param {unknown} err
-   * @param {Omit<import("./middleware.d.ts").Context<D>, "next">} context
+   * @param {Omit<import("./index.d.ts").Context<D>, "next">} context
    */
   #handleError(err, context) {
     try {
       if (err instanceof Error) {
-        // @ts-expect-error For better DX, we pass down an error that behaves like "any"
         if (!this.emit("error", err, context)) {
           context.log.error(err);
         }
@@ -217,8 +198,8 @@ function initLog(log, dev) {
     const level =
       // eslint-disable-next-line turbo/no-undeclared-env-vars
       dev || process.env.NODE_ENV === "development" ? "debug" : "info";
-    return BaseLogger.create({ level, name: "@chatally/core" });
+    return new BaseLogger({ level, name: "@chatally/core" });
   } else {
-    return log || NoLogger.create();
+    return log || new NoLogger();
   }
 }

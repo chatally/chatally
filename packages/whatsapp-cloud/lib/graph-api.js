@@ -1,64 +1,13 @@
 import { GraphApiError } from "./errors.js";
 /**
  * We CANNOT use `node.fetch`, because it is not correctly detected by the
- * Facebook Graph API as client (probably due to a wrong Host header, which
- * cannot be overridden programmatically), when downloading binary data from
+ * Facebook Graph API as client, when downloading binary data from
  * the Media endpoint.
+ *
+ * This is probably due to a wrong Host header, which cannot be overridden
+ * programmatically.
  */
 import undici from "undici";
-
-/**
- * @typedef GraphApiConfig
- * @property {string} phoneNumberId
- *    Sender id, i.e. the phone number id of the WhatsApp business account
- * @property {string} accessToken
- *    Access token to use as authorization bearer
- * @property {string} [baseUrl]
- *    [Optional] Base URL for Meta GraphAPI
- *
- *    [default="graph.facebook.com"]
- * @property {number} [basePort]
- *    [Optional] Port at which to reach Meta GraphAPI
- *
- *    [default=undefined]
- * @property {number} [version]
- *    [Optional] Version of the Meta GraphAPI
- *
- *    [default=20]
- * @property {import("@chatally/logger").Logger} [log]
- *    [Optional] Logger to use
- *
- *    [default=undefined]
- * @property {RequestFn} [_request]
- *    [Optional] Allows to override the internal HTTP request for testing
- *
- *    [default=undici.request]
- */
-
-/**
- * @typedef {(url: string, init: RequestInit) => Promise<ResponseData>} RequestFn
- */
-
-/**
- * @typedef RequestInit
- * @property {"GET" | "POST" | "DELETE"} [method]
- * @property {string | FormData} [body]
- * @property {Record<string, string | string[] | undefined>} [headers]
- */
-
-/**
- * @typedef ResponseData
- * @property {number} statusCode
- * @property {Record<string, string | string[] | undefined>} headers
- * @property {Body} body
- */
-
-/**
- * @typedef Body
- * @property {() => string | Promise<string>} text
- * @property {() => unknown | Promise<unknown>} json
- * @property {() => ArrayBuffer | Promise<ArrayBuffer>} arrayBuffer
- */
 
 const endpoints = [
   "business_compliance_info",
@@ -76,15 +25,11 @@ export class GraphApi {
 
   /**
    * @protected
-   * Override the internal fetch method for testing.
-   *
-   * @type {(url: string, init: RequestInit) => Promise<ResponseData>}
+   * @type {import("./index.js").RequestFn}
    */
-  _fetch;
+  _request;
 
-  /**
-   * @param {GraphApiConfig} config
-   */
+  /** @param {import("./index.js").GraphApiConfig} config */
   constructor(config) {
     const {
       basePort,
@@ -114,7 +59,7 @@ export class GraphApi {
     }
     this.#accessToken = accessToken;
 
-    this._fetch = _fetch;
+    this._request = _fetch;
   }
 
   /**
@@ -135,7 +80,7 @@ export class GraphApi {
         ...body,
       });
     }
-    return await this.#fetch({ method: "POST", headers, body }, endpoint);
+    return await this.#request({ method: "POST", headers, body }, endpoint);
   }
 
   /**
@@ -143,7 +88,7 @@ export class GraphApi {
    * @param {Record<string, string>} [headers]
    */
   async get(endpoint, headers) {
-    return await this.#fetch(
+    return await this.#request(
       { method: "GET", headers: this.#headers(headers) },
       endpoint
     );
@@ -154,24 +99,18 @@ export class GraphApi {
    * @param {Record<string, string>} [headers]
    */
   async delete(endpoint, headers) {
-    return await this.#fetch(
+    return await this.#request(
       { method: "DELETE", headers: this.#headers(headers) },
       endpoint
     );
   }
 
   /**
-   * @typedef Result
-   * @property {string} contentType
-   * @property {string | undefined} [text]
-   * @property {Record<string, unknown> | undefined} [json]
-   * @property {ArrayBuffer | undefined} [buffer]
-   *
-   * @param {RequestInit} request
+   * @param {import("./index.d.ts").RequestInit} request
    * @param {string} endpoint
-   * @returns {Promise<Result>}
+   * @returns {Promise<import("./index.js").GraphApiResult>}
    */
-  async #fetch(request, endpoint) {
+  async #request(request, endpoint) {
     if (!endpoint || endpoint.length === 0) {
       throw new Error("Invalid Graph API fetch: endpoint may not be void.");
     }
@@ -181,7 +120,7 @@ export class GraphApi {
         ? [this.#url, this.#phoneNumberId, endpoint, ""]
         : [this.#url, endpoint, ""];
     const url = segments.join("/");
-    const response = await this._fetch(url, request);
+    const response = await this._request(url, request);
 
     if (response.statusCode !== 200) {
       /** @type {any} */
@@ -191,7 +130,7 @@ export class GraphApi {
     const contentType =
       /** @type {string} */ (response.headers["content-type"]) || "unknown";
 
-    /** @type {Result} */
+    /** @type {import("./index.js").GraphApiResult} */
     const result = {
       contentType,
       text: undefined,

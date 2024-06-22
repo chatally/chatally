@@ -6,7 +6,6 @@ const green = 32;
 const onGreen = 42;
 
 /**
- *
  * @param {string} text
  * @param {string | number} color
  * @returns
@@ -16,9 +15,6 @@ function color(text, color) {
 }
 
 /**
- * @class
- * Console server
- *
  * @typedef {import("@chatally/core").Server} Server
  * @implements {Server}
  */
@@ -26,16 +22,10 @@ export class ConsoleServer {
   /** @type {import("@chatally/core").Dispatch} */
   dispatch;
 
-  /**
-   * Create a console server that reads input from the console, dispatches it
-   * to a chat application and outputs responses on the console.
-   *
-   * You can configure the `name`, `prompt`, `greeting`, `goodBye` and the
-   * `stopToken` simply by setting these properties. There are also some colors
-   * you can configure: `nameColor`, `promptColor` and `responseColor`.
-   *
-   * @param {import("@chatally/core").Dispatch} [dispatch]
-   */
+  /** @type {import("@chatally/logger").Logger | undefined} */
+  log;
+
+  /** @param {import("@chatally/core").Dispatch} [dispatch] */
   constructor(
     dispatch = async (req, res) => {
       res.end(`You said:

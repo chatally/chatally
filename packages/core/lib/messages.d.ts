@@ -11,7 +11,7 @@ export type Message =
   | Text
   | Video;
 
-export type Action = {
+type Action = {
   id: string;
   title: string;
   description?: string;
