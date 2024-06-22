@@ -11,7 +11,7 @@ export class Webhooks extends EventEmitter {
   /** @protected */
   _server;
 
-  /** @param {import("./index.js").WebhooksConfig} [config] */
+  /** @param {import("./index.d.ts").WebhooksConfig} [config] */
   constructor(config = {}) {
     super();
     const { port, verifyToken, secret, log, assetsDir, assetsPath } = config;

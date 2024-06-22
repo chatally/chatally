@@ -6,7 +6,7 @@ import { isServer } from "./is-server.js";
  * ChatAlly Application that dispatches incoming requests from all registered
  * servers to all registered middleware.
  *
- * @template {object} D
+ * @template {Record<string, unknown>} D
  * @type {import("./index.d.ts").Application<D>}
  */
 export class Application extends EventEmitter {

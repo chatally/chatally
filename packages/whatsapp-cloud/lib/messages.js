@@ -1,11 +1,11 @@
 export class Messages {
-  /** @type {import("./index.js").GraphApi} */
+  /** @type {import("./index.d.ts").GraphApi} */
   #graphApi;
 
   /** @type {import("@chatally/logger").Logger | undefined} */
   #log;
 
-  /** @param {import("./index.js").MessagesConfig} config */
+  /** @param {import("./index.d.ts").MessagesConfig} config */
   constructor(config) {
     this.#log = config.log;
     this.#graphApi = config.graphApi;
@@ -94,7 +94,7 @@ received ${status.id}.`);
   }
 
   /**
-   * @typedef Send
+   * @typedef SendMessageBody
    * @property {"individual"} recipient_type
    * @property {string} to
    * @property {{message_id: string}} [context]
@@ -102,16 +102,16 @@ received ${status.id}.`);
 
   /** @param {Waiting} $ */
   async #send({ to, message, replyTo }) {
-    /** @type {Send} */
-    const request = {
+    /** @type {SendMessageBody} */
+    const body = {
       recipient_type: "individual",
       to,
       ...message,
     };
     if (replyTo) {
-      request.context = { message_id: replyTo };
+      body.context = { message_id: replyTo };
     }
-    const response = await this.#graphApi.post(request, "messages");
+    const response = await this.#graphApi.post("messages", body);
     const messages = /** @type {Array<{id: string}>}*/ (
       response.json?.messages
     );
@@ -136,11 +136,11 @@ received ${status.id}.`);
    */
   async markAsRead(message_id) {
     /** @type {MarkAsRead} */
-    const request = {
+    const body = {
       status: "read",
       message_id,
     };
-    const response = await this.#graphApi.post(request, "messages");
+    const response = await this.#graphApi.post("messages", body);
     return !!response.json?.success;
   }
 }

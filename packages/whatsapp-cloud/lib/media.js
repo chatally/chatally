@@ -1,7 +1,6 @@
 import Database from "better-sqlite3";
 import fs from "node:fs/promises";
 import { MediaError } from "./errors.js";
-import { GraphApi } from "./graph-api.js";
 import {
   getMaxSizeFromMediaType,
   getMediaTypeFromSuffix,
@@ -22,7 +21,7 @@ import {
  */
 
 export class Media {
-  /** @type {GraphApi} */
+  /** @type {import("./index.d.ts").GraphApi} */
   #graphApi;
   /** @type {string} */
   #downloadDir;
@@ -97,7 +96,7 @@ CREATE INDEX IF NOT EXISTS id_by_file ON ids(file);
       const body = new FormData();
       body.append("type", mediaType);
       body.append("file", blob, file.split("/").pop() || file);
-      const response = await this.#graphApi.post(body, "media");
+      const response = await this.#graphApi.post("media", body);
       const id = /** @type {string | undefined} */ (response.json?.id);
       if (!id) {
         throw new MediaError(`[Media] upload failed, unexpected response:
@@ -144,7 +143,7 @@ CREATE INDEX IF NOT EXISTS id_by_file ON ids(file);
       }
     }
 
-    const { url, mime_type } = await this.#getUrl(id);
+    const { url } = await this.#getUrl(id);
     const response = await this.#graphApi.get(url);
     const buffer = response.buffer;
     if (!buffer) {

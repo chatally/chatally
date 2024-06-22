@@ -1,15 +1,16 @@
 import type { Level, Logger } from "@chatally/logger";
 import { EventEmitter } from "node:events";
 import type { Message } from "./messages.d.ts";
+export type * from "./messages.d.ts";
 
 /**
  * ChatAlly Application Class
  *
  * Dispatches incoming requests to registered middleware.
  */
-export declare class Application<D extends Object> extends EventEmitter<
-  ApplicationEvents<D>
-> {
+export declare class Application<
+  D extends Record<string, unknown>,
+> extends EventEmitter<ApplicationEvents<D>> {
   /**
    * Create a Chatally application that dispatches incoming chat requests from
    * all registered servers to all registered middleware.

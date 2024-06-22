@@ -1,13 +1,13 @@
-import { fstatSync, mkdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import { nanoid } from "nanoid";
+import { mkdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import fs from "node:fs/promises";
 import { GraphApi } from "./graph-api.js";
 import { Media } from "./media.js";
-import fs from "node:fs/promises";
-import { nanoid } from "nanoid";
 
 const downloadUrl = "https://download.here";
 
 function newMedia() {
-  /** @type {Array<{url: string, req: import("./graph-api.js").RequestInit, res: import("./graph-api.js").ResponseData}>} */
+  /** @type {Array<{url: string, req: import("./index.d.ts").RequestInit, res: import("./index.d.ts").ResponseData}>} */
   const requests = [];
   const graphApi = new GraphApi({
     phoneNumberId: "1234",
@@ -61,7 +61,7 @@ const copied = "./testing/renamed-image.jpg";
 
 describe("Media", async function () {
   it("does not re-download uploaded media", async function () {
-    const { media, requests, cleanup } = newMedia();
+    const { media, cleanup } = newMedia();
     try {
       const id = await media.upload(original);
       const downloaded = await media.download(id);

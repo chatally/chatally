@@ -43,6 +43,7 @@ export type Buttons = {
 export type Custom = {
   readonly type: "custom";
   readonly schema: string;
+  // @ts-ignore We want to use custom as anything
   readonly custom: any;
 };
 

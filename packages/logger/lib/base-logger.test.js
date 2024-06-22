@@ -1,7 +1,7 @@
 import { StringWritable, TestError } from "@internal/test-utils";
 import { BaseLogger } from "./base-logger.js";
 
-/** @param {import("./index.js").LoggerOptions | undefined} [options] */
+/** @param {import("./index.d.ts").LoggerOptions | undefined} [options] */
 function getLogger(options) {
   const actual = new StringWritable();
   const log = new BaseLogger(options);
