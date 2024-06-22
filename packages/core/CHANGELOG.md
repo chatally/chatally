@@ -1,5 +1,13 @@
 # @chatally/core
 
+## 0.0.7
+
+### Patch Changes
+
+- 795d1ac: Improved types for all packages
+- Updated dependencies [795d1ac]
+  - @chatally/logger@0.0.5
+
 ## 0.0.6
 
 ### Patch Changes

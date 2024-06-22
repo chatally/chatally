@@ -1,5 +1,11 @@
 # @chatally/logger
 
+## 0.0.5
+
+### Patch Changes
+
+- 795d1ac: Improved types for all packages
+
 ## 0.0.4
 
 ### Patch Changes

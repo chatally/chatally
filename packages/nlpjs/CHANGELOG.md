@@ -1,5 +1,13 @@
 # @chatally/nlpjs
 
+## 0.0.4
+
+### Patch Changes
+
+- 795d1ac: Improved types for all packages
+- Updated dependencies [795d1ac]
+  - @chatally/core@0.0.7
+
 ## 0.0.3
 
 ### Patch Changes
