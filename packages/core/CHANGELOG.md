@@ -1,5 +1,15 @@
 # @chatally/core
 
+## 0.0.8
+
+### Patch Changes
+
+- 840b939: Changed the logger handling, so that they are handed down.
+- 38de0ca: Fixed some more typing issues
+- Updated dependencies [840b939]
+- Updated dependencies [38de0ca]
+  - @chatally/logger@0.0.6
+
 ## 0.0.7
 
 ### Patch Changes

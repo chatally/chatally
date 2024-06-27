@@ -1,5 +1,12 @@
 # @chatally/logger
 
+## 0.0.6
+
+### Patch Changes
+
+- 840b939: Changed the logger handling, so that they are handed down.
+- 38de0ca: Fixed some more typing issues
+
 ## 0.0.5
 
 ### Patch Changes
