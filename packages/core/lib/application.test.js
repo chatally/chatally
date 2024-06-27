@@ -4,41 +4,20 @@ import { Application } from "./application.js";
 import { Request } from "./request.js";
 import { Response } from "./response.js";
 
-/**
- * @type {import("./index.d.ts").Middleware<{}>}
- */
+/** @type {import("./middleware.d.ts").Middleware<unknown>} */
 const echo = ({ req, res }) => {
   if (res.isWritable && req.message.type === "text") {
     res.write(`Echo: '${req.message.text}'`);
   }
 };
 
-/** @param {string} text */
-function req(text) {
-  return new Request(`test: ${text}`);
-}
-
-/** @param {Response} res */
-function messages(res) {
-  return res.messages.map((m) =>
-    m.type === "text" ? m.text : JSON.stringify(m)
-  );
-}
-
-/**
- * @param {import("@chatally/logger").LoggerOptions | undefined} options
- */
-function getLogger(options) {
-  return new BaseLogger(options);
-}
-
 describe("Application", function () {
   it("dispatches to middleware", async () => {
     const app = new Application().use(echo);
 
     const res = new Response();
-    await app.dispatch(req("foo"), res);
-    expect(messages(res)).toStrictEqual(["Echo: 'foo'"]);
+    await app.dispatch(new Request("test: foo"), res);
+    expect(res.text).toStrictEqual(["Echo: 'foo'"]);
   });
 
   it("dispatches in order of registration", async () => {
@@ -67,15 +46,8 @@ describe("Application", function () {
       });
 
     const res = new Response();
-    await app.dispatch(req("foo"), res);
-    expect(messages(res)).toStrictEqual([
-      "a",
-      "c-pre",
-      "d",
-      "e",
-      "c-post",
-      "b",
-    ]);
+    await app.dispatch(new Request("test: foo"), res);
+    expect(res.text).toStrictEqual(["a", "c-pre", "d", "e", "c-post", "b"]);
   });
 
   it("catches sync middleware errors", async () => {
@@ -90,8 +62,8 @@ describe("Application", function () {
         error = err;
       });
     const res = new Response();
-    await app.dispatch(req("foo"), res);
-    expect(messages(res)).toStrictEqual(["Echo: 'foo'"]);
+    await app.dispatch(new Request("test: foo"), res);
+    expect(res.text).toStrictEqual(["Echo: 'foo'"]);
     expect(error?.message).toBe("Boom");
   });
 
@@ -104,8 +76,8 @@ describe("Application", function () {
       res.write("First");
     });
     const res = new Response();
-    await app.dispatch(req("foo"), res);
-    expect(messages(res)).toStrictEqual(["Echo: 'foo'", "First", "Boom Async"]);
+    await app.dispatch(new Request("test: foo"), res);
+    expect(res.text).toStrictEqual(["Echo: 'foo'", "First", "Boom Async"]);
   });
 
   it("exposes errors if demanded", async () => {
@@ -124,13 +96,13 @@ describe("Application", function () {
       });
 
     const res = new Response();
-    await app.dispatch(req("foo"), res);
-    expect(messages(res)).toStrictEqual(["Echo: 'foo'", "Boom"]);
+    await app.dispatch(new Request("test: foo"), res);
+    expect(res.text).toStrictEqual(["Echo: 'foo'", "Boom"]);
   });
 
   it("warns about unnamed middleware", async () => {
     const out = new StringWritable();
-    const log = getLogger({ name: "root", level: "warn" });
+    const log = new BaseLogger({ name: "root", level: "warn" });
     log.out = out;
     log.timestamp = false;
 
@@ -142,7 +114,7 @@ describe("Application", function () {
 
   it("logs middleware output", async () => {
     const out = new StringWritable();
-    const log = getLogger({ level: "warn" });
+    const log = new BaseLogger({ level: "warn" });
     log.out = out;
     log.timestamp = false;
 
@@ -153,7 +125,7 @@ describe("Application", function () {
       });
 
     const res = new Response();
-    await app.dispatch(req("foo"), res);
+    await app.dispatch(new Request("test: foo"), res);
     expect(out.data).toBe("DEBUG (logs): Hello\n");
   });
 });

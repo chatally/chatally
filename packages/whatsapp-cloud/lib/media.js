@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 import fs from "node:fs/promises";
-import { MediaError } from "./errors.js";
+import { BaseError } from "./errors.js";
 import {
   getMaxSizeFromMediaType,
   getMediaTypeFromSuffix,
@@ -21,7 +21,7 @@ import {
  */
 
 export class Media {
-  /** @type {import("./index.d.ts").GraphApi} */
+  /** @type {import("./graph-api.d.ts").GraphApi} */
   #graphApi;
   /** @type {string} */
   #downloadDir;
@@ -178,5 +178,19 @@ CREATE INDEX IF NOT EXISTS id_by_file ON ids(file);
     }
     this.#deleteId.run(id);
     return success;
+  }
+}
+
+export class MediaError extends BaseError {
+  /** @type {unknown|undefined} */
+  info;
+
+  /**
+   * @param {string | undefined} message
+   * @param {undefined} [info]
+   */
+  constructor(message, info) {
+    super(message);
+    this.info = info;
   }
 }

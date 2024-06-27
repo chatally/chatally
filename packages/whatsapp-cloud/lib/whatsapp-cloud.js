@@ -1,22 +1,15 @@
-import {
-  Request as ChatRequest,
-  Response as ChatResponse,
-} from "@chatally/core";
-import { GraphApi, Media, Messages, Webhooks } from "./index.js";
+import { BaseServer } from "@chatally/core";
+import { GraphApi } from "./graph-api.js";
+import { Media } from "./media.js";
+import { Messages } from "./messages.js";
 import { toChatallyMessage } from "./to-chatally-message.js";
 import { toWhatsAppMessage } from "./to-whatsapp-message.js";
 import { deepMerge } from "./utils/deep-merge.js";
 import { envBoolean, envNumber } from "./utils/env.js";
 import { readJsonOrYamlFile } from "./utils/read-json-or-yaml.js";
+import { Webhooks } from "./webhooks.js";
 
-/**
- * @typedef {import("@chatally/core").Server} Server
- * @implements {Server}
- */
-export class WhatsAppCloud {
-  /** @type {string} */
-  name;
-
+export class WhatsAppCloud extends BaseServer {
   /**
    * Indicate, whether messages should be delivered immediately (on write)
    * instead of on end.
@@ -25,36 +18,13 @@ export class WhatsAppCloud {
    */
   immediate;
 
-  /**
-   * Logger to use during runtime. `false` means NoLogger, `true` or `undefined`
-   * leave setting the logger to the parent application.
-   * [default=undefined]
-   * @type {import("@chatally/logger").Logger | boolean | undefined}
-   */
-  log;
-
   /** @type {Webhooks} */ #webhooks;
+  /** @type {GraphApi} */ #graphApi;
   /** @type {Messages} */ #messages;
   /** @type {Media} */ #media;
-  /** @type {import("@chatally/core").Dispatch | undefined} */ #dispatch;
 
   /**
-   * Dispatch method to generate a response
-   *
-   * [default: echoes the incoming text]
-   * @param {import("@chatally/core").Dispatch} dispatch
-   */
-  set dispatch(dispatch) {
-    if (typeof dispatch !== "function") {
-      throw new Error(
-        "Dispatch must be a function (sync or async) that takes a Request and a Response and returns void."
-      );
-    }
-    this.#dispatch = dispatch;
-  }
-
-  /**
-   * @param {Partial<import("./index.d.ts").WhatsAppCloudConfig>} [configObj]
+   * @param {Partial<import("./whatsapp-cloud.d.ts").WhatsAppCloudConfig>} [configObj]
    */
   constructor(configObj) {
     const config = readConfigs(configObj);
@@ -63,14 +33,13 @@ export class WhatsAppCloud {
       immediate = false,
       log,
       webhooks,
+      graphApi,
       messages,
       media,
     } = config;
-    let { graphApi } = config;
 
-    this.name = name;
+    super(name);
     this.immediate = immediate;
-    this.log = log;
 
     if (webhooks instanceof Webhooks) {
       this.#webhooks = webhooks;
@@ -78,61 +47,78 @@ export class WhatsAppCloud {
       this.#webhooks = new Webhooks(webhooks);
     }
 
-    if (!(graphApi instanceof GraphApi)) {
-      graphApi = new GraphApi(graphApi);
+    if (graphApi instanceof GraphApi) {
+      this.#graphApi = graphApi;
+    } else {
+      this.#graphApi = new GraphApi(graphApi);
     }
 
     if (messages instanceof Messages) {
       this.#messages = messages;
     } else {
-      this.#messages = new Messages({ graphApi, ...messages });
+      this.#messages = new Messages({
+        graphApi: this.#graphApi,
+        ...messages,
+      });
     }
 
     if (media instanceof Media) {
       this.#media = media;
     } else {
-      this.#media = new Media({ graphApi, ...media });
+      this.#media = new Media({
+        graphApi: this.#graphApi,
+        ...media,
+      });
+    }
+    this.log = log;
+  }
+
+  /** @type {import("@chatally/logger").Logger | undefined} */
+  #log;
+
+  get log() {
+    return this.#log;
+  }
+
+  /**
+   * @param {import("@chatally/logger").Logger | undefined} log
+   */
+  set log(log) {
+    this.#log = log;
+    if (this.#webhooks instanceof Webhooks) {
+      this.#webhooks.log = log?.child({ name: "Webhooks" });
+    }
+    if (this.#graphApi instanceof GraphApi) {
+      this.#graphApi.log = log?.child({ name: "GraphApi" });
+    }
+    if (this.#messages instanceof Messages) {
+      this.#messages.log = log?.child({ name: "Messages" });
     }
   }
 
   /** @param {number} [port] */
   listen(port) {
-    if (!this.#dispatch) {
-      throw new Error(
-        "Dispatch is not set, so listen would not have any effect. Set `this.dispatch = ...` before listening to notifications."
-      );
-    }
     this.#webhooks.on("notification", this.#handleNotification.bind(this));
     this.#webhooks.listen(port);
     this.#messages.waitForDelivered(this.#webhooks);
   }
 
-  /** @param {import("./index.d.ts").WebhooksNotification} n */
-  async #handleNotification({ messages }) {
-    if (!this.#dispatch) {
-      throw new Error("Set this.dispatch before listening to notifications");
-    }
+  /** @param {import("./webhooks.d.ts").WebhooksNotification} notification */
+  #handleNotification({ messages }) {
     // TODO: Handle statuses and errors
-    for (let incoming of messages.map(toChatallyMessage)) {
-      if (!incoming) continue;
-      try {
-        const to = incoming.from;
-        const chatResponse = new ChatResponse();
-        if (this.immediate) {
-          chatResponse.on(
-            "write",
-            async (outgoing) => await this.send(to, outgoing)
-          );
-        }
-        await this.#messages.markAsRead(incoming.id);
-        await this.#dispatch(new ChatRequest(incoming), chatResponse);
-        if (!this.immediate) {
-          await this.send(to, ...chatResponse.messages);
-        }
-      } catch (err) {
-        if (this.log && this.log !== true) {
-          this.log.error(err);
-        }
+    for (let message of messages) {
+      this.log?.debug("Received message", message);
+      this.#messages.markAsRead(message.id);
+      const to = message.from;
+      const chatallyMessage = toChatallyMessage(message);
+      if (this.immediate) {
+        this.dispatch(chatallyMessage, {
+          onWrite: async (msg) => await this.send(to, msg),
+        });
+      } else {
+        this.dispatch(chatallyMessage, {
+          onFinished: async (res) => await this.send(to, ...res.messages),
+        });
       }
     }
   }
@@ -142,8 +128,10 @@ export class WhatsAppCloud {
    * @param {...import("@chatally/core").OutgoingMessage} outgoing
    */
   async send(to, ...outgoing) {
-    for (const message of outgoing.map(toWhatsAppMessage)) {
-      await this.#messages.send(to, message);
+    for (const message of outgoing) {
+      const whatsAppMessage = toWhatsAppMessage(message);
+      await this.#messages.send(to, whatsAppMessage);
+      this.log?.debug("Sent message", { to, ...whatsAppMessage });
     }
   }
 
@@ -151,20 +139,24 @@ export class WhatsAppCloud {
    * @param {string} file
    */
   async upload(file) {
-    return await this.#media.upload(file);
+    const mediaId = await this.#media.upload(file);
+    this.log?.debug("Uploaded file", { file, mediaId });
+    return mediaId;
   }
 
   /**
-   * @param {string} id
+   * @param {string} mediaId
    */
-  async download(id) {
-    return await this.#media.download(id);
+  async download(mediaId) {
+    const file = await this.#media.download(mediaId);
+    this.log?.debug("Downloaded file", { mediaId, file });
+    return file;
   }
 }
 
 /**
- * @param {Partial<import("./index.d.ts").WhatsAppCloudConfig>} [config = {}]
- * @returns {import("./index.d.ts").WhatsAppCloudConfig}
+ * @param {Partial<import("./whatsapp-cloud.d.ts").WhatsAppCloudConfig>} [config = {}]
+ * @returns {import("./whatsapp-cloud.d.ts").WhatsAppCloudConfig}
  */
 function readConfigs(config = {}) {
   const file = readConfigFromFile(config.file);
@@ -203,29 +195,27 @@ function readConfigFromFile(path) {
 
 /**
  * @param {string | boolean | undefined} prefix
- * @returns {Partial<import("./index.d.ts").WhatsAppCloudConfig>}
+ * @returns {Partial<import("./whatsapp-cloud.d.ts").WhatsAppCloudConfig>}
  */
 function readConfigFromEnv(prefix) {
   if (prefix !== false) {
     if (prefix === true || prefix === undefined) {
       prefix = "WHATSAPP_CLOUD_";
     }
-    /** @type {import("./index.d.ts").WhatsAppCloudConfig} */
+    /** @type {import("./whatsapp-cloud.d.ts").WhatsAppCloudConfig} */
     const config = {};
     const name = process.env[`${prefix}NAME`];
     if (name) config.name = name;
     config.immediate = envBoolean(`${prefix}IMMEDIATE`);
 
-    /** @type {import("./index.d.ts").WebhooksConfig} */
+    /** @type {import("./webhooks.d.ts").WebhooksConfig} */
     const webhooks = {};
     webhooks.port = envNumber(`${prefix}WEBHOOKS_PORT`);
     webhooks.verifyToken = process.env[`${prefix}WEBHOOKS_VERIFY_TOKEN`];
     webhooks.secret = process.env[`${prefix}WEBHOOKS_SECRET`];
-    webhooks.assetsDir = process.env[`${prefix}WEBHOOKS_ASSETS_DIR`];
-    webhooks.assetsPath = process.env[`${prefix}WEBHOOKS_ASSETS_PATH`];
     config.webhooks = webhooks;
 
-    /** @type {Partial<import("./index.d.ts").GraphApiConfig>} */
+    /** @type {Partial<import("./graph-api.d.ts").GraphApiConfig>} */
     const graphApi = {};
     graphApi.phoneNumberId = process.env[`${prefix}GRAPHAPI_PHONE_NUMBER_ID`];
     graphApi.accessToken = process.env[`${prefix}GRAPHAPI_ACCESS_TOKEN`];
@@ -235,7 +225,7 @@ function readConfigFromEnv(prefix) {
     // @ts-expect-error Partial configurations are ok here
     config.graphApi = graphApi;
 
-    /** @type {import("./index.d.ts").MediaConfig} */
+    /** @type {import("./media.d.ts").MediaConfig} */
     const media = {};
     media.downloadDir = process.env[`${prefix}MEDIA_DOWNLOAD_DIR`];
     media.dbPath = process.env[`${prefix}MEDIA_DB_PATH`];

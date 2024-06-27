@@ -1,4 +1,4 @@
-import { Request, Response } from "@chatally/core";
+import { BaseServer, text } from "@chatally/core";
 import { createInterface as readline } from "node:readline";
 
 const grey = 30;
@@ -14,26 +14,11 @@ function color(text, color) {
   return `\u001b[${color}m${text}\u001b[0m`;
 }
 
-/**
- * @typedef {import("@chatally/core").Server} Server
- * @implements {Server}
- */
-export class ConsoleServer {
-  /** @type {import("@chatally/core").Dispatch} */
-  dispatch;
-
-  /** @type {import("@chatally/logger").Logger | undefined} */
-  log;
-
-  /** @param {import("@chatally/core").Dispatch} [dispatch] */
-  constructor(
-    dispatch = async (req, res) => {
-      res.end(`You said:
-    > ${req.text}`);
-    }
-  ) {
-    this.dispatch = dispatch;
+export class ConsoleServer extends BaseServer {
+  constructor(name = "ConsoleServer") {
+    super(name);
   }
+
   /**
    * The name displayed before each message from your bot.
    */
@@ -92,7 +77,7 @@ Waiting for your messages...`;
     this._interface = readline(process.stdin);
 
     this._interface
-      .on("line", (input) => this.#printResponse(input))
+      .on("line", (line) => this.#printResponse(line))
       .on("close", () => this.#printGoodBye());
   }
 
@@ -109,18 +94,19 @@ Waiting for your messages...`;
   /**
    * @param {String} line
    */
-  async #printResponse(line) {
+  #printResponse(line) {
     if (this.stopToken && line === this.stopToken) {
       return this._interface?.close();
     }
-    const req = new Request(line);
-    const res = new Response();
-    await this.dispatch(req, res);
-    for (let text of res.text) {
-      this.#printName();
-      process.stdout.write(`${color(text, this.responseColor)}\n`);
-    }
-    this.#printPrompt();
+    this.dispatch(line, {
+      onWrite: (msg) => {
+        this.#printName();
+        process.stdout.write(`${color(text(msg), this.responseColor)}\n`);
+      },
+      onFinished: () => {
+        this.#printPrompt();
+      },
+    });
   }
 
   #printGoodBye() {

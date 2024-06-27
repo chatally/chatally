@@ -7,7 +7,7 @@ import { Media } from "./media.js";
 const downloadUrl = "https://download.here";
 
 function newMedia() {
-  /** @type {Array<{url: string, req: import("./index.d.ts").RequestInit, res: import("./index.d.ts").ResponseData}>} */
+  /** @type {Array<{url: string, req: import("./graph-api.d.ts").GraphApiRequest, res: import("./graph-api.d.ts").GraphApiResponse}>} */
   const requests = [];
   const graphApi = new GraphApi({
     phoneNumberId: "1234",

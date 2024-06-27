@@ -1,6 +1,6 @@
-import { Middleware } from "@chatally/core";
-import { Logger } from "@chatally/logger";
-import { Configuration, Nlp } from "@nlpjs/basic";
+import type { Middleware } from "@chatally/core";
+import type { Logger } from "@chatally/logger";
+import type { Configuration, Nlp } from "@nlpjs/basic";
 
 /**
  * Create a trained nlp.js NLP (Natural Language Processing) module.

@@ -1,3 +1,95 @@
+import type { Logger } from "@chatally/logger";
+import type { GraphApi } from "./graph-api.d.ts";
+import type { Webhooks } from "./webhooks.d.ts";
+
+export declare class Messages {
+  log: Logger | undefined;
+
+  /**
+   * Map of waiting messages, meant to be used in tests or subclasses only.
+   * @protected
+   */
+  _waiting: Record<string, Waiting[]>;
+
+  /**
+   * Send WhatsApp messages using the Graph API. Abstracts the
+   * `https://graph.facebook.com/<version>/PHONE_NUMBER_ID/messages` endpoint.
+   *
+   * Use it to send text, media, contacts, location, and interactive messages,
+   * as well as message templates through WhatsApp. You can also mark incoming
+   * messages as `read` through the Messages endpoint.
+   *
+   * [Learn more about the messages you can send](https://developers.facebook.com/docs/whatsapp/conversation-types).
+   *
+   * Messages are sent asynchronously. The API returns a 200 OK response with
+   * the message's unique ID (WAMID) when the message is successfully queued for
+   * delivery. The API does not return a response when the message is delivered.
+   * There is no guarantee about the order of delivery, even when awaiting the
+   * method call.
+   */
+  constructor(config: MessagesConfig);
+
+  /**
+   * Wait for `delivered` status of previous message before sending the next.
+   * This requires notifications from the Webhooks API.
+   *
+   * @param webhooks Webhooks API
+   * @param maxWait [Optional] Maximum time to wait for "delivered" status
+   *    before sending the next message
+   *    [default=-1 meaning forever]
+   * @returns this
+   */
+  waitForDelivered(webhooks: Webhooks, maxWait?: number): this;
+
+  /**
+   * Wrapper around the Graph API request to send a message.
+   *
+   * It automatically sets the `messaging_product` and `recipient_type` fields,
+   * as well as the correct headers. For full type-safety use the respective
+   * send<Type> methods instead.
+   *
+   * @param to recipient phone number
+   * @param message payload corresponding to the message type
+   * @param replyTo [Optional] message id to reply to
+   * @returns the message id from the WhatsApp server (WAMID)
+   */
+  send(to: string, message: Message, replyTo?: string): Promise<string>;
+
+  /**
+   * Mark a message as read.
+   *
+   * Send a POST request to the `/PHONE_NUMBER_ID/messages` endpoint with
+   * messaging_product set to whatsapp, message_id set to the message ID and
+   * status to read.
+   *
+   * For details, see
+   * https://developers.facebook.com/docs/whatsapp/cloud-api/guides/mark-message-as-read
+   *
+   * @param message_id The WAMID of the message to mark as read.
+   * @returns true, if the message was marked as read, false otherwise.
+   */
+  markAsRead(message_id: string): Promise<boolean>;
+}
+
+export interface Waiting {
+  to: string;
+  message: Message;
+  replyTo?: string;
+}
+
+export interface MessagesConfig {
+  /**
+   * Access to Meta's Graph API
+   */
+  graphApi: GraphApi;
+
+  /**
+   * [Optional] logger to use
+   * [default=undefined]
+   */
+  log?: Logger;
+}
+
 export type Message = {
   id?: string;
 } & (
@@ -390,7 +482,7 @@ export interface LocationMessage {
  *
  * For details see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages#media-object
  */
-export type Media = UploadedMedia | LinkedMedia;
+export type MediaObject = UploadedMedia | LinkedMedia;
 
 /**
  * Uploaded media asset.
@@ -433,7 +525,7 @@ export interface LinkedMedia {
  *
  * https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#supported-media-types
  */
-export type Audio = Media;
+export type Audio = MediaObject;
 
 export interface AudioMessage {
   type: "audio";
@@ -456,7 +548,7 @@ export interface AudioMessage {
  * Only PDF documents are supported for media-based message templates.
  * Size limit is 100MB.
  */
-export type Document = Media & {
+export type Document = MediaObject & {
   caption?: string;
   /** Describes the filename for the specific document. */
   filename?: string;
@@ -476,7 +568,7 @@ export interface DocumentMessage {
  *
  * Size limit is 5MB.
  */
-export type Image = Media & {
+export type Image = MediaObject & {
   caption?: string;
 };
 
@@ -492,7 +584,7 @@ export interface ImageMessage {
  *
  * Size limit for static stickers is 100KB, for animated stickers is 500KB.
  */
-export type Sticker = Media;
+export type Sticker = MediaObject;
 
 export interface StickerMessage {
   type: "sticker";
@@ -512,7 +604,7 @@ export interface StickerMessage {
  *
  * Size limit is 16MB.
  */
-export type Video = Media & {
+export type Video = MediaObject & {
   caption?: string;
 };
 

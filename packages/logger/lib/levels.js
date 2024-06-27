@@ -4,6 +4,7 @@
  * @type {Record<keyof import("./index.d.ts").LogMethods, undefined>}
  */
 const logMethods = {
+  trace: undefined,
   debug: undefined,
   info: undefined,
   warn: undefined,

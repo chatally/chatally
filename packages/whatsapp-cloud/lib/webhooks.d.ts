@@ -1,3 +1,84 @@
+import type { Logger } from "@chatally/logger";
+import type { Express } from "express-serve-static-core";
+import type { EventEmitter } from "node:events";
+
+/**
+ * WhatsApp Webhooks Server Class
+ */
+export declare class Webhooks extends EventEmitter<WebhooksEvents> {
+  log: Logger | undefined;
+
+  /**
+   * Create a WhatsApp Webhooks server.
+   *
+   * The server implements EventEmitter, you can register the event
+   * `notification`, it gives you notification with incoming messages,
+   * statuses, and errors.
+   *
+   * @see https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks
+   *
+   * @param config
+   */
+  constructor(config?: WebhooksConfig);
+
+  /**
+   * Start the server
+   * @param port [Optional] Port to listen on [`default=3000`]
+   */
+  listen(port?: number): void;
+
+  /**
+   * Get the underlying express app (for testing purposes).
+   *
+   * @protected
+   */
+  get _app(): Express;
+}
+
+type WebhooksEvents = {
+  notification: WebhooksNotification[];
+};
+
+export interface WebhooksNotification {
+  messages: IncomingMessage[];
+  statuses: Status[];
+  errors: Error[];
+}
+
+export interface WebhooksConfig {
+  /**
+   * [Optional] token to verify webhooks registration, if not provided webhooks
+   * cannot be registered with WhatsApp business account
+   * [`default=undefined`]
+   */
+  verifyToken?: string | undefined;
+
+  /**
+   * [Optional] secret to verify payload signatures, if not provided thet
+   * payload is not verified
+   * [`default=undefined`]
+   */
+  secret?: string;
+
+  /**
+   * [Optional] URL path to listen on
+   * [`default="/"`]
+   */
+  path?: string;
+
+  /**
+   * [Optional] Port to listen on
+   * [`default=3000`]
+   */
+  port?: number;
+
+  /**
+   * [Optional] Logger to use instead of console
+   * [`default=undefined`]
+   */
+  log?: Logger;
+}
+
 /**
  * Notification Payload Object
  *
@@ -298,7 +379,7 @@ export interface IncomingInteractive {
           /** Title of the selected list item. */
           title: string;
           /** Description of the selected row. */
-          description: string;
+          description?: string;
         };
       };
 }

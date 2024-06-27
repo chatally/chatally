@@ -3,62 +3,50 @@
  *
  * Some WhatsApp message types are ignored and will return undefined.
  *
- * @param {import("./webhooks-types.js").IncomingMessage} wa
+ * @param {import("./webhooks.js").IncomingMessage} wa
  * @returns {import("@chatally/core").IncomingMessage}
  */
 export function toChatallyMessage(wa) {
-  /** @type {import("@chatally/core").Message | undefined} */
-  let mapped = undefined;
-  switch (wa.type) {
-    case "audio":
-      mapped = audio(wa);
-      break;
-    case "document":
-      mapped = document(wa);
-      break;
-    case "image":
-      mapped = image(wa);
-      break;
-    case "interactive":
-      mapped = interactive(wa);
-      break;
-    case "location":
-      mapped = location(wa);
-      break;
-    case "reaction":
-      mapped = reaction(wa);
-      break;
-    case "sticker":
-      mapped = sticker(wa);
-      break;
-    case "text":
-      mapped = text(wa);
-      break;
-    case "video":
-      mapped = video(wa);
-      break;
-    case "system":
-    case "button":
-    case "order":
-    case "referral":
-      mapped = {
-        type: "custom",
-        schema: "whatsappcloud",
-        custom: wa,
-      };
-      break;
-  }
-  return {
+  const message = {
     timestamp: Number(wa.timestamp),
     id: wa.id,
     from: wa.from,
     replyTo: wa.context?.id,
-    ...mapped,
   };
+  switch (wa.type) {
+    case "audio":
+      return { ...message, ...audio(wa) };
+    case "document":
+      return { ...message, ...document(wa) };
+    case "image":
+      return { ...message, ...image(wa) };
+    case "interactive":
+      return { ...message, ...interactive(wa) };
+    case "location":
+      return { ...message, ...location(wa) };
+    case "reaction":
+      return { ...message, ...reaction(wa) };
+    case "sticker":
+      return { ...message, ...sticker(wa) };
+    case "text":
+      return { ...message, ...text(wa) };
+    case "video":
+      return { ...message, ...video(wa) };
+    case "system":
+    case "button":
+    case "order":
+    case "referral":
+      return {
+        ...message,
+        type: "custom",
+        schema: "whatsappcloud",
+        custom: wa,
+      };
+  }
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingText} wa
+ * @param {import("./webhooks.js").IncomingText} wa
  * @returns {import("@chatally/core").Text}
  */
 function text(wa) {
@@ -69,7 +57,7 @@ function text(wa) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingImage} wa
+ * @param {import("./webhooks.js").IncomingImage} wa
  * @returns {import("@chatally/core").Image}
  */
 function image(wa) {
@@ -93,7 +81,7 @@ function download(id) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingAudio} wa
+ * @param {import("./webhooks.js").IncomingAudio} wa
  * @returns {import("@chatally/core").Audio}
  */
 function audio(wa) {
@@ -107,7 +95,7 @@ function audio(wa) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingVideo} wa
+ * @param {import("./webhooks.js").IncomingVideo} wa
  * @returns {import("@chatally/core").Video}
  */
 function video(wa) {
@@ -122,7 +110,7 @@ function video(wa) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingDocument} wa
+ * @param {import("./webhooks.js").IncomingDocument} wa
  * @returns {import("@chatally/core").Document}
  */
 function document(wa) {
@@ -138,7 +126,7 @@ function document(wa) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingLocation} wa
+ * @param {import("./webhooks.js").IncomingLocation} wa
  * @returns {import("@chatally/core").Location}
  */
 function location(wa) {
@@ -149,7 +137,7 @@ function location(wa) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingReaction} wa
+ * @param {import("./webhooks.js").IncomingReaction} wa
  * @returns {import("@chatally/core").Reaction}
  */
 function reaction(wa) {
@@ -163,7 +151,7 @@ function reaction(wa) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingSticker} wa
+ * @param {import("./webhooks.js").IncomingSticker} wa
  * @returns {import("@chatally/core").Image}
  */
 function sticker(wa) {
@@ -178,19 +166,19 @@ function sticker(wa) {
 }
 
 /**
- * @param {import("./webhooks-types.js").IncomingInteractive} wa
- * @returns {import("@chatally/core").Select}
+ * @param {import("./webhooks.js").IncomingInteractive} wa
+ * @returns {import("@chatally/core").Action}
  */
 function interactive(wa) {
   if (wa.interactive.type === "button_reply") {
     return {
-      type: "select",
-      select: wa.interactive.button_reply,
+      type: "action",
+      action: wa.interactive.button_reply,
     };
   } else {
     return {
-      type: "select",
-      select: wa.interactive.list_reply,
+      type: "action",
+      action: wa.interactive.list_reply,
     };
   }
 }

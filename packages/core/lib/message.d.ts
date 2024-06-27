@@ -1,20 +1,51 @@
-export type Message =
+/**
+ * Generic message type (incoming and outgoing).
+ */
+export type Message = IncomingMessage | OutgoingMessage;
+
+/**
+ * Incoming message.
+ */
+export type IncomingMessage = {
+  /** Arrival time of message */
+  timestamp: number;
+  /** Id of message */
+  id: string;
+  /** Id of sender */
+  from: string;
+  /** [Optional] Id of message that this message is a reply to. */
+  replyTo?: string;
+} & (
+  | Action // Incoming only
+  | BidiMessage
+);
+
+/** Bidirectional message types */
+type BidiMessage =
   | Audio
-  | Buttons
   | Custom
   | Document
   | Image
   | Location
-  | Menu
   | Reaction
-  | Select
   | Text
   | Video;
 
-type Action = {
-  id: string;
-  title: string;
-  description?: string;
+/**
+ * Incoming message
+ */
+export type OutgoingMessage = {
+  /** [Optional] Id of message that this message is a reply to. */
+  readonly replyTo?: string;
+} & (
+  | Buttons // Outgoing only
+  | Menu // Outgoing only
+  | BidiMessage
+);
+
+export type Action = {
+  readonly type: "action";
+  readonly action: _Action;
 };
 
 export type Audio = {
@@ -36,15 +67,20 @@ export type Buttons = {
   /** The content of the message */
   readonly buttons: {
     text: string;
-    actions: Action[];
+    actions: _Action[];
   };
+};
+
+type _Action = {
+  id: string;
+  title: string;
+  description?: string;
 };
 
 export type Custom = {
   readonly type: "custom";
   readonly schema: string;
-  // @ts-ignore We want to use custom as anything
-  readonly custom: any;
+  readonly custom: unknown;
 };
 
 export type Document = {
@@ -99,7 +135,7 @@ export type Menu = {
     text: string;
     sections: Array<{
       title?: string;
-      actions: Action[];
+      actions: _Action[];
     }>;
   };
 };
@@ -112,11 +148,6 @@ export type Reaction = {
     /** The emoji the customer reacted with. */
     emoji: string;
   };
-};
-
-export type Select = {
-  readonly type: "select";
-  readonly select: Action;
 };
 
 export type Text = {

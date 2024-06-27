@@ -42,7 +42,7 @@ export async function trainNlp(logger, configuration) {
   const log = logger;
   if (log) {
     dock.getContainer().register("logger", {
-      trace: (/** @type {string} */ msg) => log.debug(`[TRACE] ${msg}`),
+      trace: (/** @type {string} */ msg) => log.trace(msg),
       debug: (/** @type {string} */ msg) => log.debug(msg),
       info: (/** @type {string} */ msg) => log.info(msg),
       log: (/** @type {string} */ msg) => log.info(msg),
@@ -88,9 +88,8 @@ export function nlpjsMiddleware(nlp, options) {
       (res, msg) => res.write(msg);
 
   const obj = {
-    [name]: async function (
-      /** @type {import("@chatally/core").Context<{}>} */ { req, res, data }
-    ) {
+    /** @type {import("@chatally/core").Middleware<unknown>} */
+    [name]: async function ({ req, res, data }) {
       if (!res.isWritable) return;
       const result = await nlp.process("en", req.text);
       data[name] = result;

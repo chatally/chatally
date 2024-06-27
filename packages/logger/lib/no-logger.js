@@ -1,5 +1,7 @@
 /**
- * @type {import("./index.d.ts").NoLogger}
+ * @typedef {import("./index.d.ts").Logger} Logger
+ * @class
+ * @implements {Logger}
  */
 export class NoLogger {
   name = "NoLogger";
@@ -20,6 +22,7 @@ export class NoLogger {
     return this;
   }
 
+  trace() {}
   debug() {}
   info() {}
   warn() {}

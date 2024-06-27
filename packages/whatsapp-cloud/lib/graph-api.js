@@ -1,4 +1,3 @@
-import { GraphApiError } from "./errors.js";
 /**
  * We CANNOT use `node.fetch`, because it is not correctly detected by the
  * Facebook Graph API as client, when downloading binary data from
@@ -8,6 +7,7 @@ import { GraphApiError } from "./errors.js";
  * programmatically.
  */
 import undici from "undici";
+import { BaseError } from "./errors.js";
 
 const endpoints = [
   "business_compliance_info",
@@ -19,17 +19,19 @@ const endpoints = [
 ];
 
 export class GraphApi {
+  /** @type {import("@chatally/logger").Logger | undefined} */
+  log;
   #url;
   #phoneNumberId;
   #accessToken;
 
   /**
    * @protected
-   * @type {import("./index.d.ts").RequestFn}
+   * @type {import("./graph-api.d.ts").RequestFn}
    */
   _request;
 
-  /** @param {import("./index.d.ts").GraphApiConfig} config */
+  /** @param {import("./graph-api.d.ts").GraphApiConfig} config */
   constructor(config) {
     const {
       basePort,
@@ -37,8 +39,10 @@ export class GraphApi {
       version = 20,
       phoneNumberId,
       accessToken,
-      _request: _fetch = undici.request,
+      log,
+      _request = undici.request,
     } = config;
+    this.log = log;
 
     const host = basePort
       ? `http://${baseUrl}:${basePort}`
@@ -59,7 +63,7 @@ export class GraphApi {
     }
     this.#accessToken = accessToken;
 
-    this._request = _fetch;
+    this._request = _request;
   }
 
   /**
@@ -103,9 +107,9 @@ export class GraphApi {
   }
 
   /**
-   * @param {import("./index.d.ts").RequestInit} request
+   * @param {import("./graph-api.d.ts").GraphApiRequest} request
    * @param {string} endpoint
-   * @returns {Promise<import("./index.d.ts").GraphApiResult>}
+   * @returns {Promise<import("./graph-api.d.ts").GraphApiResult>}
    */
   async #request(request, endpoint) {
     if (!endpoint || endpoint.length === 0) {
@@ -117,6 +121,7 @@ export class GraphApi {
         ? [this.#url, this.#phoneNumberId, endpoint, ""]
         : [this.#url, endpoint, ""];
     const url = segments.join("/");
+    this.log?.trace("Request", { url, request });
     const response = await this._request(url, request);
 
     if (response.statusCode !== 200) {
@@ -127,7 +132,7 @@ export class GraphApi {
     const contentType =
       /** @type {string} */ (response.headers["content-type"]) || "unknown";
 
-    /** @type {import("./index.d.ts").GraphApiResult} */
+    /** @type {import("./graph-api.d.ts").GraphApiResult} */
     const result = {
       contentType,
       text: undefined,
@@ -158,6 +163,7 @@ export class GraphApi {
     } else {
       result.buffer = await response.body.arrayBuffer();
     }
+    this.log?.trace("Response", result);
     return result;
   }
 
@@ -172,5 +178,13 @@ export class GraphApi {
       "User-Agent": "GraphApiSdk/1.0.0",
       ...headers,
     };
+  }
+}
+
+export class GraphApiError extends BaseError {
+  /** @param {import("./graph-api.js").GraphApiErrorInit} init */
+  constructor(init) {
+    super(init.error_user_msg);
+    Object.assign(this, init);
   }
 }

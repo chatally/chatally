@@ -13,17 +13,17 @@ const webhooks = new Webhooks_();
 
 class Messages_ extends Messages {
   /**
-   * All logged fetch calls
+   * All logged requests
    * @type {Array<{url: string|URL|Request, request: any|undefined}>}
    */
-  fetchCalls = [];
+  requests = [];
   constructor() {
     super({
       graphApi: new GraphApi({
         phoneNumberId: "ID",
         accessToken: "ACCESS_TOKEN",
         _request: async (url, request) => {
-          this.fetchCalls.push({ url, request });
+          this.requests.push({ url, request });
           return {
             statusCode: 200,
             headers: {
@@ -32,7 +32,7 @@ class Messages_ extends Messages {
             body: {
               json: () => {
                 return {
-                  messages: [{ id: `wamid-${this.fetchCalls.length}` }],
+                  messages: [{ id: `wamid-${this.requests.length}` }],
                 };
               },
               text: () => {
@@ -49,17 +49,17 @@ class Messages_ extends Messages {
   }
 
   /** @param {string} to */
-  waiting(to) {
+  countWaiting(to) {
     return (this._waiting[to] || []).length;
   }
 }
 
 /**
  * @param {number} count
- * @returns {import("./messages-types.js").Message[]}
+ * @returns {import("./messages.d.ts").Message[]}
  */
 function text(count) {
-  /** @type {import("./messages-types.js").TextMessage[]} */
+  /** @type {import("./messages.d.ts").TextMessage[]} */
   const messages = [];
   for (let i = 0; i < count; i++) {
     messages.push({
@@ -76,7 +76,7 @@ describe("messages", function () {
       const messages = new Messages_();
       const wamid = await messages.send("foo", text(1)[0]);
       expect(wamid).toEqual("wamid-1");
-      expect(messages.fetchCalls[0].url).toEqual(
+      expect(messages.requests[0].url).toEqual(
         "https://graph.facebook.com/v20.0/ID/messages/"
       );
     });
@@ -90,8 +90,8 @@ describe("messages", function () {
       const secondId = await messages.send("foo", texts[1]);
       expect(firstId).toEqual("wamid-1");
       expect(texts[0].id).toEqual("wamid-1");
-      expect(messages.fetchCalls.length).toEqual(1);
-      expect(messages.waiting("foo")).toEqual(2);
+      expect(messages.requests.length).toEqual(1);
+      expect(messages.countWaiting("foo")).toEqual(2);
       expect(secondId).toEqual("<waiting>");
     });
     it("sends second message on webhook notification", async function () {
@@ -106,15 +106,30 @@ describe("messages", function () {
         messages: [],
         errors: [],
         statuses: [
-          { recipient_id: to, id: texts[0].id || "", status: "delivered" },
+          {
+            recipient_id: to,
+            id: texts[0].id || "",
+            status: "delivered",
+            pricing: {
+              billable: false,
+              category: "customer_initiated",
+              pricing_model: "CBP",
+            },
+            timestamp: String(Date.now()),
+            conversation: {
+              origin: { type: "customer_initiated" },
+              id: "",
+              expiration_timestamp: String(Date.now() + 24 * 60 * 60 * 1000),
+            },
+          },
         ],
       });
       // emitted events are handled in background, so we forcefully need to
       // wait one tick
       await new Promise((res) => process.nextTick(res));
       expect(texts[1].id).toEqual("wamid-2");
-      expect(messages.fetchCalls.length).toEqual(2);
-      expect(messages.waiting(to)).toEqual(2);
+      expect(messages.requests.length).toEqual(2);
+      expect(messages.countWaiting(to)).toEqual(2);
       expect(texts[2].id).toEqual("<waiting>");
     });
   });

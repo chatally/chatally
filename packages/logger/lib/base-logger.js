@@ -1,14 +1,19 @@
-import { format } from "node:util";
+import { format, formatWithOptions } from "node:util";
 import { getLevel, getLevelIndex } from "./levels.js";
 
 /** @type {import("./index.d.ts").Level} */
 const DEFAULT_LEVEL = "info";
+const TRACE = getLevelIndex("trace");
 const DEBUG = getLevelIndex("debug");
 const INFO = getLevelIndex("info");
 const WARN = getLevelIndex("warn");
 const ERROR = getLevelIndex("error");
 
-/** @type {import("./index.d.ts").BaseLogger} */
+/**
+ * @typedef {import("./index.d.ts").Logger} Logger
+ * @class
+ * @implements {Logger}
+ */
 export class BaseLogger {
   /**
    * Output writable, default is the console
@@ -94,6 +99,11 @@ export class BaseLogger {
   }
 
   // @ts-expect-error Implementing overriding method
+  trace(...args) {
+    this.log(TRACE, ...args);
+  }
+
+  // @ts-expect-error Implementing overriding method
   debug(...args) {
     this.log(DEBUG, ...args);
   }
@@ -165,7 +175,9 @@ export class BaseLogger {
       data = undefined;
     }
     const msg_ =
-      !!msg && args && args.length > 0 ? format(msg || "", ...args) : msg || "";
+      !!msg && args && args.length > 0
+        ? formatWithOptions({ depth: 3, colors: true }, msg || "", ...args)
+        : msg || "";
     const sLevel = this.levels.text(nLevel).toUpperCase();
     let line = this.name
       ? format("%s (%s): %s", sLevel, this.name, msg_)

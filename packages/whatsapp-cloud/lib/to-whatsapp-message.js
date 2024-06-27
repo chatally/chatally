@@ -1,6 +1,6 @@
 /**
  * @param {import("@chatally/core").OutgoingMessage} message
- * @returns {import("./messages-types.js").Message}
+ * @returns {import("./messages.js").Message}
  */
 export function toWhatsAppMessage(message) {
   switch (message.type) {
@@ -29,7 +29,7 @@ export function toWhatsAppMessage(message) {
         },
       };
     case "custom":
-      return message.custom;
+      return /** @type {import("./messages.js").Message} */ (message.custom);
     case "document":
       return {
         type: "document",
@@ -87,8 +87,6 @@ export function toWhatsAppMessage(message) {
           emoji: message.reaction.emoji,
         },
       };
-    case "select":
-      throw new Error("Cannot send 'select' messages");
     case "text":
       return {
         type: "text",

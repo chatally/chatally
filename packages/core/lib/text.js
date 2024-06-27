@@ -1,5 +1,5 @@
 /**
- * @param {import("./messages.js").Message} msg
+ * @param {import("./message.d.ts").Message} msg
  * @returns {string}
  */
 export function text(msg) {
@@ -41,8 +41,8 @@ export function text(msg) {
       return `${msg.menu.title}: ${msg.menu.text}`;
     case "reaction":
       return msg.reaction.emoji;
-    case "select":
-      return `${msg.select.id}: ${msg.select.title}`;
+    case "action":
+      return `${msg.action.id}: ${msg.action.title}`;
     case "text":
       return msg.text;
     case "video":
@@ -52,4 +52,5 @@ export function text(msg) {
         `video: ${msg.video.url} (${msg.video.mimeType})`
       );
   }
+  // return "unknown:" + JSON.stringify(msg);
 }

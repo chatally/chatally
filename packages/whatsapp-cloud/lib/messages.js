@@ -1,13 +1,13 @@
 export class Messages {
-  /** @type {import("./index.d.ts").GraphApi} */
+  /** @type {import("./graph-api.d.ts").GraphApi} */
   #graphApi;
 
   /** @type {import("@chatally/logger").Logger | undefined} */
-  #log;
+  log;
 
-  /** @param {import("./index.d.ts").MessagesConfig} config */
+  /** @param {import("./messages.d.ts").MessagesConfig} config */
   constructor(config) {
-    this.#log = config.log;
+    this.log = config.log;
     this.#graphApi = config.graphApi;
   }
 
@@ -39,21 +39,14 @@ export class Messages {
   #waitForDelivered = undefined;
 
   /**
-   * @typedef Waiting
-   * @property {string} to
-   * @property {import("./messages-types.js").Message} message
-   * @property {string} [replyTo]
-   */
-
-  /**
    * Map of waiting messages, meant to be used in tests or subclasses only.
    * @protected
-   * @type {Record<string, (Waiting[] | undefined)>}
+   * @type {Record<string, (import("./messages.d.ts").Waiting[] | undefined)>}
    */
   _waiting = {};
 
   /**
-   * @param {import("./webhooks-types.js").Status} status
+   * @param {import("./webhooks.d.ts").Status} status
    */
   async #sendNext(status) {
     const waiting = this._waiting[status.recipient_id];
@@ -61,7 +54,7 @@ export class Messages {
 
     const previous = waiting.shift();
     if (previous && previous.message.id !== status.id) {
-      this.#log?.warn(`Received delivery status for unexpected message,
+      this.log?.warn(`Received delivery status for unexpected message,
 expected ${previous.message.id}
 received ${status.id}.`);
     }
@@ -76,7 +69,7 @@ received ${status.id}.`);
 
   /**
    * @param {string} to
-   * @param {import("./messages-types.js").Message} message
+   * @param {import("./messages.js").Message} message
    * @param {string} [replyTo]
    */
   async send(to, message, replyTo) {
@@ -100,7 +93,7 @@ received ${status.id}.`);
    * @property {{message_id: string}} [context]
    */
 
-  /** @param {Waiting} $ */
+  /** @param {import("./messages.d.ts").Waiting} $ */
   async #send({ to, message, replyTo }) {
     /** @type {SendMessageBody} */
     const body = {
@@ -117,11 +110,11 @@ received ${status.id}.`);
     );
     if (!messages || messages.length === 0) {
       throw new Error(
-        `Message was not sent: ${JSON.stringify(response, null, 2)}`
+        `Message was not sent, server responded with
+${JSON.stringify(response, null, 2)}`
       );
     }
     message.id = messages[0].id;
-    this.#log?.info("Sent message %s to %s", message.id, to);
     return message.id;
   }
 

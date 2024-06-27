@@ -2,13 +2,17 @@ import { nanoid } from "nanoid";
 import { text } from "./text.js";
 
 /**
- * @type {import("./index.d.ts").Request}
+ * @typedef {import("./message.d.ts").IncomingMessage} IncomingMessage
+ */
+
+/**
+ * @type {import("./request.d.ts").Request}
  */
 export class Request {
-  /** @type {import("./index.d.ts").IncomingMessage} */
+  /** @type {IncomingMessage} */
   #message;
 
-  /** @param {import("./index.d.ts").IncomingMessage | string} message */
+  /** @param {IncomingMessage | string} message */
   constructor(message) {
     if (typeof message === "string") {
       let [from, text] = message.split(": ");
@@ -33,6 +37,6 @@ export class Request {
   }
 
   get text() {
-    return text(this.message);
+    return text(this.#message);
   }
 }

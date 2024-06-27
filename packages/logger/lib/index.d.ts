@@ -28,6 +28,7 @@ export declare class BaseLogger implements Logger {
   data?: unknown;
   isLevel(level: Level): boolean;
   child(options?: LoggerOptions | undefined): Logger;
+  trace: LogMethod;
   debug: LogMethod;
   info: LogMethod;
   warn: LogMethod;
@@ -118,6 +119,8 @@ export type Level = "silent" | keyof LogMethods;
  * See ./levels.js
  */
 export type LogMethods = {
+  /** Log a trace message. */
+  trace: LogMethod;
   /** Log a debug message. */
   debug: LogMethod;
   /** Log an info message. */
@@ -161,6 +164,7 @@ export declare class NoLogger implements Logger {
   isLevel(level: Level): boolean;
   /** Create a child logger. Will always return `this`. */
   child(options?: LoggerOptions | undefined): Logger;
+  trace: LogMethod;
   debug: LogMethod;
   info: LogMethod;
   warn: LogMethod;

@@ -1,18 +1,18 @@
 import { EventEmitter } from "node:events";
 import { text } from "./text.js";
 
-/** @type {import("./index.d.ts").Response} */
+/**
+ * @typedef {import("./message.d.ts").OutgoingMessage} OutgoingMessage
+ */
+
+/** @type {import("./response.d.ts").Response} */
 export class Response extends EventEmitter {
-  /** @type {import("./index.d.ts").OutgoingMessage[]} */
+  /** @type {OutgoingMessage[]} */
   #messages = [];
   #finished = false;
 
-  /** @param {((r: Response) => void)} [onFinished] */
-  constructor(onFinished) {
+  constructor() {
     super();
-    if (onFinished) {
-      this.on("finished", onFinished);
-    }
   }
 
   get messages() {
@@ -23,18 +23,14 @@ export class Response extends EventEmitter {
     return !this.#finished;
   }
 
-  get text() {
-    return this.#messages.map(text);
-  }
-
-  /** @param {string | import("./index.d.ts").OutgoingMessage} [msg] */
+  /** @param {string | OutgoingMessage} [msg] */
   end(msg) {
     this.write(msg);
     this.#finished = true;
     this.emit("finished", this);
   }
 
-  /** @param {string | import("./index.d.ts").OutgoingMessage} [msg] */
+  /** @param {string | OutgoingMessage} [msg] */
   write(msg) {
     if (!msg) return;
 
@@ -50,5 +46,9 @@ export class Response extends EventEmitter {
       this.#messages.push(msg);
     }
     this.emit("write", msg);
+  }
+
+  get text() {
+    return this.#messages.map(text);
   }
 }
