@@ -1,5 +1,14 @@
 # @chatally/console
 
+## 0.0.4
+
+### Patch Changes
+
+- 135787e: Forcefully bumping version numbers
+- Updated dependencies [135787e]
+  - @chatally/core@0.0.9
+  - @chatally/logger@0.0.7
+
 ## 0.0.3
 
 ### Patch Changes

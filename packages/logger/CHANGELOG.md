@@ -1,5 +1,11 @@
 # @chatally/logger
 
+## 0.0.7
+
+### Patch Changes
+
+- 135787e: Forcefully bumping version numbers
+
 ## 0.0.6
 
 ### Patch Changes

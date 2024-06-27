@@ -1,6 +1,6 @@
 {
   "name": "@chatally/logger",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "ChatAlly Logger Facade",
   "license": "MIT",
   "keywords": [
