@@ -1,5 +1,13 @@
 # @chatally/nlpjs
 
+## 0.0.6
+
+### Patch Changes
+
+- 135787e: Forcefully bumping version numbers
+- Updated dependencies [135787e]
+  - @chatally/core@0.0.9
+
 ## 0.0.5
 
 ### Patch Changes
