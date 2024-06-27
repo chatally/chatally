@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "tsc": "tsc",
     "lint": "eslint .",
     "dev": "nodemon index.js"
   },

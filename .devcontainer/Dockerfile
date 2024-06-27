@@ -1,4 +1,4 @@
-ARG VARIANT=20
+ARG VARIANT=lts
 FROM node:${VARIANT}
 
 USER root

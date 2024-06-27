@@ -27,6 +27,7 @@
     "dev": "turbo run dev --parallel --no-daemon",
     "docs": "npm run -w @apps/docs dev",
     "format": "prettier --write \"**/*.{d\\.ts,[c]js,md}\"",
+    "tsc": "turbo run tsc --no-daemon",
     "lint": "turbo run lint --no-daemon",
     "prepare:release": "npm run clean && npm run release:build && npm run release:check",
     "release:build": "turbo run build --filter=!./apps/* --no-daemon",

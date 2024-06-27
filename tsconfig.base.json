@@ -28,5 +28,6 @@
     "target": "ES2022",
     "types": ["vitest/globals"]
   },
+  "include": ["./vitest.d.ts"],
   "exclude": ["**/dist", "**/node_modules"]
 }

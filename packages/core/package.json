@@ -21,7 +21,8 @@
     }
   },
   "scripts": {
-    "lint": "tsc & eslint .",
+    "tsc": "tsc",
+    "lint": "eslint .",
     "repl": "nodemon repl.js",
     "test": "vitest"
   },

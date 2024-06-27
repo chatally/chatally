@@ -17,6 +17,9 @@
     "lint": {
       "dependsOn": ["^build"]
     },
+    "tsc": {
+      "persistent": true
+    },
     "test": {
       "outputs": ["coverage/**"],
       "dependsOn": []
