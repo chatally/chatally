@@ -1,5 +1,11 @@
 # @chatally/console
 
+## 0.0.5
+
+### Patch Changes
+
+- 40b9bcb: Added trace statement to output the incoming request in case of error
+
 ## 0.0.4
 
 ### Patch Changes
