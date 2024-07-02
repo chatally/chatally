@@ -24,9 +24,9 @@ export class Webhooks extends EventEmitter {
   /** @param {number} [port] */
   listen(port = this.#port) {
     const url = port
-      ? `http://localhost${this.#path}:${port}`
+      ? `http://localhost:${port}${this.#path}`
       : `http://localhost${this.#path}`;
-    this.log?.info(`Started server at ${url} (GET, POST)`);
+    this.log?.info(`Webhooks started at ${url} (GET, POST)`);
     this._app.listen(port);
   }
 
@@ -56,8 +56,17 @@ export class Webhooks extends EventEmitter {
         })
         .use(
           /** @type {import("express").ErrorRequestHandler} */
-          (err, _req, res, next) => {
-            this.log?.error(err.message, err.description);
+          (err, req, res, next) => {
+            if (this.log?.isLevel("debug")) {
+              this.log.error(err.message, {
+                description: err.description,
+                url: req.originalUrl,
+                headers: req.headers,
+                body: req.body?.toString(),
+              });
+            } else {
+              this.log?.error(err.message, err.description);
+            }
             if (err instanceof HttpError) {
               res.status(err.status).send(err.message);
             } else {

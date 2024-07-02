@@ -101,21 +101,19 @@ describe("Application", function () {
   });
 
   it("warns about unnamed middleware", async () => {
-    const out = new StringWritable();
     const log = new BaseLogger({ name: "root", level: "warn" });
-    log.out = out;
+    log.out = new StringWritable();
     log.timestamp = false;
 
     new Application({ log })
       // unnamed middleware
       .use(() => {});
-    expect(out.data.startsWith("WARN (root):")).toBeTruthy();
+    expect(log.out.data.startsWith("WARN (root):")).toBeTruthy();
   });
 
   it("logs middleware output", async () => {
-    const out = new StringWritable();
     const log = new BaseLogger({ level: "warn" });
-    log.out = out;
+    log.out = new StringWritable();
     log.timestamp = false;
 
     const app = new Application({ log }) //
@@ -126,6 +124,6 @@ describe("Application", function () {
 
     const res = new Response();
     await app.dispatch(new Request("test: foo"), res);
-    expect(out.data).toBe("DEBUG (logs): Hello\n");
+    expect(log.out.data).toBe("DEBUG (logs): Hello\n");
   });
 });

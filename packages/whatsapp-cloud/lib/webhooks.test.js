@@ -1,5 +1,7 @@
 import supertest from "supertest";
 import { Webhooks } from "./webhooks.js";
+import { BaseLogger } from "@chatally/logger";
+import { StringWritable } from "@internal/test-utils";
 
 class _Webhooks extends Webhooks {
   /** @param {import("./webhooks.d.ts").WebhooksConfig} [config] */
@@ -94,13 +96,17 @@ describe("webhooks", function () {
       expect(res.text).toEqual("Missing header 'x-hub-signature-256'.");
     });
     it("fails for incorrect signature (Bad Request)", async function () {
-      const webhooks = new _Webhooks({ secret: "abc" });
+      const log = new BaseLogger({ name: "root", level: "debug" });
+      log.out = new StringWritable();
+      log.timestamp = false;
+      const webhooks = new _Webhooks({ secret: "abc", log });
       const res = await webhooks.app
         .post("/")
         .set("x-hub-signature-256", "foo")
         .send(text("me", "foo"));
       expect(res.status).toEqual(400);
       expect(res.text).toEqual("Invalid 'x-hub-signature-256'.");
+      // console.log(log.out.data);
     });
   });
 });
