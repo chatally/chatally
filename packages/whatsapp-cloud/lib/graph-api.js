@@ -36,7 +36,7 @@ export class GraphApi {
     const {
       basePort,
       baseUrl = 'graph.facebook.com',
-      version = 20,
+      version = 19,
       phoneNumberId,
       accessToken,
       log,
@@ -118,8 +118,8 @@ export class GraphApi {
     const segments = endpoint.startsWith('http')
       ? [endpoint]
       : endpoints.includes(endpoint)
-        ? [this.#url, this.#phoneNumberId, endpoint, '']
-        : [this.#url, endpoint, '']
+        ? [this.#url, this.#phoneNumberId, endpoint]
+        : [this.#url, endpoint]
     const url = segments.join('/')
     this.log?.trace('Request', { url, request })
     const response = await this._request(url, request)
