@@ -1,5 +1,11 @@
 # @chatally/console
 
+## 0.0.6
+
+### Patch Changes
+
+- f4b7586: Improved logging
+
 ## 0.0.5
 
 ### Patch Changes
