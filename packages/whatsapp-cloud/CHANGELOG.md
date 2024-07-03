@@ -1,5 +1,11 @@
 # @chatally/console
 
+## 0.0.8
+
+### Patch Changes
+
+- 0dfcb38: Fixed prefix in x-hub-signature
+
 ## 0.0.7
 
 ### Patch Changes
