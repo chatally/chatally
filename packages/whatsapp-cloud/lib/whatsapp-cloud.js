@@ -18,45 +18,61 @@ export class WhatsAppCloud extends BaseServer {
    */
   immediate;
 
-  /** @type {Webhooks} */ #webhooks;
-  /** @type {GraphApi} */ #graphApi;
-  /** @type {Messages} */ #messages;
-  /** @type {Media} */ #media;
+  /** @type {import("./whatsapp-cloud.d.ts").WhatsAppCloudConfig} */
+  #config;
+  /** @type {Webhooks} */
+  #webhooks;
+  /** @type {GraphApi} */
+  #graphApi;
+  /** @type {Messages} */
+  #messages;
+  /** @type {Media} */
+  #media;
 
   /**
    * @param {Partial<import("./whatsapp-cloud.d.ts").WhatsAppCloudConfig>} [configObj]
    */
   constructor(configObj) {
     const config = readConfigs(configObj);
+    super(config.name || "WhatsAppCloud");
+    this.#config = config;
+  }
+
+  init() {
     const {
-      name = "WhatsAppCloud",
       immediate = false,
-      log,
       webhooks,
       graphApi,
       messages,
       media,
-    } = config;
+    } = this.#config;
+    const log = this.log || this.#config.log;
 
-    super(name);
     this.immediate = immediate;
 
     if (webhooks instanceof Webhooks) {
       this.#webhooks = webhooks;
     } else {
-      this.#webhooks = new Webhooks(webhooks);
+      this.#webhooks = new Webhooks({
+        log: log?.child({ name: "Webhooks" }),
+        ...webhooks,
+      });
     }
 
     if (graphApi instanceof GraphApi) {
       this.#graphApi = graphApi;
     } else {
-      this.#graphApi = new GraphApi(graphApi);
+      this.#graphApi = new GraphApi({
+        log: log?.child({ name: "GraphApi" }),
+        ...graphApi,
+      });
     }
 
     if (messages instanceof Messages) {
       this.#messages = messages;
     } else {
       this.#messages = new Messages({
+        log: log?.child({ name: "Messages" }),
         graphApi: this.#graphApi,
         ...messages,
       });
@@ -66,6 +82,7 @@ export class WhatsAppCloud extends BaseServer {
       this.#media = media;
     } else {
       this.#media = new Media({
+        log: log?.child({ name: "Media" }),
         graphApi: this.#graphApi,
         ...media,
       });
@@ -94,10 +111,14 @@ export class WhatsAppCloud extends BaseServer {
     if (this.#messages instanceof Messages) {
       this.#messages.log = log?.child({ name: "Messages" });
     }
+    if (this.#media instanceof Media) {
+      this.#media.log = log?.child({ name: "Media" });
+    }
   }
 
   /** @param {number} [port] */
   listen(port) {
+    this.init();
     this.#webhooks.on("notification", this.#handleNotification.bind(this));
     this.#webhooks.listen(port);
     this.#messages.waitForDelivered(this.#webhooks);

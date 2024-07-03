@@ -1,5 +1,7 @@
 import Database from "better-sqlite3";
+import fss from "node:fs";
 import fs from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import { BaseError } from "./errors.js";
 import {
   getMaxSizeFromMediaType,
@@ -7,20 +9,9 @@ import {
   getSuffixFromMediaType,
 } from "./media-types.js";
 
-/**
- * @typedef MediaConfig
- * @property {import("./graph-api.js").GraphApi} graphApi
- *    Facebook Graph API configuration
- * @property {string} [downloadDir="media"]
- *    [Optional] Path to a directory where to store downloaded media assets
- *    [default="media"]
- * @property {string} [dbPath="media.db"]
- *    [Optional] Path to the database to store media ids and their
- *    corresponding paths.
- *    [default="media.db"]
- */
-
 export class Media {
+  /** @type {import("@chatally/logger").Logger | undefined} */
+  log;
   /** @type {import("./graph-api.d.ts").GraphApi} */
   #graphApi;
   /** @type {string} */
@@ -38,34 +29,46 @@ export class Media {
    * @param {MediaConfig} config
    */
   constructor(config) {
-    const { graphApi, downloadDir = "media", dbPath = "media.db" } = config;
+    const {
+      graphApi,
+      downloadDir = "media",
+      dbPath = "media.db",
+      log,
+    } = config;
+    this.log = log;
     this.#graphApi = graphApi;
     this.#downloadDir = downloadDir;
-    const db = new Database(dbPath);
-    db.pragma("journal_mode = WAL");
-    db.exec(`
-CREATE TABLE IF NOT EXISTS ids (
-  'rowid' integer PRIMARY KEY AUTOINCREMENT,
-  'id' varchar,
-  'file' varchar
-);
-CREATE INDEX IF NOT EXISTS file_by_id ON ids(id);
-CREATE INDEX IF NOT EXISTS id_by_file ON ids(file);
-    `);
-    this.#selectId = db.prepare("SELECT id FROM ids WHERE file = ?");
-    this.#selectFile = db.prepare("SELECT file FROM ids WHERE id = ?");
-    this.#insertId = db.prepare("INSERT INTO ids (id, file) VALUES (?, ?)");
-    this.#deleteId = db.prepare("DELETE FROM ids WHERE id = ?");
+    fss.mkdirSync(downloadDir, { recursive: true });
+    fss.mkdirSync(dirname(dbPath), { recursive: true });
+    this.initDb(dbPath);
+    this.log?.info(`
+  Started with database at ${dbPath} (${resolve(dbPath)}). 
+  Downloads are stored at ${downloadDir} (${resolve(downloadDir)}).`);
+  }
+
+  initDb(dbPath) {
+    try {
+      const db = new Database(dbPath);
+      db.pragma("journal_mode = WAL");
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS ids (
+        'rowid' integer PRIMARY KEY AUTOINCREMENT,
+        'id' varchar,
+        'file' varchar
+        );
+        CREATE INDEX IF NOT EXISTS file_by_id ON ids(id);
+        CREATE INDEX IF NOT EXISTS id_by_file ON ids(file);
+      `);
+      this.#selectId = db.prepare("SELECT id FROM ids WHERE file = ?");
+      this.#selectFile = db.prepare("SELECT file FROM ids WHERE id = ?");
+      this.#insertId = db.prepare("INSERT INTO ids (id, file) VALUES (?, ?)");
+      this.#deleteId = db.prepare("DELETE FROM ids WHERE id = ?");
+    } catch (err) {
+      throw new Error(`Failed to open media database at '${dbPath}'`);
+    }
   }
 
   /**
-   * Upload media through a POST call to /PHONE_NUMBER_ID/media.
-   *
-   * All media files sent through this endpoint are encrypted and persist for
-   * 30 days, unless they are deleted earlier.
-   *
-   * @see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#upload-media
-   *
    * @param {string} file
    * @returns {Promise<string>}
    */
@@ -103,6 +106,7 @@ CREATE INDEX IF NOT EXISTS id_by_file ON ids(file);
   ${JSON.stringify(response)}`);
       }
       this.#insertId.run(id, file);
+      this.log?.trace(`Uploaded '${file}' (${size} bytes) to media id '${id}'`);
       return id;
     } catch (e) {
       throw new MediaError(`Media upload failed for file '${file}':
@@ -152,16 +156,17 @@ CREATE INDEX IF NOT EXISTS id_by_file ON ids(file);
   ${response.text?.slice(start, start + 1000)}`);
     }
     const suffix = getSuffixFromMediaType(response.contentType);
-    try {
-      await fs.stat(this.#downloadDir);
-    } catch (e) {
-      fs.mkdir(this.#downloadDir);
-    }
     file = `${this.#downloadDir}/${id}.${suffix}`;
     await fs.writeFile(file, Buffer.from(buffer));
 
     this.#insertId.run(id, file);
     // TODO: Implement quota for download directory
+    if (this.log?.isLevel("trace")) {
+      const size = buffer.byteLength;
+      this.log.trace(
+        `Downloaded '${file}' (${size} bytes) from media id '${id}'.`
+      );
+    }
     return file;
   }
 

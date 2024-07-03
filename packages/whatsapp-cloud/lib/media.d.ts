@@ -4,6 +4,8 @@ import type { GraphApi } from "./graph-api.d.ts";
  * WhatsApp Media endpoint
  */
 export declare class Media {
+  log?: Logger;
+
   constructor(config: MediaConfig);
 
   /**
@@ -49,4 +51,11 @@ export interface MediaConfig {
    * [default="media.db"]
    */
   dbPath?: string;
+
+  /**
+   * [Optional] Logger to use
+   *
+   * [default=undefined]
+   */
+  log?: Logger;
 }
