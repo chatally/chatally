@@ -135,13 +135,14 @@ function verifySignature (req, secret) {
   if (typeof xHubSignature !== 'string') {
     throw new HttpError(400, "Invalid 'x-hub-signature-256'.")
   }
-  const signature = crypto
-    .createHmac('sha256', secret)
+  const [algorithm, actual] = xHubSignature.split('=')
+  const expected = crypto
+    .createHmac(algorithm, secret)
     .update(req.body)
     .digest('hex')
-  if (signature !== xHubSignature) {
+  if (expected !== actual) {
     throw new HttpError(400, "Invalid 'x-hub-signature-256'.",
-        `Expected 'x-hub-signature-256': '${signature}'.`)
+        `Expected 'x-hub-signature-256': '${expected}'.`)
   }
 }
 

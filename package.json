@@ -25,7 +25,8 @@
       "expect"
     ],
     "ignore": [
-      "packages/whatsapp-deno-server/"
+      "packages/whatsapp-deno-server/",
+      "**/*_gitignore/"
     ]
   },
   "scripts": {

@@ -10,7 +10,7 @@ import { BaseLogger } from '@chatally/logger'
  *
  * ```sh
  * curl --location 'http://localhost:3000/whatsapp' \
- * --header 'x-hub-signature-256: 4816f067216a69dec0dd0b3a476f5e588b4676e8579bbc25c791ab01fbe47c0e' \
+ * --header 'x-hub-signature-256: sha256=4816f067216a69dec0dd0b3a476f5e588b4676e8579bbc25c791ab01fbe47c0e' \
  * --header 'Content-Type: application/json' \
  * --data '{"entry": [{"changes": [{"value": {"messages": [{"from": "foo", "type": "text", "text": { "body": "Hello!" }}]}}]}]}'
  * ```

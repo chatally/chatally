@@ -77,7 +77,7 @@ describe('webhooks', function () {
         .post('/')
         .set(
           'x-hub-signature-256',
-          '14628c8cd96535a55d0be7b1f18b73d4ce2f5f9e1007a0272fef421700dac174'
+          'sha256=14628c8cd96535a55d0be7b1f18b73d4ce2f5f9e1007a0272fef421700dac174'
         )
         .send(text('me', 'foo'))
       expect(res.status).toEqual(200)
@@ -102,7 +102,7 @@ describe('webhooks', function () {
       const webhooks = new _Webhooks({ secret: 'abc', log })
       const res = await webhooks.app
         .post('/')
-        .set('x-hub-signature-256', 'foo')
+        .set('x-hub-signature-256', 'sha256=foo')
         .send(text('me', 'foo'))
       expect(res.status).toEqual(400)
       expect(res.text).toEqual("Invalid 'x-hub-signature-256'.")
