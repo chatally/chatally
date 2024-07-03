@@ -1,32 +1,32 @@
 export class Messages {
   /** @type {import("./graph-api.d.ts").GraphApi} */
-  #graphApi;
+  #graphApi
 
   /** @type {import("@chatally/logger").Logger | undefined} */
-  log;
+  log
 
   /** @param {import("./messages.d.ts").MessagesConfig} config */
-  constructor(config) {
-    this.log = config.log;
-    this.#graphApi = config.graphApi;
+  constructor (config) {
+    this.log = config.log
+    this.#graphApi = config.graphApi
   }
 
   /**
    * @param {import("./webhooks.js").Webhooks} webhooks
    * @param {number} [maxWait]
    */
-  waitForDelivered(webhooks, maxWait = -1) {
-    webhooks.on("notification", ({ statuses }) => {
+  waitForDelivered (webhooks, maxWait = -1) {
+    webhooks.on('notification', ({ statuses }) => {
       for (const status of statuses) {
-        const value = status.status;
-        if (value === "delivered" || value === "read" || value === "failed") {
-          this.#sendNext(status);
+        const value = status.status
+        if (value === 'delivered' || value === 'read' || value === 'failed') {
+          this.#sendNext(status)
         }
       }
-    });
+    })
     // TODO: Implement max waiting for sending next message
-    this.#waitForDelivered = maxWait;
-    return this;
+    this.#waitForDelivered = maxWait
+    return this
   }
 
   /**
@@ -36,34 +36,34 @@ export class Messages {
    * forever, set this to -1
    * @type {number | undefined}
    */
-  #waitForDelivered = undefined;
+  #waitForDelivered = undefined
 
   /**
    * Map of waiting messages, meant to be used in tests or subclasses only.
    * @protected
    * @type {Record<string, (import("./messages.d.ts").Waiting[] | undefined)>}
    */
-  _waiting = {};
+  _waiting = {}
 
   /**
    * @param {import("./webhooks.d.ts").Status} status
    */
-  async #sendNext(status) {
-    const waiting = this._waiting[status.recipient_id];
-    if (!waiting) return;
+  async #sendNext (status) {
+    const waiting = this._waiting[status.recipient_id]
+    if (!waiting) return
 
-    const previous = waiting.shift();
+    const previous = waiting.shift()
     if (previous && previous.message.id !== status.id) {
       this.log?.warn(`Received delivery status for unexpected message,
 expected ${previous.message.id}
-received ${status.id}.`);
+received ${status.id}.`)
     }
 
     if (waiting.length > 0) {
-      const request = waiting[0];
-      request.message.id = await this.#send(request);
+      const request = waiting[0]
+      request.message.id = await this.#send(request)
     } else {
-      this._waiting[status.recipient_id] = undefined;
+      this._waiting[status.recipient_id] = undefined
     }
   }
 
@@ -72,18 +72,18 @@ received ${status.id}.`);
    * @param {import("./messages.js").Message} message
    * @param {string} [replyTo]
    */
-  async send(to, message, replyTo) {
-    const request = { to, message, replyTo };
+  async send (to, message, replyTo) {
+    const request = { to, message, replyTo }
     if (this.#waitForDelivered !== undefined) {
       if (this._waiting[to]) {
-        this._waiting[to]?.push(request);
-        message.id = "<waiting>";
-        return message.id;
+        this._waiting[to]?.push(request)
+        message.id = '<waiting>'
+        return message.id
       }
-      this._waiting[to] = [request];
+      this._waiting[to] = [request]
     }
-    await this.#send(request);
-    return message.id;
+    await this.#send(request)
+    return message.id
   }
 
   /**
@@ -94,28 +94,28 @@ received ${status.id}.`);
    */
 
   /** @param {import("./messages.d.ts").Waiting} $ */
-  async #send({ to, message, replyTo }) {
+  async #send ({ to, message, replyTo }) {
     /** @type {SendMessageBody} */
     const body = {
-      recipient_type: "individual",
+      recipient_type: 'individual',
       to,
-      ...message,
-    };
-    if (replyTo) {
-      body.context = { message_id: replyTo };
+      ...message
     }
-    const response = await this.#graphApi.post("messages", body);
-    const messages = /** @type {Array<{id: string}>}*/ (
+    if (replyTo) {
+      body.context = { message_id: replyTo }
+    }
+    const response = await this.#graphApi.post('messages', body)
+    const messages = /** @type {Array<{id: string}>} */ (
       response.json?.messages
-    );
+    )
     if (!messages || messages.length === 0) {
       throw new Error(
         `Message was not sent, server responded with
 ${JSON.stringify(response, null, 2)}`
-      );
+      )
     }
-    message.id = messages[0].id;
-    return message.id;
+    message.id = messages[0].id
+    return message.id
   }
 
   /**
@@ -125,15 +125,15 @@ ${JSON.stringify(response, null, 2)}`
    */
 
   /**
-   * @param {string} message_id
+   * @param {string} wamid
    */
-  async markAsRead(message_id) {
+  async markAsRead (wamid) {
     /** @type {MarkAsRead} */
     const body = {
-      status: "read",
-      message_id,
-    };
-    const response = await this.#graphApi.post("messages", body);
-    return !!response.json?.success;
+      status: 'read',
+      message_id: wamid
+    }
+    const response = await this.#graphApi.post('messages', body)
+    return !!response.json?.success
   }
 }

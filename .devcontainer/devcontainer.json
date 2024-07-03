@@ -25,9 +25,9 @@
         "davidanson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
         "editorconfig.editorconfig",
-        "esbenp.prettier-vscode",
         "gruntfuggly.todo-tree",
         "jock.svg",
+        "standard.vscode-standard",
         "unifiedjs.vscode-mdx",
         "yzhang.markdown-all-in-one"
       ]

@@ -4,27 +4,25 @@
  * @implements {Logger}
  */
 export class NoLogger {
-  name = "NoLogger";
-  data = undefined;
-
-  constructor() {}
+  name = 'NoLogger'
+  data = undefined
 
   /** @returns {import("./index.d.ts").Level} */
-  get level() {
-    return "silent";
+  get level () {
+    return 'silent'
   }
 
-  isLevel() {
-    return false;
+  isLevel () {
+    return false
   }
 
-  child() {
-    return this;
+  child () {
+    return this
   }
 
-  trace() {}
-  debug() {}
-  info() {}
-  warn() {}
-  error() {}
+  trace () {}
+  debug () {}
+  info () {}
+  warn () {}
+  error () {}
 }

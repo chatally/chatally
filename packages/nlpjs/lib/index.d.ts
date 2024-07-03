@@ -1,6 +1,6 @@
-import type { Middleware } from "@chatally/core";
-import type { Logger } from "@chatally/logger";
-import type { Configuration, Nlp } from "@nlpjs/basic";
+import type { Middleware } from '@chatally/core'
+import type { Logger } from '@chatally/logger'
+import type { Configuration, Nlp } from '@nlpjs/basic'
 
 /**
  * Create a trained nlp.js NLP (Natural Language Processing) module.
@@ -18,10 +18,10 @@ import type { Configuration, Nlp } from "@nlpjs/basic";
  *    training corpora.
  * @returns The trained NLP module
  */
-export declare function trainNlp(
+export declare function trainNlp (
   logger?: Logger,
   configuration?: Configuration | string[]
-): Promise<Nlp>;
+): Promise<Nlp>
 
 /**
  * Create a trained nlp.js NLP (Natural Language Processing) module.
@@ -37,9 +37,9 @@ export declare function trainNlp(
  * training corpora.
  * @returns The trained NLP module
  */
-export declare function trainNlp(
+export declare function trainNlp (
   configuration?: Configuration | string[]
-): Promise<Nlp>;
+): Promise<Nlp>
 
 /**
  * Create a ChatAlly middleware function for an nlp.js NLP module
@@ -51,10 +51,10 @@ export declare function trainNlp(
  * @param options Options
  * @returns a ChatAlly middleware function
  */
-export function nlpjsMiddleware(
+export function nlpjsMiddleware (
   nlp: Nlp,
   options?: Options
-): Middleware<unknown>;
+): Middleware<unknown>
 
 interface Options {
   /**
@@ -62,11 +62,11 @@ interface Options {
    * NOTE: Result data from the NLP process will be put into the context under
    *    this name.
    */
-  name?: string;
+  name?: string
   /**
    * [Optional] Indicates, whether an answer above the threshold should end the
    * response.
    * [`default=false`]
    */
-  end?: boolean;
+  end?: boolean
 }

@@ -1,12 +1,12 @@
-import type { GraphApi } from "./graph-api.d.ts";
+import type { GraphApi } from './graph-api.d.ts'
 
 /**
  * WhatsApp Media endpoint
  */
 export declare class Media {
-  log?: Logger;
+  log?: Logger
 
-  constructor(config: MediaConfig);
+  constructor (config: MediaConfig)
 
   /**
    * Upload media through a POST call to /PHONE_NUMBER_ID/media.
@@ -20,7 +20,7 @@ export declare class Media {
    * @returns The media id that can be used to reference the uploaded media in
    *    messages
    */
-  upload(file: string): Promise<string>;
+  upload (file: string): Promise<string>
 
   /**
    * Download a media asset to the downloadDir.
@@ -30,32 +30,32 @@ export declare class Media {
    * @param id The media id
    * @returns The downloaded file's path
    */
-  download(id: string): Promise<string>;
+  download (id: string): Promise<string>
 }
 
 export interface MediaConfig {
   /**
    * Facebook Graph API configuration
    */
-  graphApi: GraphApi;
+  graphApi: GraphApi
 
   /**
    * [Optional] Path to a directory where to store downloaded media assets
    * [default="media"]
    */
-  downloadDir?: string;
+  downloadDir?: string
 
   /**
    * [Optional] Path to the database to store media ids and their corresponding
    * paths.
    * [default="media.db"]
    */
-  dbPath?: string;
+  dbPath?: string
 
   /**
    * [Optional] Logger to use
    *
    * [default=undefined]
    */
-  log?: Logger;
+  log?: Logger
 }

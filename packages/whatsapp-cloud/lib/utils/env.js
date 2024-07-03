@@ -3,12 +3,12 @@
  * @param {boolean} [defaultValue=false]
  * @returns {boolean}
  */
-export function envBoolean(name, defaultValue = false) {
-  const value = process.env[name]?.toLowerCase();
+export function envBoolean (name, defaultValue = false) {
+  const value = process.env[name]?.toLowerCase()
   if (value) {
-    return Boolean(value);
+    return Boolean(value)
   }
-  return defaultValue;
+  return defaultValue
 }
 
 /**
@@ -17,14 +17,14 @@ export function envBoolean(name, defaultValue = false) {
  * @param {N} [defaultValue]
  * @returns {N | number}
  */
-export function envNumber(name, defaultValue) {
-  const value = process.env[name];
+export function envNumber (name, defaultValue) {
+  const value = process.env[name]
   if (value) {
-    return Number(value);
+    return Number(value)
   }
   if (defaultValue) {
-    return defaultValue;
+    return defaultValue
   }
   // @ts-expect-error N is undefined in this case
-  return undefined;
+  return undefined
 }

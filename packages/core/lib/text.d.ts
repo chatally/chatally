@@ -1,3 +1,3 @@
-import type { Message } from "./message.d.ts";
+import type { Message } from './message.d.ts'
 
-export declare function text(message: Message): string;
+export declare function text (message: Message): string

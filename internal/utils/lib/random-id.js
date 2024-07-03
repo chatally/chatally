@@ -1,5 +1,5 @@
-import { nanoid } from "nanoid";
+import { nanoid } from 'nanoid'
 
-export function randomId() {
-  return nanoid();
+export function randomId () {
+  return nanoid()
 }

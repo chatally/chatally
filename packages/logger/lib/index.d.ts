@@ -1,4 +1,4 @@
-import { Writable } from "node:stream";
+import { Writable } from 'node:stream'
 
 /**
  * Basic logger implementation, that logs to the console by default.
@@ -22,24 +22,24 @@ export declare class BaseLogger implements Logger {
    * @param options
    * @param levelsFn
    */
-  constructor(options?: LoggerOptions, levelsFn?: LevelsFn);
-  level: Level;
-  name?: string | undefined;
-  data?: unknown;
-  isLevel(level: Level): boolean;
-  child(options?: LoggerOptions | undefined): Logger;
-  trace: LogMethod;
-  debug: LogMethod;
-  info: LogMethod;
-  warn: LogMethod;
-  error: LogMethod;
+  constructor (options?: LoggerOptions, levelsFn?: LevelsFn)
+  level: Level
+  name?: string | undefined
+  data?: unknown
+  isLevel (level: Level): boolean
+  child (options?: LoggerOptions | undefined): Logger
+  trace: LogMethod
+  debug: LogMethod
+  info: LogMethod
+  warn: LogMethod
+  error: LogMethod
 
   /**
    * Output writable, default is the console.
    *
    * Override this for testing your logger.
    */
-  out?: Writable;
+  out?: Writable
 
   /**
    * Create a timestamp that will be included in the logged message. You can
@@ -48,7 +48,7 @@ export declare class BaseLogger implements Logger {
    * Default will return the time part of an ISO-formatted date
    * (without the date).
    */
-  timestamp: (() => string) | false | undefined;
+  timestamp: (() => string) | false | undefined
 }
 
 /**
@@ -61,24 +61,24 @@ export interface Logger extends LogMethods {
   /**
    * Log level of this logger.
    */
-  level: Level;
+  level: Level
 
   /**
    * Optional name of this logger.
    */
-  name?: string;
+  name?: string
 
   /**
    * Optional data of this logger.
    */
-  data?: unknown;
+  data?: unknown
 
   /**
    * Check if this logger is active on the given level.
    *
    * @param level
    */
-  isLevel(level: Level): boolean;
+  isLevel: (level: Level) => boolean
 
   /**
    * Create a child logger
@@ -88,27 +88,27 @@ export interface Logger extends LogMethods {
    *
    * @param options Override parent options
    */
-  child(options?: LoggerOptions): Logger;
+  child: (options?: LoggerOptions) => Logger
 }
 
 interface LoggerOptions {
   /** Initial log level of the logger */
-  level?: Level;
+  level?: Level
   /** Optional name of the logger */
-  name?: string;
+  name?: string
   /** Additional data to log with each call to a log method */
-  data?: unknown;
+  data?: unknown
 }
 
-type LevelsFn = {
-  index: (level: Level) => number;
-  text: (level: number) => Level;
-};
+interface LevelsFn {
+  index: (level: Level) => number
+  text: (level: number) => Level
+}
 
 /**
  * All log levels, i.e. all log method names plus "silent".
  */
-export type Level = "silent" | keyof LogMethods;
+export type Level = 'silent' | keyof LogMethods
 
 /**
  * All log methods.
@@ -118,26 +118,26 @@ export type Level = "silent" | keyof LogMethods;
  *
  * See ./levels.js
  */
-export type LogMethods = {
+export interface LogMethods {
   /** Log a trace message. */
-  trace: LogMethod;
+  trace: LogMethod
   /** Log a debug message. */
-  debug: LogMethod;
+  debug: LogMethod
   /** Log an info message. */
-  info: LogMethod;
+  info: LogMethod
   /** Log a warn message. */
-  warn: LogMethod;
+  warn: LogMethod
   /** Log an error message. */
-  error: LogMethod;
-};
+  error: LogMethod
+}
 
 interface LogMethod {
   /** Log a simple message */
-  (msg: string): void;
+  (msg: string): void
   /** Log a printf-like message template, with rest arguments. */
-  (msg: string, ...args: unknown[]): void;
+  (msg: string, ...args: unknown[]): void
   /** Log data and a printf-like message template, with rest arguments. */
-  (data: unknown, msg?: string, ...args: unknown[]): void;
+  (data: unknown, msg?: string, ...args: unknown[]): void
 }
 
 /**
@@ -149,26 +149,26 @@ export declare class NoLogger implements Logger {
    *
    * This logger causes no overhead, as it does nothing.
    */
-  constructor();
+  constructor ()
 
   /**
    * Log level of this logger. Will always return `"silent"`.
    */
-  level: Level;
-  name?: string | undefined;
-  data?: unknown;
+  level: Level
+  name?: string | undefined
+  data?: unknown
   /**
    * Check if this logger is active. Will always return `false`.
    * @param level
    */
-  isLevel(level: Level): boolean;
+  isLevel (level: Level): boolean
   /** Create a child logger. Will always return `this`. */
-  child(options?: LoggerOptions | undefined): Logger;
-  trace: LogMethod;
-  debug: LogMethod;
-  info: LogMethod;
-  warn: LogMethod;
-  error: LogMethod;
+  child (options?: LoggerOptions | undefined): Logger
+  trace: LogMethod
+  debug: LogMethod
+  info: LogMethod
+  warn: LogMethod
+  error: LogMethod
 }
 
 /**
@@ -178,7 +178,7 @@ export declare class NoLogger implements Logger {
  * @returns the textual level; "silent" for < 0, and maximum the highest level,
  *   e.g. "error"
  */
-export declare function getLevel(numeric: number): Level;
+export declare function getLevel (numeric: number): Level
 
 /**
  * Get index of textual representation of the level
@@ -187,4 +187,4 @@ export declare function getLevel(numeric: number): Level;
  *   textual representation of the level, e.g. "debug"
  * @returns index of level; -1 ("silent") for unknown levels
  */
-export declare function getLevelIndex(level: Level): number;
+export declare function getLevelIndex (level: Level): number

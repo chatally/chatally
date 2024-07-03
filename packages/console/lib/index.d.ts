@@ -1,4 +1,4 @@
-import { BaseServer } from "@chatally/core";
+import { BaseServer } from '@chatally/core'
 
 /**
  * Console server class that reads input from the console, dispatches it to a
@@ -13,7 +13,7 @@ export declare class ConsoleServer extends BaseServer {
    * `stopToken` simply by setting these properties. There are also some colors
    * you can configure: `nameColor`, `promptColor` and `responseColor`.
    */
-  constructor(name?: string);
+  constructor (name?: string)
 
-  listen: () => void;
+  listen: () => void
 }

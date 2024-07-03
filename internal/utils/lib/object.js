@@ -14,38 +14,38 @@
  *   accessor
  * @returns {boolean}
  */
-export function hasProperty(o, p, c) {
+export function hasProperty (o, p, c) {
   if (!o) {
-    return false;
+    return false
   }
   const prop =
     Object.getOwnPropertyDescriptor(o, p) ||
-    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(o), p);
+    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(o), p)
   if (!prop) {
-    return false;
+    return false
   }
   if (c) {
     if (c.writable !== undefined && c.writable !== prop.writable) {
-      return false;
+      return false
     }
     if (c.settable === true && !prop.set && !prop.writable) {
-      return false;
+      return false
     }
     if (c.settable === false && (!!prop.set || !!prop.writable)) {
-      return false;
+      return false
     }
     if (c.enumerable !== undefined && c.enumerable !== prop.enumerable) {
-      return false;
+      return false
     }
     if (c.set !== undefined && c.set !== !!prop.set) {
-      return false;
+      return false
     }
     if (c.configurable !== undefined && c.configurable !== prop.configurable) {
-      return false;
+      return false
     }
     if (c.get !== undefined && c.get !== !!prop.get) {
-      return false;
+      return false
     }
   }
-  return true;
+  return true
 }

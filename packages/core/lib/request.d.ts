@@ -1,4 +1,4 @@
-import type { IncomingMessage } from "./message.d.ts";
+import type { IncomingMessage } from './message.d.ts'
 
 /**
  * Chat request with incoming message
@@ -10,10 +10,10 @@ export declare class Request implements IRequest {
    * @param message Fully typed message or a string that can optionally contain
    *    a sender before a colon, i.e. `"<from>: <message>"` will create a text message with properties `from=<from>` and `text="<message>"`.
    */
-  constructor(message: string | IncomingMessage);
+  constructor (message: string | IncomingMessage)
 
-  get message(): IncomingMessage;
-  get text(): string;
+  get message (): IncomingMessage
+  get text (): string
 }
 
 /**
@@ -21,8 +21,8 @@ export declare class Request implements IRequest {
  */
 export interface IRequest {
   /** Incoming message */
-  get message(): IncomingMessage;
+  get message(): IncomingMessage
 
   /** Textual content of incoming message */
-  get text(): string;
+  get text(): string
 }

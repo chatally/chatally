@@ -1,5 +1,5 @@
-import { nanoid } from "nanoid";
-import { text } from "./text.js";
+import { nanoid } from 'nanoid'
+import { text } from './text.js'
 
 /**
  * @typedef {import("./message.d.ts").IncomingMessage} IncomingMessage
@@ -10,33 +10,33 @@ import { text } from "./text.js";
  */
 export class Request {
   /** @type {IncomingMessage} */
-  #message;
+  #message
 
   /** @param {IncomingMessage | string} message */
-  constructor(message) {
-    if (typeof message === "string") {
-      let [from, text] = message.split(": ");
+  constructor (message) {
+    if (typeof message === 'string') {
+      let [from, text] = message.split(': ')
       if (!text) {
-        text = from;
-        from = "";
+        text = from
+        from = ''
       }
       this.#message = {
-        type: "text",
+        type: 'text',
         text,
         timestamp: Date.now(),
         from,
-        id: nanoid(),
-      };
+        id: nanoid()
+      }
     } else {
-      this.#message = message;
+      this.#message = message
     }
   }
 
-  get message() {
-    return this.#message;
+  get message () {
+    return this.#message
   }
 
-  get text() {
-    return text(this.#message);
+  get text () {
+    return text(this.#message)
   }
 }

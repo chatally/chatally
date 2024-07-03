@@ -1,15 +1,15 @@
-import type { Logger } from "@chatally/logger";
-import type { GraphApi } from "./graph-api.d.ts";
-import type { Webhooks } from "./webhooks.d.ts";
+import type { Logger } from '@chatally/logger'
+import type { GraphApi } from './graph-api.d.ts'
+import type { Webhooks } from './webhooks.d.ts'
 
 export declare class Messages {
-  log: Logger | undefined;
+  log: Logger | undefined
 
   /**
    * Map of waiting messages, meant to be used in tests or subclasses only.
    * @protected
    */
-  _waiting: Record<string, Waiting[]>;
+  _waiting: Record<string, Waiting[]>
 
   /**
    * Send WhatsApp messages using the Graph API. Abstracts the
@@ -27,7 +27,7 @@ export declare class Messages {
    * There is no guarantee about the order of delivery, even when awaiting the
    * method call.
    */
-  constructor(config: MessagesConfig);
+  constructor (config: MessagesConfig)
 
   /**
    * Wait for `delivered` status of previous message before sending the next.
@@ -39,7 +39,7 @@ export declare class Messages {
    *    [default=-1 meaning forever]
    * @returns this
    */
-  waitForDelivered(webhooks: Webhooks, maxWait?: number): this;
+  waitForDelivered (webhooks: Webhooks, maxWait?: number): this
 
   /**
    * Wrapper around the Graph API request to send a message.
@@ -53,7 +53,7 @@ export declare class Messages {
    * @param replyTo [Optional] message id to reply to
    * @returns the message id from the WhatsApp server (WAMID)
    */
-  send(to: string, message: Message, replyTo?: string): Promise<string>;
+  send (to: string, message: Message, replyTo?: string): Promise<string>
 
   /**
    * Mark a message as read.
@@ -65,33 +65,33 @@ export declare class Messages {
    * For details, see
    * https://developers.facebook.com/docs/whatsapp/cloud-api/guides/mark-message-as-read
    *
-   * @param message_id The WAMID of the message to mark as read.
+   * @param wamid The WAMID of the message to mark as read.
    * @returns true, if the message was marked as read, false otherwise.
    */
-  markAsRead(message_id: string): Promise<boolean>;
+  markAsRead (wamid: string): Promise<boolean>
 }
 
 export interface Waiting {
-  to: string;
-  message: Message;
-  replyTo?: string;
+  to: string
+  message: Message
+  replyTo?: string
 }
 
 export interface MessagesConfig {
   /**
    * Access to Meta's Graph API
    */
-  graphApi: GraphApi;
+  graphApi: GraphApi
 
   /**
    * [Optional] logger to use
    * [default=undefined]
    */
-  log?: Logger;
+  log?: Logger
 }
 
 export type Message = {
-  id?: string;
+  id?: string
 } & (
   | AudioMessage
   | ContactsMessage
@@ -104,23 +104,23 @@ export type Message = {
   | TemplateMessage
   | TextMessage
   | VideoMessage
-);
+)
 
 /**
  * Response from the Graph API when sending a message.
  *
  * https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages#successful-response
  */
-export type MessagesResponse = {
-  messaging_product: "whatsapp";
+export interface MessagesResponse {
+  messaging_product: 'whatsapp'
   contacts?: Array<{
-    input: string;
-    wa_id: string;
-  }>;
+    input: string
+    wa_id: string
+  }>
   messages: Array<{
-    id: string;
-  }>;
-};
+    id: string
+  }>
+}
 
 /**
  * Contact content.
@@ -129,102 +129,102 @@ export type MessagesResponse = {
  */
 export interface Contact {
   /** Full contact address(es) formatted as an addresses object. */
-  addresses?: Addresses[];
+  addresses?: Addresses[]
   /** YYYY-MM-DD formatted string. */
-  birthday?: Birthday;
+  birthday?: Birthday
   /** Contact email address(es) formatted as an emails object. */
-  emails?: Email[];
+  emails?: Email[]
   /** Full contact name formatted as a name object. */
-  name: Name;
+  name: Name
   /** Contact organization information formatted as an org object. */
-  org?: Org;
+  org?: Org
   /** Contact phone number(s) formatted as a phone object. */
-  phones?: Phone[];
+  phones?: Phone[]
   /** Contact URL(s) formatted as a urls object. */
-  urls?: URL[];
+  urls?: URL[]
 }
 
 export interface ContactsMessage {
-  type: "contacts";
-  contacts: Contact[];
+  type: 'contacts'
+  contacts: Contact[]
 }
 
 interface Addresses {
   /** Street number and name. */
-  street?: string;
+  street?: string
   /** City name. */
-  city?: string;
+  city?: string
   /** State abbreviation. */
-  state?: string;
+  state?: string
   /** ZIP code. */
-  zip?: string;
+  zip?: string
   /** Full country name. */
-  country?: string;
+  country?: string
   /** Two-letter country abbreviation. */
-  country_code?: string;
+  country_code?: string
   /** Standard values are HOME and WORK. */
-  type?: "HOME" | "WORK" | string;
+  type?: 'HOME' | 'WORK' | string
 }
 
 type Birthday =
-  `${number}${number}${number}${number}-${number}${number}-${number}${number}`;
+  `${number}${number}${number}${number}-${number}${number}-${number}${number}`
 
 interface Email {
   /** Email address. */
-  email?: string;
+  email?: string
   /** Standard values are HOME and WORK. */
-  type?: "HOME" | "WORK" | string;
+  type?: 'HOME' | 'WORK' | string
 }
 
 interface Name {
   /** Full name, as it normally appears. */
-  formatted_name: string;
+  formatted_name: string
   /** First name. */
-  first_name?: string;
+  first_name?: string
   /** Last name. */
-  last_name?: string;
+  last_name?: string
   /** Middle name. */
-  middle_name?: string;
+  middle_name?: string
   /** Name suffix. */
-  suffix?: string;
+  suffix?: string
   /** Name prefix. */
-  prefix?: string;
+  prefix?: string
 }
 
 interface Org {
   /** Name of the contact's company. */
-  company?: string;
+  company?: string
   /** Name of the contact's department. */
-  department?: string;
+  department?: string
   /** Contact's business title. */
-  title?: string;
+  title?: string
 }
 
 interface Phone {
   /** Automatically populated with the `wa_id` value as a formatted phone number. */
-  phone?: string;
+  phone?: string
   /** Standard Values are CELL, MAIN, IPHONE, HOME, and WORK. */
-  type?: "CELL" | "MAIN" | "IPHONE" | "HOME" | "WORK" | string;
+  type?: 'CELL' | 'MAIN' | 'IPHONE' | 'HOME' | 'WORK' | string
   /** WhatsApp ID. */
-  wa_id?: string;
+  wa_id?: string
 }
 
 interface URL {
   /** URL. */
-  url?: string;
+  url?: string
   /** Standard values are HOME and WORK. */
-  type?: "HOME" | "WORK" | string;
+  type?: 'HOME' | 'WORK' | string
 }
 
 export type Interactive =
   | InteractiveButton
   | InteractiveList
   | InteractiveProduct
-  | InteractiveProductList;
+  | InteractiveProductList
 
 export interface InteractiveMessage {
-  type: "interactive";
-  interactive: Interactive;
+  type: 'interactive'
+  interactive: Interactive
 }
 
 /**
@@ -232,23 +232,23 @@ export interface InteractiveMessage {
  */
 export interface InteractiveButton {
   /** The interface of interactive message you want to send. */
-  type: "button";
+  type: 'button'
   /** Header content displayed on top of a message. */
-  header?: Header;
+  header?: Header
   /** An object with the footer of the message. */
-  footer?: Footer;
+  footer?: Footer
   /** An object with the body of the message. */
-  body: Body;
+  body: Body
   /** */
   action: {
     /** You can have up to 3 buttons. */
-    buttons: ReplyButton[];
-  };
+    buttons: ReplyButton[]
+  }
 }
 
 export interface ReplyButton {
   /** only supported interface is reply */
-  type: "reply";
+  type: 'reply'
   reply: {
     /**
      * Unique identifier for your button.
@@ -258,7 +258,7 @@ export interface ReplyButton {
      *
      * Maximum length: 256 characters.
      */
-    id: string;
+    id: string
     /**
      * Button title.
      *
@@ -267,8 +267,8 @@ export interface ReplyButton {
      *
      * Maximum length: 20 characters.
      */
-    title: string;
-  };
+    title: string
+  }
 }
 
 /**
@@ -276,13 +276,13 @@ export interface ReplyButton {
  */
 export interface InteractiveList {
   /** The interface of interactive message you want to send. */
-  type: "list";
+  type: 'list'
   /** Header content displayed on top of a message. */
-  header?: Header;
+  header?: Header
   /** An object with the footer of the message. */
-  footer?: Footer;
+  footer?: Footer
   /** An object with the body of the message. */
-  body: Body;
+  body: Body
   /** */
   action: {
     /**
@@ -293,38 +293,38 @@ export interface InteractiveList {
      *
      * Maximum length: 20 characters.
      */
-    button: string;
+    button: string
     /** Array of section objects. Minimum of 1, maximum of 10. */
-    sections: ListSection[];
-  };
+    sections: ListSection[]
+  }
 }
 
 export interface ListSection {
   /** List of rows. You can have a total of 10 rows across your sections. */
-  rows: Row[];
+  rows: Row[]
   /**
    * Title of the section.
    *
    * Required if the message has more than one section.
    * Maximum length: 24 characters.
    */
-  title?: string;
+  title?: string
 }
 
 export interface Row {
   /** ID (Maximum length: 200 characters) */
-  id: string;
+  id: string
   /** Title (Maximum length: 24 characters) */
-  title: string;
+  title: string
   /** Description (Maximum length: 72 characters) */
-  description?: string;
+  description?: string
 }
 
 export interface CreateInteractiveListParams {
-  header?: Header | string;
-  footer?: string;
-  body: string;
-  button: string;
+  header?: Header | string
+  footer?: string
+  body: string
+  button: string
 }
 
 /**
@@ -332,11 +332,11 @@ export interface CreateInteractiveListParams {
  */
 export interface InteractiveProduct {
   /** The interface of interactive message you want to send. */
-  type: "product";
+  type: 'product'
   /** An object with the footer of the message. */
-  footer?: Footer;
+  footer?: Footer
   /** An object with the body of the message. */
-  body?: Body;
+  body?: Body
   /** */
   action: {
     /**
@@ -344,10 +344,10 @@ export interface InteractiveProduct {
      *
      * This ID can be retrieved via the [Meta Commerce Manager](https://business.facebook.com/commerce_manager/get_started/).
      */
-    catalog_id: string;
+    catalog_id: string
     /** Unique identifier of the product in a catalog. */
-    product_retailer_id: string;
-  };
+    product_retailer_id: string
+  }
 }
 
 /**
@@ -355,13 +355,13 @@ export interface InteractiveProduct {
  */
 export interface InteractiveProductList {
   /** The interface of interactive message you want to send. */
-  type: "product_list";
+  type: 'product_list'
   /** Header content displayed on top of a message. */
-  header: Header;
+  header: Header
   /** An object with the footer of the message. */
-  footer?: Footer;
+  footer?: Footer
   /** An object with the body of the message. */
-  body: Body;
+  body: Body
   /** */
   action: {
     /**
@@ -369,10 +369,10 @@ export interface InteractiveProductList {
      *
      * This ID can be retrieved via the [Meta Commerce Manager](https://business.facebook.com/commerce_manager/get_started/).
      */
-    catalog_id: string;
+    catalog_id: string
     /** Array of section objects. Minimum of 1, maximum of 10. */
-    sections: ProductListSection[];
-  };
+    sections: ProductListSection[]
+  }
 }
 
 export interface ProductListSection {
@@ -385,52 +385,52 @@ export interface ProductListSection {
      * you want to mention. The ID for that item is displayed under the item's
      * name.
      */
-    product_retailer_id: string;
-  }>;
+    product_retailer_id: string
+  }>
   /**
    * Title of the section.
    *
    * Required if the message has more than one section.
    * Maximum length: 24 characters.
    */
-  title?: string;
+  title?: string
 }
 
-type Header = DocumentHeader | ImageHeader | TextHeader | VideoHeader;
+type Header = DocumentHeader | ImageHeader | TextHeader | VideoHeader
 
 export interface DocumentHeader {
-  type: "document";
+  type: 'document'
   /**
    * Contains the media object for this document.
    */
-  document: Document;
+  document: Document
 }
 
 export interface ImageHeader {
-  type: "image";
+  type: 'image'
   /**
    * Contains the media object for this image.
    */
-  image: Image;
+  image: Image
 }
 
 export interface TextHeader {
-  type: "text";
+  type: 'text'
   /**
    * Text for the header.
    *
    * Emojis, markdown, and links are supported.
    * Maximum length: 60 characters.
    */
-  text: string;
+  text: string
 }
 
 export interface VideoHeader {
-  type: "video";
+  type: 'video'
   /**
    * Contains the media object for this video.
    */
-  video: Video;
+  video: Video
 }
 
 export interface Footer {
@@ -439,7 +439,7 @@ export interface Footer {
    *
    * Emojis, markdown, and links are supported. Maximum length: 60 characters.
    */
-  text: string;
+  text: string
 }
 
 export interface Body {
@@ -448,7 +448,7 @@ export interface Body {
    *
    * Emojis and markdown are supported. Maximum length: 1024 characters.
    */
-  text: string;
+  text: string
 }
 
 /**
@@ -458,18 +458,18 @@ export interface Body {
  */
 export interface Location {
   /** Longitude of the location. */
-  longitude: number;
+  longitude: number
   /** Latitude of the location. */
-  latitude: number;
+  latitude: number
   /** Name of the location. */
-  name?: string;
+  name?: string
   /** Address of the location. Only displayed if name is present. */
-  address?: string;
+  address?: string
 }
 
 export interface LocationMessage {
-  type: "location";
-  location: Location;
+  type: 'location'
+  location: Location
 }
 
 /**
@@ -482,16 +482,16 @@ export interface LocationMessage {
  *
  * For details see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages#media-object
  */
-export type MediaObject = UploadedMedia | LinkedMedia;
+export type MediaObject = UploadedMedia | LinkedMedia
 
 /**
  * Uploaded media asset.
  */
 export interface UploadedMedia {
   /** The media object ID. */
-  id: string;
+  id: string
   /** Use id instead for uploaded media. */
-  link?: never;
+  link?: never
 }
 
 /**
@@ -507,9 +507,9 @@ export interface UploadedMedia {
  */
 export interface LinkedMedia {
   /** Use link instead for linked media. */
-  id?: never;
+  id?: never
   /** The protocol and URL of the media to be sent. */
-  link: string;
+  link: string
 }
 
 /**
@@ -525,11 +525,11 @@ export interface LinkedMedia {
  *
  * https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#supported-media-types
  */
-export type Audio = MediaObject;
+export type Audio = MediaObject
 
 export interface AudioMessage {
-  type: "audio";
-  audio: Audio;
+  type: 'audio'
+  audio: Audio
 }
 
 /**
@@ -549,14 +549,14 @@ export interface AudioMessage {
  * Size limit is 100MB.
  */
 export type Document = MediaObject & {
-  caption?: string;
+  caption?: string
   /** Describes the filename for the specific document. */
-  filename?: string;
-};
+  filename?: string
+}
 
 export interface DocumentMessage {
-  type: "document";
-  document: Document;
+  type: 'document'
+  document: Document
 }
 
 /**
@@ -569,12 +569,12 @@ export interface DocumentMessage {
  * Size limit is 5MB.
  */
 export type Image = MediaObject & {
-  caption?: string;
-};
+  caption?: string
+}
 
 export interface ImageMessage {
-  type: "image";
-  image: Image;
+  type: 'image'
+  image: Image
 }
 
 /**
@@ -584,11 +584,11 @@ export interface ImageMessage {
  *
  * Size limit for static stickers is 100KB, for animated stickers is 500KB.
  */
-export type Sticker = MediaObject;
+export type Sticker = MediaObject
 
 export interface StickerMessage {
-  type: "sticker";
-  sticker: Sticker;
+  type: 'sticker'
+  sticker: Sticker
 }
 
 /**
@@ -605,24 +605,24 @@ export interface StickerMessage {
  * Size limit is 16MB.
  */
 export type Video = MediaObject & {
-  caption?: string;
-};
+  caption?: string
+}
 
 export interface VideoMessage {
-  type: "video";
-  video: Video;
+  type: 'video'
+  video: Video
 }
 
 export interface Reaction {
   /** The ID of the message the customer reacted to. */
-  message_id: string;
+  message_id: string
   /** The emoji the customer reacted with. */
-  emoji: string;
+  emoji: string
 }
 
 export interface ReactionMessage {
-  type: "reaction";
-  reaction: Reaction;
+  type: 'reaction'
+  reaction: Reaction
 }
 
 /**
@@ -630,9 +630,9 @@ export interface ReactionMessage {
  *
  * For details see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages#template-object
  */
-export type Template = {
+export interface Template {
   /** Name of the template. */
-  name: string;
+  name: string
   /** Specifies the language the template may be rendered in. */
   language: {
     /**
@@ -641,30 +641,30 @@ export type Template = {
      * The only supported option is `deterministic`.
      * For details see https://developers.facebook.com/docs/whatsapp/api/messages/message-templates#language-policy-options
      */
-    policy: "deterministic";
+    policy: 'deterministic'
     /**
      * The code of the language or locale to use.
      */
-    code: string;
-  };
+    code: string
+  }
   /**  */
-  components?: Component[];
-};
-
-export interface TemplateMessage {
-  type: "template";
-  template: Template;
+  components?: Component[]
 }
 
-type Component = HeaderComponent | BodyComponent | ButtonComponent;
+export interface TemplateMessage {
+  type: 'template'
+  template: Template
+}
+
+type Component = HeaderComponent | BodyComponent | ButtonComponent
 
 interface HeaderComponent {
-  type: "header";
+  type: 'header'
 }
 
 interface BodyComponent {
-  type: "body";
-  parameters: Parameter[];
+  type: 'body'
+  parameters: Parameter[]
 }
 
 type Parameter =
@@ -673,27 +673,27 @@ type Parameter =
   | DocumentParameter
   | ImageParameter
   | TextParameter
-  | VideoParameter;
+  | VideoParameter
 
 interface CurrencyParameter {
   /** Describes the parameter type. */
-  type: "currency";
+  type: 'currency'
   /** A currency object. */
-  currency: Currency;
+  currency: Currency
 }
 
 interface Currency {
   /** Default text if localization fails. */
-  fallback_value: string;
+  fallback_value: string
   /** Currency code as defined in ISO 4217. */
-  code: string;
+  code: string
   /** Amount multiplied by 1000. */
-  amount_1000: number;
+  amount_1000: number
 }
 
 interface DateTimeParameter {
   /** Describes the parameter type. */
-  type: "date_time";
+  type: 'date_time'
   /** A date_time object. */
   date_time: {
     /**
@@ -702,36 +702,36 @@ interface DateTimeParameter {
      * We always use the fallback value, and we do not attempt to localize
      * using other optional fields.
      */
-    fallback_value: string;
-  };
+    fallback_value: string
+  }
 }
 
 interface DocumentParameter {
   /** Describes the parameter type. */
-  type: "document";
+  type: 'document'
   /**
    * A media object of type document.
    *
    * Only PDF documents are supported for media-based message templates.
    * Captions not supported when used in a media template.
    */
-  document: Document;
+  document: Document
 }
 
 interface ImageParameter {
   /** Describes the parameter type. */
-  type: "image";
+  type: 'image'
   /**
    * A media object of type image.
    *
    * Captions not supported when used in a media template.
    */
-  image: Image;
+  image: Image
 }
 
 interface TextParameter {
   /** Describes the parameter type. */
-  type: "text";
+  type: 'text'
   /**
    * The message’s text.
    *
@@ -744,22 +744,22 @@ interface TextParameter {
    *   - 1024 characters if other component types are included
    *   - 32768 characters if body is the only component type included
    */
-  text: string;
+  text: string
 }
 
 interface VideoParameter {
   /** Describes the parameter type. */
-  type: "video";
+  type: 'video'
   /**
    * A media object of type video.
    *
    * Captions not supported when used in a media template.
    */
-  video: Video;
+  video: Video
 }
 
 interface ButtonComponent {
-  type: "button";
+  type: 'button'
   /**
    * Type of button to create.
    *
@@ -769,55 +769,55 @@ interface ButtonComponent {
    *   visit the URL generated by appending the text parameter to the
    *   predefined prefix URL in the template.
    */
-  sub_type: "quick_reply" | "url";
+  sub_type: 'quick_reply' | 'url'
 
   /**
    * Array of parameter objects with the content of the message.
    *
    * For components of type=button, see the button parameter object.
    */
-  parameters: ButtonParameter[];
+  parameters: ButtonParameter[]
   /**
    * Position index of the button.
    *
    * You can have up to 3 buttons using index values of 0 to 2.
    */
-  index: number;
+  index: number
 }
 
-type ButtonParameter = PayloadButtonParameter | TextButtonParameter;
+type ButtonParameter = PayloadButtonParameter | TextButtonParameter
 
 interface PayloadButtonParameter {
-  type: "payload";
+  type: 'payload'
   /**
    * Developer-defined payload.
    *
    * Will be returned when the button is clicked in addition to the display
    * text on the button.
    */
-  payload: string;
+  payload: string
 }
 
 interface TextButtonParameter {
-  type: "text";
+  type: 'text'
   /** Developer-provided suffix.
    *
    * Will be appended to the predefined prefix URL in the template.
    */
-  text: string;
+  text: string
 }
 
 /**
  * Text Object.
  */
-export type Text = {
+export interface Text {
   /**
    * The text of the text message.
    *
    * It can contain URLs which begin with http:// or https:// and formatting.
    * See available formatting options [here](https://developers.facebook.com/docs/whatsapp/on-premises/reference/messages#formatting).
    */
-  body: string;
+  body: string
 
   /**
    * Render a link preview of any URL in the body text string.
@@ -828,10 +828,10 @@ export type Text = {
    * If preview_url is omitted, or if unable to retrieve a preview, a clickable
    * link will be rendered instead.
    */
-  preview_url?: boolean;
-};
+  preview_url?: boolean
+}
 
 export interface TextMessage {
-  type: "text";
-  text: Text;
+  type: 'text'
+  text: Text
 }

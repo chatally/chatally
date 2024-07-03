@@ -1,6 +1,6 @@
-import { BaseLogger, NoLogger } from "@chatally/logger";
-import { EventEmitter } from "node:events";
-import { isServer } from "./server.js";
+import { BaseLogger, NoLogger } from '@chatally/logger'
+import { EventEmitter } from 'node:events'
+import { isServer } from './server.js'
 
 /**
  * @typedef {import("./server.d.ts").Server} Server
@@ -29,87 +29,86 @@ export class Application extends EventEmitter {
   /**
    * Main logger for the application
    * @type {Logger} */
-  #log;
+  #log
 
   /**
    * Middlewares in order of registration
    * @type {Middleware<D>[]}
    */
-  #middlewares = [];
+  #middlewares = []
 
   /**
    * Servers
    * @type {Server[]}
    */
-  #servers = [];
+  #servers = []
 
   /**
    * Child loggers, one for each middleware
    * @type {Logger[]}
    */
-  #middlewareLogs = [];
+  #middlewareLogs = []
 
   /**
    * Data prototype, cloned for each callback before being dispatched
    * @type {D | undefined}
    */
-  #data;
+  #data
 
   /**
    * @param {import("./application.js").ApplicationOptions<D>} [options]
    */
-  constructor(options = {}) {
-    super();
-    this.#data = options.data;
+  constructor (options = {}) {
+    super()
+    this.#data = options.data
     if (options.log === undefined) {
       const level =
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
-        options.dev || process.env.NODE_ENV === "development"
-          ? "debug"
-          : "info";
-      this.#log = new BaseLogger({ level, name: "@chatally/core" });
+        options.dev || process.env.NODE_ENV === 'development'
+          ? 'debug'
+          : 'info'
+      this.#log = new BaseLogger({ level, name: '@chatally/core' })
     } else {
-      this.#log = options.log || new NoLogger();
+      this.#log = options.log || new NoLogger()
     }
-    this.#log.debug("Application logging level: %s", this.#log.level);
+    this.#log.debug('Application logging level: %s', this.#log.level)
   }
 
   /**
    * @param {string} name
    * @param {Level} [level]
    */
-  getLogger(name, level) {
-    return this.#log.child({ name, level });
+  getLogger (name, level) {
+    return this.#log.child({ name, level })
   }
 
   /**
    * @param {Middleware<D> | Server} module
    * @param {String} [name]
    */
-  use(module, name) {
-    name ??= module.name;
+  use (module, name) {
+    name ??= module.name
     if (!name) {
-      name = "<unnamed>";
+      name = '<unnamed>'
       this.#log.warn(`⚠️ For better traceability, prefer using named functions
    instead of arrow functions or provide an optional 
-   'name' parameter when registering it with 'use'.`);
+   'name' parameter when registering it with 'use'.`)
     }
     if (isServer(module)) {
-      module.on("dispatch", this.dispatch.bind(this));
+      module.on('dispatch', this.dispatch.bind(this))
       if (module.log === undefined) {
-        module.log = this.#log.child({ name: module.name });
+        module.log = this.#log.child({ name: module.name })
       }
-      this.#servers.push(module);
-      this.#log.info("Registered server '%s'", name);
-    } else if (typeof module === "function") {
-      this.#middlewareLogs.push(this.#log.child({ name }));
-      this.#middlewares.push(module);
-      this.#log.info("Registered middleware '%s'", name);
+      this.#servers.push(module)
+      this.#log.info("Registered server '%s'", name)
+    } else if (typeof module === 'function') {
+      this.#middlewareLogs.push(this.#log.child({ name }))
+      this.#middlewares.push(module)
+      this.#log.info("Registered middleware '%s'", name)
     } else {
       throw new TypeError(`Ineffective application module '${name}'.
-  Middleware must be a function, servers must provide a method 'listen' and a method 'on' to register an event callback.`);
+  Middleware must be a function, servers must provide a method 'listen' and a method 'on' to register an event callback.`)
     }
-    return this;
+    return this
   }
 
   /**
@@ -129,28 +128,28 @@ export class Application extends EventEmitter {
    * @param {IRequest} req
    * @param {IResponse} res
    */
-  async dispatch(req, res) {
-    const data = Object.assign(Object.create(this.#data || {}), this.#data);
-    const log = this.#log;
-    const context = { req, res, data, log };
+  async dispatch (req, res) {
+    const data = Object.assign(Object.create(this.#data || {}), this.#data)
+    const log = this.#log
+    const context = { req, res, data, log }
     try {
-      let current = 0;
+      let current = 0
       const next = async () => {
         while (current < this.#middlewares.length) {
           try {
-            const log = this.#middlewareLogs[current];
-            await this.#middlewares[current++]({ ...context, log, next });
+            const log = this.#middlewareLogs[current]
+            await this.#middlewares[current++]({ ...context, log, next })
           } catch (err) {
-            this.#handleError(err, context);
+            this.#handleError(err, context)
           }
         }
-      };
-      await next();
+      }
+      await next()
       if (res.isWritable) {
-        res.end();
+        res.end()
       }
     } catch (err) {
-      this.#handleError(err, context);
+      this.#handleError(err, context)
     }
   }
 
@@ -177,33 +176,33 @@ export class Application extends EventEmitter {
    * @param {unknown} err
    * @param {Omit<Context<D>, "next">} context
    */
-  #handleError(err, context) {
+  #handleError (err, context) {
     /** @param {unknown} err */
-    function uncaught(err) {
-      context.log.error("Uncaught", err);
+    function uncaught (err) {
+      context.log.error('Uncaught', err)
     }
     if (err instanceof Error) {
-      if (this.listenerCount("error") === 0) {
-        uncaught(err);
+      if (this.listenerCount('error') === 0) {
+        uncaught(err)
       } else {
-        this.emit("error", err, context);
+        this.emit('error', err, context)
       }
     } else {
-      uncaught(err);
+      uncaught(err)
     }
   }
 
   /**
    * Start all registered servers in parallel.
    */
-  listen() {
-    for (let server of this.#servers) {
+  listen () {
+    for (const server of this.#servers) {
       // overcome blocking `listen()` calls
-      new Promise((res) => {
-        server.listen();
-        res(undefined);
+      new Promise((_resolve) => {
+        server.listen()
+        _resolve(undefined)
         // TODO: Use this.#handleError instead
-      }).catch((err) => this.#log.error(err));
+      }).catch((err) => this.#log.error(err))
     }
   }
 }

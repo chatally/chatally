@@ -1,6 +1,6 @@
-import { EventEmitter } from "node:events";
-import { Request } from "./request.js";
-import { Response } from "./response.js";
+import { EventEmitter } from 'node:events'
+import { Request } from './request.js'
+import { Response } from './response.js'
 
 /**
  * @typedef {import("./message.d.ts").IncomingMessage} IncomingMessage
@@ -16,28 +16,28 @@ import { Response } from "./response.js";
  */
 export class BaseServer extends EventEmitter {
   /** @type {import("@chatally/logger").Logger | undefined} */
-  #log;
+  #log
 
-  get log() {
-    return this.#log;
+  get log () {
+    return this.#log
   }
 
-  set log(log) {
-    this.#log = log;
+  set log (log) {
+    this.#log = log
   }
 
   /**
    * @param {string} name
    */
-  constructor(name) {
-    super();
-    this.name = name;
+  constructor (name) {
+    super()
+    this.name = name
   }
 
-  listen() {
+  listen () {
     throw new Error(
-      "The method `listen()` in BaseServer is abstract and must be overridden"
-    );
+      'The method `listen()` in BaseServer is abstract and must be overridden'
+    )
   }
 
   /**
@@ -46,28 +46,28 @@ export class BaseServer extends EventEmitter {
    * @param {((msg: OutgoingMessage) => void) | ((msg: OutgoingMessage) => Promise<void>)} [callbacks.onWrite]
    * @param {((res: Response) => void) | ((res: Response) => Promise<void>)} [callbacks.onFinished]
    */
-  dispatch(incoming, { onWrite, onFinished }) {
-    const req = new Request(incoming);
-    const res = new Response();
+  dispatch (incoming, { onWrite, onFinished }) {
+    const req = new Request(incoming)
+    const res = new Response()
     if (onWrite) {
-      res.on("write", async (msg) => {
+      res.on('write', async (msg) => {
         try {
-          await onWrite(msg);
+          await onWrite(msg)
         } catch (err) {
-          this.log?.error(err);
+          this.log?.error(err)
         }
-      });
+      })
     }
     if (onFinished) {
-      res.on("finished", async (res) => {
+      res.on('finished', async (res) => {
         try {
-          await onFinished(res);
+          await onFinished(res)
         } catch (err) {
-          this.log?.error(err);
+          this.log?.error(err)
         }
-      });
+      })
     }
-    this.emit("dispatch", req, res);
+    this.emit('dispatch', req, res)
   }
 }
 
@@ -75,11 +75,11 @@ export class BaseServer extends EventEmitter {
  * @param {any} object
  * @returns {object is import("./index.d.ts").Server}
  */
-export function isServer(object) {
-  if (!object) return false;
-  if (object instanceof BaseServer) return true;
+export function isServer (object) {
+  if (!object) return false
+  if (object instanceof BaseServer) return true
 
-  if (typeof object.listen !== "function") return false;
-  if (typeof object.on !== "function") return false;
-  return true;
+  if (typeof object.listen !== 'function') return false
+  if (typeof object.on !== 'function') return false
+  return true
 }

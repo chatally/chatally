@@ -1,12 +1,12 @@
-import type { Logger } from "@chatally/logger";
-import type { Express } from "express-serve-static-core";
-import type { EventEmitter } from "node:events";
+import type { Logger } from '@chatally/logger'
+import type { Express } from 'express-serve-static-core'
+import type { EventEmitter } from 'node:events'
 
 /**
  * WhatsApp Webhooks Server Class
  */
 export declare class Webhooks extends EventEmitter<WebhooksEvents> {
-  log: Logger | undefined;
+  log: Logger | undefined
 
   /**
    * Create a WhatsApp Webhooks server.
@@ -19,30 +19,30 @@ export declare class Webhooks extends EventEmitter<WebhooksEvents> {
    *
    * @param config
    */
-  constructor(config?: WebhooksConfig);
+  constructor (config?: WebhooksConfig)
 
   /**
    * Start the server
    * @param port [Optional] Port to listen on [`default=3000`]
    */
-  listen(port?: number): void;
+  listen (port?: number): void
 
   /**
    * Get the underlying express app (for testing purposes).
    *
    * @protected
    */
-  get _app(): Express;
+  get _app (): Express
 }
 
-type WebhooksEvents = {
-  notification: WebhooksNotification[];
-};
+interface WebhooksEvents {
+  notification: WebhooksNotification[]
+}
 
 export interface WebhooksNotification {
-  messages: IncomingMessage[];
-  statuses: Status[];
-  errors: Error[];
+  messages: IncomingMessage[]
+  statuses: Status[]
+  errors: Error[]
 }
 
 export interface WebhooksConfig {
@@ -51,32 +51,32 @@ export interface WebhooksConfig {
    * cannot be registered with WhatsApp business account
    * [`default=undefined`]
    */
-  verifyToken?: string | undefined;
+  verifyToken?: string | undefined
 
   /**
    * [Optional] secret to verify payload signatures, if not provided thet
    * payload is not verified
    * [`default=undefined`]
    */
-  secret?: string;
+  secret?: string
 
   /**
    * [Optional] URL path to listen on
    * [`default="/"`]
    */
-  path?: string;
+  path?: string
 
   /**
    * [Optional] Port to listen on
    * [`default=3000`]
    */
-  port?: number;
+  port?: number
 
   /**
    * [Optional] Logger to use instead of console
    * [`default=undefined`]
    */
-  log?: Logger;
+  log?: Logger
 }
 
 /**
@@ -91,9 +91,9 @@ export interface Notification {
    *
    * The webhook is `whatsapp_business_account`.
    */
-  object: "whatsapp_business_account";
+  object: 'whatsapp_business_account'
   /** An array of entry objects. */
-  entry: Entry[];
+  entry: Entry[]
 }
 
 export interface Entry {
@@ -101,15 +101,15 @@ export interface Entry {
    * The WhatsApp Business Account ID for the business that is subscribed to
    * the webhook.
    */
-  id: string;
+  id: string
   /** An array of change objects. */
-  changes: Change[];
+  changes: Change[]
 }
 
 export interface Change {
   /** Notification type. Value will be `messages`. */
-  field: "messages";
-  value: Value;
+  field: 'messages'
+  value: Value
 }
 
 /**
@@ -119,21 +119,21 @@ export interface Change {
  */
 export interface Value {
   /** Product used to send the message. Value is always `whatsapp`. */
-  messaging_product: "whatsapp";
+  messaging_product: 'whatsapp'
   /**
    * Array of contact objects
    *
    * Contains information for the customer who sent a message to the business.
    */
-  contacts?: Contact[];
+  contacts?: Contact[]
   /** An array of error objects describing the error. */
-  errors?: Error[];
+  errors?: Error[]
   /** Information about a message received. */
-  messages?: IncomingMessage[];
+  messages?: IncomingMessage[]
   /** A metadata object describing the business subscribed to the webhook. */
-  metadata: Metadata[];
+  metadata: Metadata[]
   /** Status object for a message that was sent. */
-  statuses?: Status[];
+  statuses?: Status[]
 }
 
 export interface Contact {
@@ -142,14 +142,14 @@ export interface Contact {
    *
    * A business can respond to a message using this ID.
    */
-  wa_id: string;
+  wa_id: string
   /** A customer profile object. */
-  profile: Profile;
+  profile: Profile
 }
 
 export interface Profile {
   /** The customer's name. */
-  name: string;
+  name: string
 }
 
 export interface Error {
@@ -161,18 +161,18 @@ export interface Error {
    *
    * For details see https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes#error-codes
    */
-  code: number;
+  code: number
   /** Error code title. Example: Rate limit hit. */
-  title: string;
+  title: string
   /** Error code message. This value is the same as the title value. */
-  message: string;
+  message: string
   /** An error data object */
-  error_data: ErrorDataObject;
+  error_data: ErrorDataObject
 }
 
 export interface ErrorDataObject {
   /** Describes the error. Example: Message failed to send */
-  details: string;
+  details: string
 }
 
 /**
@@ -188,26 +188,26 @@ export type IncomingMessage = {
    *
    * Only included when a user replies or interacts with one of your messages.
    */
-  context?: Context;
+  context?: Context
 
   /** An array of error objects describing the error. */
-  errors: Error[];
+  errors: Error[]
 
   /** The customer's phone number who sent the message to the business. */
-  from: string;
+  from: string
 
   /**
    * The ID (WAMID) for the message that was received.
    *
    * You could use messages endpoint to mark this specific message as read.
    */
-  id: string;
+  id: string
 
   /** Unix timestamp.
    *
    * indicating when the WhatsApp server received the message from the
    * customer. */
-  timestamp: string;
+  timestamp: string
 
   /**
    * An identity object.
@@ -215,7 +215,7 @@ export type IncomingMessage = {
    * Webhook is triggered when a customer's phone number or profile
    * information has been updated. See `messages system identity`.
    */
-  identity?: Identity;
+  identity?: Identity
 } & (
   | IncomingAudio
   | IncomingButton
@@ -230,23 +230,23 @@ export type IncomingMessage = {
   | IncomingText
   | IncomingVideo
   | SystemMessage
-);
+)
 
 export interface Context {
   /** Set to true if the message received has been forwarded. */
-  forwarded: boolean;
+  forwarded: boolean
 
   /**
    * Set to true if the message received has been forwarded
    * more than 5 times.
    */
-  frequently_forwarded: boolean;
+  frequently_forwarded: boolean
 
   /** The WhatsApp ID for the customer who replied to an inbound message. */
-  from: string;
+  from: string
 
   /** The message ID for the sent message for an inbound reply. */
-  id: string;
+  id: string
 
   /**
    * Referred product object describing the product the user is requesting
@@ -257,10 +257,10 @@ export interface Context {
    */
   referred_product: {
     /** Unique identifier of the linked Meta catalog. */
-    catalog_id: string;
+    catalog_id: string
     /** Unique identifier of the product in a catalog. */
-    product_retailer_id: string;
-  };
+    product_retailer_id: string
+  }
 }
 
 export interface Identity {
@@ -268,246 +268,246 @@ export interface Identity {
    * State of acknowledgment for the messages system
    * `customer_identity_changed`.
    */
-  acknowledged: string;
+  acknowledged: string
 
   /**
    * The time when the WhatsApp Business Management API detected the customer
    * may have changed their profile information.
    */
-  created_timestamp: string;
+  created_timestamp: string
 
   /**
    * The ID for the messages system `customer_identity_changed`
    */
-  hash: string;
+  hash: string
 }
 
 export interface IncomingAudio {
   /** Includes voice messages */
-  type: "audio";
+  type: 'audio'
   audio: {
     /** ID for the audio file. */
-    id: string;
+    id: string
     /** Mime type of the audio file. */
-    mime_type: AudioMimeType;
-  };
+    mime_type: AudioMimeType
+  }
 }
 
 export type AudioMimeType =
-  | "audio/aac"
-  | "audio/mp4"
-  | "audio/mpeg"
-  | "audio/amr"
-  | "audio/ogg";
+  | 'audio/aac'
+  | 'audio/mp4'
+  | 'audio/mpeg'
+  | 'audio/amr'
+  | 'audio/ogg'
 
 /**
  * This message can only result from a message template.
  * All other buttons are received as InteractiveMessage.
  */
 export interface IncomingButton {
-  type: "button";
+  type: 'button'
   button: {
     /** The payload of the button. */
-    payload: string;
+    payload: string
     /** The text of the button. */
-    text: string;
-  };
+    text: string
+  }
 }
 
 export interface IncomingDocument {
-  type: "document";
+  type: 'document'
   document: {
     /** Caption for the document, if provided. */
-    caption?: string;
+    caption?: string
     /** Name for the file on the sender's device. */
-    filename: string;
+    filename: string
     /** SHA 256 hash. */
-    sha256: string;
+    sha256: string
     /** Mime type of the document file. */
-    mime_type: DocumentMimeType;
+    mime_type: DocumentMimeType
     /** ID for the document. */
-    id: string;
-  };
+    id: string
+  }
 }
 
 export type DocumentMimeType =
-  | "text/plain"
-  | "application/pdf"
-  | "application/vnd.ms-powerpoint"
-  | "application/msword"
-  | "application/vnd.ms-excel"
-  | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  | "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-  | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+  | 'text/plain'
+  | 'application/pdf'
+  | 'application/vnd.ms-powerpoint'
+  | 'application/msword'
+  | 'application/vnd.ms-excel'
+  | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  | 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
 export interface IncomingImage {
-  type: "image";
+  type: 'image'
   image: {
     /** Caption for the image, if provided. */
-    caption?: string;
+    caption?: string
     /** SHA 256 hash. */
-    sha256: string;
+    sha256: string
     /** Mime type of the image file. */
-    mime_type: ImageMimeType;
+    mime_type: ImageMimeType
     /** ID for the image. */
-    id: string;
-  };
+    id: string
+  }
 }
 
-export type ImageMimeType = "image/jpeg" | "image/png";
+export type ImageMimeType = 'image/jpeg' | 'image/png'
 
 export interface IncomingInteractive {
-  type: "interactive";
+  type: 'interactive'
   /** When a customer has interacted with your message. */
   interactive:
-    | {
-        type: "button_reply";
-        /** Sent when a customer clicks a button. */
-        button_reply: {
-          /** Unique ID of a button. */
-          id: string;
-          /** Title of a button. */
-          title: string;
-        };
-      }
-    | {
-        type: "list_reply";
-        /** Sent when a customer selects an item from a list. */
-        list_reply: {
-          /** Unique ID of the selected list item. */
-          id: string;
-          /** Title of the selected list item. */
-          title: string;
-          /** Description of the selected row. */
-          description?: string;
-        };
-      };
+  | {
+    type: 'button_reply'
+    /** Sent when a customer clicks a button. */
+    button_reply: {
+      /** Unique ID of a button. */
+      id: string
+      /** Title of a button. */
+      title: string
+    }
+  }
+  | {
+    type: 'list_reply'
+    /** Sent when a customer selects an item from a list. */
+    list_reply: {
+      /** Unique ID of the selected list item. */
+      id: string
+      /** Title of the selected list item. */
+      title: string
+      /** Description of the selected row. */
+      description?: string
+    }
+  }
 }
 
 export interface IncomingLocation {
-  type: "location";
+  type: 'location'
   location: {
     /** Longitude of the location. */
-    longitude: number;
+    longitude: number
     /** Latitude of the location. */
-    latitude: number;
+    latitude: number
     /** Name of the location. */
-    name?: string;
+    name?: string
     /** Address of the location. Only displayed if name is present. */
-    address?: string;
-  };
+    address?: string
+  }
 }
 
 export interface IncomingOrder {
-  type: "order";
+  type: 'order'
   /** Included in the messages object when a customer has placed an order. */
   order: {
     /** ID for the catalog the ordered item belongs to. */
-    catalog_id: string;
+    catalog_id: string
     /** Text message from the user sent along with the order. */
-    text: string;
+    text: string
     /** Array of product item objects */
-    product_items: ProductItem[];
-  };
+    product_items: ProductItem[]
+  }
 }
 
 export interface ProductItem {
   /** Unique identifier of the product in a catalog. */
-  product_retailer_id: string;
+  product_retailer_id: string
   /** Number of items. */
-  quantity: string;
+  quantity: string
   /** Price of each item. */
-  item_price: string;
+  item_price: string
   /** Price currency. */
-  currency: string;
+  currency: string
 }
 
 export interface IncomingReaction {
-  type: "reaction";
+  type: 'reaction'
   reaction: {
     /** The ID of the message the customer reacted to. */
-    message_id: string;
+    message_id: string
     /** The emoji the customer reacted with. */
-    emoji: string;
-  };
+    emoji: string
+  }
 }
 
 export interface IncomingReferral {
-  type: "referral";
+  type: 'referral'
   /** Referral object. When a customer clicks an ad redirecting to WhatsApp. */
   referral: {
     /**
      * The Meta URL that leads to the ad or post clicked by the customer.
      * Opening this url takes you to the ad viewed by your customer.
      */
-    source_url: URL;
+    source_url: URL
     /** The type of the ad's source; ad or post. */
-    source_type: "ad" | "post";
+    source_type: 'ad' | 'post'
     /** Meta ID for an ad or a post. */
-    source_id: string;
+    source_id: string
     /** Headline used in the ad or post. */
-    headline: string;
+    headline: string
     /** Body for the ad or post. */
-    body: string;
+    body: string
     /** Media present in the ad or post; image or video. */
-    media_type: ImageMimeType | VideoMimeType;
+    media_type: ImageMimeType | VideoMimeType
     /** URL of the image, when media_type is an image. */
-    image_url: URL;
+    image_url: URL
     /** URL of the video, when media_type is a video. */
-    video_url: URL;
+    video_url: URL
     /** URL for the thumbnail, when media_type is a video. */
-    thumbnail_url: URL;
-  };
+    thumbnail_url: URL
+  }
 }
 
 export interface IncomingSticker {
-  type: "sticker";
+  type: 'sticker'
   sticker: {
     /** image/webp. */
-    mime_type: "image/webp";
+    mime_type: 'image/webp'
     /** Hash for the sticker. */
-    sha256: string;
+    sha256: string
     /** ID for the sticker. */
-    id: string;
+    id: string
     /** Set to true if the sticker is animated; false otherwise. */
-    animated: boolean;
-  };
+    animated: boolean
+  }
 }
 
 export interface IncomingText {
-  type: "text";
+  type: 'text'
   text: {
     /** The text of the message. */
-    body: string;
-  };
+    body: string
+  }
 }
 
 export interface IncomingVideo {
-  type: "video";
+  type: 'video'
   video: {
     /** The caption for the video, if provided. */
-    caption?: string;
+    caption?: string
     /** The name for the file on the sender's device. */
-    filename: string;
+    filename: string
     /** The hash for the video. */
-    sha256: string;
+    sha256: string
     /** The ID for the video. */
-    id: string;
+    id: string
     /** The mime type for the video file. */
-    mime_type: VideoMimeType;
-  };
+    mime_type: VideoMimeType
+  }
 }
 
-export type VideoMimeType = "video/mp4" | "video/3gp";
+export type VideoMimeType = 'video/mp4' | 'video/3gp'
 
 export interface Metadata {
   /** The phone number that is displayed for a business. */
-  display_phone_number: string;
+  display_phone_number: string
   /** ID for the phone number.
    *
    * A business can respond to a message using this ID.
    */
-  phoneNumberId: string;
+  phoneNumberId: string
 }
 
 /**
@@ -521,18 +521,18 @@ export interface Metadata {
  */
 export interface Status {
   /** Information about the conversation. */
-  conversation: Conversation;
+  conversation: Conversation
   /** An array of error objects describing the error. */
-  errors?: Error[];
+  errors?: Error[]
   /** The ID for the message that the business sent to a customer */
-  id: string;
+  id: string
   /** An object containing billing information. */
-  pricing: Pricing;
+  pricing: Pricing
   /** The WhatsApp ID for the customer */
-  recipient_id: string;
-  status: StatusType;
+  recipient_id: string
+  status: StatusType
   /** Date for the status message */
-  timestamp: string;
+  timestamp: string
 }
 
 export interface Conversation {
@@ -540,7 +540,7 @@ export interface Conversation {
    * Represents the ID of the conversation the given status notification
    * belongs to.
    */
-  id: string;
+  id: string
 
   /** Indicates who initiated the conversation */
   origin: {
@@ -549,53 +549,53 @@ export interface Conversation {
      *
      * This can also be referred to as a conversation entry point
      */
-    type: ConversationType;
-  };
+    type: ConversationType
+  }
 
   /**
    * Date when the conversation expires.
    *
    * This field is only present for messages with a `status` set to `sent`.
    */
-  expiration_timestamp: string;
+  expiration_timestamp: string
 }
 
 export type ConversationType =
-  | "business_initiated"
-  | "customer_initiated"
-  | "referral_conversion"
-  | "user_initiated";
+  | 'business_initiated'
+  | 'customer_initiated'
+  | 'referral_conversion'
+  | 'user_initiated'
 
 export interface Pricing {
   /** Indicates whether the conversation is billable */
-  billable: boolean;
+  billable: boolean
   /** Indicates the conversation pricing category */
-  category: ConversationType;
+  category: ConversationType
   /**
    * Type of pricing model used.
    *
    * Current supported value is CBP
    */
-  pricing_model: "CBP";
+  pricing_model: 'CBP'
 }
 
-export type StatusType = "delivered" | "failed" | "read" | "sent";
+export type StatusType = 'delivered' | 'failed' | 'read' | 'sent'
 
 export interface SystemMessage {
-  type: "system";
+  type: 'system'
   /** Customer has updated their phone number or profile information */
   system: {
     /** Describes the change to the customer's identity or phone number. */
-    body: string;
+    body: string
     /** Hash for the identity fetched from server. */
-    identity: string;
+    identity: string
     /** New WhatsApp ID for the customer when their phone number is updated. */
-    wa_id: string;
+    wa_id: string
     /** Type of system update. */
     type:
-      | "customer_changed_number" // changed phone number
-      | "customer_identity_changed"; // changed profile information
+    | 'customer_changed_number' // changed phone number
+    | 'customer_identity_changed' // changed profile information
     /** The WhatsApp ID for the customer prior to the update. */
-    customer: string;
-  };
+    customer: string
+  }
 }

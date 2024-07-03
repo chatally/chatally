@@ -1,8 +1,8 @@
-import type { BaseServer, OutgoingMessage } from "@chatally/core";
-import type { GraphApi, GraphApiConfig } from "./graph-api.d.ts";
-import type { MediaConfig } from "./media.d.ts";
-import type { MediaObject, Messages, MessagesConfig } from "./messages.d.ts";
-import type { Webhooks, WebhooksConfig } from "./webhooks.d.ts";
+import type { BaseServer, OutgoingMessage } from '@chatally/core'
+import type { GraphApi, GraphApiConfig } from './graph-api.d.ts'
+import type { MediaConfig } from './media.d.ts'
+import type { MediaObject, Messages, MessagesConfig } from './messages.d.ts'
+import type { Webhooks, WebhooksConfig } from './webhooks.d.ts'
 
 /**
  * WhatsApp Cloud Server Class
@@ -66,7 +66,7 @@ export declare class WhatsAppCloud extends BaseServer {
    * **Media**
    * - https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media
    */
-  constructor(configObj?: Partial<WhatsAppCloudConfig>);
+  constructor (configObj?: Partial<WhatsAppCloudConfig>)
 
   /**
    * Start the underlying Webhooks API server.
@@ -79,14 +79,14 @@ export declare class WhatsAppCloud extends BaseServer {
    *
    * @param port [Optional] Port to listen on with the Webhooks server
    */
-  listen: (port?: number) => void;
+  listen: (port?: number) => void
 
   /**
    * Indicate, whether messages should be delivered immediately (on write)
    * instead of on end.
    * [default=false]
    */
-  immediate: boolean;
+  immediate: boolean
 
   /**
    * Asynchronously send message(s) to recipient.
@@ -98,7 +98,7 @@ export declare class WhatsAppCloud extends BaseServer {
    * @param to recipient
    * @param outgoing one or more messages
    */
-  send(to: string, ...outgoing: OutgoingMessage[]): Promise<void>;
+  send (to: string, ...outgoing: OutgoingMessage[]): Promise<void>
 
   /**
    * Upload a local file to the Media endpoint.
@@ -106,7 +106,7 @@ export declare class WhatsAppCloud extends BaseServer {
    * @param file
    * @returns the media id
    */
-  upload(file: string): Promise<string>;
+  upload (file: string): Promise<string>
 
   /**
    * Download a media asset from the Media endpoint to a local file.
@@ -114,7 +114,7 @@ export declare class WhatsAppCloud extends BaseServer {
    * @param id the media id
    * @returns the file path to the downloaded file
    */
-  download(id: string): Promise<string>;
+  download (id: string): Promise<string>
 }
 
 export interface WhatsAppCloudConfig {
@@ -136,7 +136,7 @@ export interface WhatsAppCloudConfig {
    *
    * [default=undefined]
    */
-  file?: string | boolean;
+  file?: string | boolean
 
   /**
    * [Optional] Use environment variables for server configuration.
@@ -151,14 +151,14 @@ export interface WhatsAppCloudConfig {
    *
    * [default=undefined]
    */
-  env?: string | boolean;
+  env?: string | boolean
 
   /**
    * [Optional] Name of the server
    *
    * [default="WhatsAppCloud"]
    */
-  name?: string;
+  name?: string
 
   /**
    * [Optional] Flag indicating, whether messages should be send before
@@ -166,14 +166,14 @@ export interface WhatsAppCloudConfig {
    *
    * [default=false]
    */
-  immediate?: boolean;
+  immediate?: boolean
 
   /**
    * [Optional] Logger to use
    *
    * [default=undefined]
    */
-  log?: import("@chatally/logger").Logger;
+  log?: import('@chatally/logger').Logger
 
   /**
    * [Optional] Webhooks instance or configuration.
@@ -181,7 +181,7 @@ export interface WhatsAppCloudConfig {
    * If not provided it must be available as configuration file or environment
    * variables.
    */
-  webhooks?: Webhooks | WebhooksConfig;
+  webhooks?: Webhooks | WebhooksConfig
 
   /**
    * [Optional] GraphApi instance or configuration
@@ -189,7 +189,7 @@ export interface WhatsAppCloudConfig {
    * If not provided it must be available as configuration file or environment
    * variables.
    */
-  graphApi: GraphApi | GraphApiConfig;
+  graphApi: GraphApi | GraphApiConfig
 
   /**
    * [Optional] Messages instance or configuration
@@ -197,7 +197,7 @@ export interface WhatsAppCloudConfig {
    * If not provided it must be available as configuration file or environment
    * variables.
    */
-  messages?: Messages | Omit<MessagesConfig, "graphApi">;
+  messages?: Messages | Omit<MessagesConfig, 'graphApi'>
 
   /**
    * [Optional] Media instance or configuration
@@ -205,5 +205,5 @@ export interface WhatsAppCloudConfig {
    * If not provided it must be available as configuration file or environment
    * variables.
    */
-  media?: MediaObject | Omit<MediaConfig, "graphApi">;
+  media?: MediaObject | Omit<MediaConfig, 'graphApi'>
 }

@@ -4,8 +4,7 @@
   },
   "js/ts.implicitProjectConfig.checkJs": true,
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "editor.defaultFormatter": "standard.vscode-standard",
+  "standard.engine": "ts-standard",
+  "editor.formatOnSave": true
 }

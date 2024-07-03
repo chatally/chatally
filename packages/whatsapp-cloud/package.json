@@ -22,7 +22,6 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "lint": "eslint .",
     "repl": "nodemon repl.js",
     "test": "vitest"
   },

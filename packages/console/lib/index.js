@@ -1,28 +1,28 @@
-import { BaseServer, text } from "@chatally/core";
-import { createInterface as readline } from "node:readline";
+import { BaseServer, text } from '@chatally/core'
+import { createInterface as readline } from 'node:readline'
 
-const grey = 30;
-const green = 32;
-const onGreen = 42;
+const grey = 30
+const green = 32
+const onGreen = 42
 
 /**
  * @param {string} text
  * @param {string | number} color
  * @returns
  */
-function color(text, color) {
-  return `\u001b[${color}m${text}\u001b[0m`;
+function color (text, color) {
+  return `\u001b[${color}m${text}\u001b[0m`
 }
 
 export class ConsoleServer extends BaseServer {
-  constructor(name = "ConsoleServer") {
-    super(name);
+  constructor (name = 'ConsoleServer') {
+    super(name)
   }
 
   /**
    * The name displayed before each message from your bot.
    */
-  name = "bot";
+  name = 'bot'
 
   /**
    * The color used to display the name.
@@ -30,12 +30,12 @@ export class ConsoleServer extends BaseServer {
    * See https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html for info on
    * terminal colors.
    */
-  nameColor = green;
+  nameColor = green
 
   /**
    * The prompt displayed before the user input.
    */
-  prompt = ">";
+  prompt = '>'
 
   /**
    * The color used to display the prompt.
@@ -43,7 +43,7 @@ export class ConsoleServer extends BaseServer {
    * See https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html for info on
    * terminal colors.
    */
-  promptColor = green;
+  promptColor = green
 
   /**
    * The color used to display the response from the bot.
@@ -51,83 +51,83 @@ export class ConsoleServer extends BaseServer {
    * See https://tldp.org/HOWTO/Bash-Prompt-HOWTO/x329.html for info on
    * terminal colors.
    */
-  responseColor = grey;
+  responseColor = grey
 
   /**
    * Optional token, that user can type to stop the console server.
    *
    * Default is '/quit'
    */
-  stopToken = "/quit";
+  stopToken = '/quit'
 
   /**
    * The greeting displayed when the console channel starts listening.
    */
-  greeting = `${color(" ChatAlly ", onGreen)} ${color("Console Server", green)}
-Quit with 'Ctrl+c'${this.stopToken ? `or type '${this.stopToken}'` : ""}.
-Waiting for your messages...`;
+  greeting = `${color(' ChatAlly ', onGreen)} ${color('Console Server', green)}
+Quit with 'Ctrl+c'${this.stopToken ? `or type '${this.stopToken}'` : ''}.
+Waiting for your messages...`
 
   /**
    * The message displayed, when the console channel shuts down.
    */
-  goodBye = `Good bye.`;
+  goodBye = 'Good bye.'
 
-  listen() {
-    this.#printGreeting();
-    this._interface = readline(process.stdin);
+  listen () {
+    this.#printGreeting()
+    this._interface = readline(process.stdin)
 
     this._interface
-      .on("line", (line) => this.#printResponse(line))
-      .on("close", () => this.#printGoodBye());
+      .on('line', (line) => this.#printResponse(line))
+      .on('close', () => this.#printGoodBye())
   }
 
-  #printGreeting() {
+  #printGreeting () {
     process.nextTick(() => {
-      console.clear();
+      console.clear()
       if (this.greeting) {
-        process.stdout.write(`${this.greeting}\n\n`);
+        process.stdout.write(`${this.greeting}\n\n`)
       }
-      this.#printPrompt();
-    });
+      this.#printPrompt()
+    })
   }
 
   /**
    * @param {String} line
    */
-  #printResponse(line) {
+  #printResponse (line) {
     if (this.stopToken && line === this.stopToken) {
-      return this._interface?.close();
+      return this._interface?.close()
     }
     this.dispatch(line, {
       onWrite: (msg) => {
-        this.#printName();
-        process.stdout.write(`${color(text(msg), this.responseColor)}\n`);
+        this.#printName()
+        process.stdout.write(`${color(text(msg), this.responseColor)}\n`)
       },
       onFinished: () => {
-        this.#printPrompt();
-      },
-    });
+        this.#printPrompt()
+      }
+    })
   }
 
-  #printGoodBye() {
+  #printGoodBye () {
     if (this.goodBye) {
-      process.stdout.write(`\n${this.goodBye}`);
+      process.stdout.write(`\n${this.goodBye}`)
     }
-    process.stdout.write("\n");
-    process.exit();
+    process.stdout.write('\n')
+    process.exit()
   }
 
-  #printName() {
+  #printName () {
     const length =
-      Math.max(this.name.length, this.prompt.length) - this.name.length;
-    const padStart = "".padStart(length, " ");
-    process.stdout.write(`${padStart}${color(this.name, this.nameColor)} `);
+      Math.max(this.name.length, this.prompt.length) - this.name.length
+    const padStart = ''.padStart(length, ' ')
+    process.stdout.write(`${padStart}${color(this.name, this.nameColor)} `)
   }
 
-  #printPrompt() {
+  #printPrompt () {
     const length =
-      Math.max(this.name.length, this.prompt.length) - this.prompt.length;
-    const padStart = " ".repeat(length);
-    process.stdout.write(`${padStart}${color(this.prompt, this.promptColor)} `);
+      Math.max(this.name.length, this.prompt.length) - this.prompt.length
+    const padStart = ' '.repeat(length)
+    process.stdout.write(`${padStart}${color(this.prompt, this.promptColor)} `)
   }
 }

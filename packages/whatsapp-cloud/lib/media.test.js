@@ -1,89 +1,89 @@
-import { nanoid } from "nanoid";
-import { mkdirSync, readFileSync, rmSync, statSync } from "node:fs";
-import fs from "node:fs/promises";
-import { GraphApi } from "./graph-api.js";
-import { Media } from "./media.js";
+import { nanoid } from 'nanoid'
+import { mkdirSync, readFileSync, rmSync, statSync } from 'node:fs'
+import fs from 'node:fs/promises'
+import { GraphApi } from './graph-api.js'
+import { Media } from './media.js'
 
-const downloadUrl = "https://download.here";
+const downloadUrl = 'https://download.here'
 
-function newMedia() {
+function newMedia () {
   /** @type {Array<{url: string, req: import("./graph-api.d.ts").GraphApiRequest, res: import("./graph-api.d.ts").GraphApiResponse}>} */
-  const requests = [];
+  const requests = []
   const graphApi = new GraphApi({
-    phoneNumberId: "1234",
-    accessToken: "ABCD",
+    phoneNumberId: '1234',
+    accessToken: 'ABCD',
     _request: async (url, req) => {
       const reqKind = url.startsWith(downloadUrl)
-        ? "download"
-        : req.method === "POST"
-          ? "upload"
-          : "mediaQuery";
+        ? 'download'
+        : req.method === 'POST'
+          ? 'upload'
+          : 'mediaQuery'
       const contentType =
-        reqKind === "download"
-          ? "image/jpeg"
-          : "text/javascript; charset=UTF-8";
+        reqKind === 'download'
+          ? 'image/jpeg'
+          : 'text/javascript; charset=UTF-8'
       const result =
-        reqKind === "upload"
-          ? { id: "12345678" }
-          : reqKind === "mediaQuery"
+        reqKind === 'upload'
+          ? { id: '12345678' }
+          : reqKind === 'mediaQuery'
             ? { url: `${downloadUrl}/12345678` }
-            : undefined;
-      const text = () => JSON.stringify(result);
-      const json = () => ({});
+            : undefined
+      const text = () => JSON.stringify(result)
+      const json = () => ({})
       const arrayBuffer =
-        reqKind === "download"
-          ? () => readFileSync("./testing/image.jpg").buffer
-          : () => new ArrayBuffer(0);
+        reqKind === 'download'
+          ? () => readFileSync('./testing/image.jpg').buffer
+          : () => new ArrayBuffer(0)
       const res = {
         statusCode: 200,
-        headers: { "content-type": contentType },
-        body: { text, json, arrayBuffer },
-      };
-      requests.push({ url, req, res });
-      return res;
-    },
-  });
-  const downloadDir = `./testing/media-${nanoid()}`;
-  mkdirSync(downloadDir);
+        headers: { 'content-type': contentType },
+        body: { text, json, arrayBuffer }
+      }
+      requests.push({ url, req, res })
+      return res
+    }
+  })
+  const downloadDir = `./testing/media-${nanoid()}`
+  mkdirSync(downloadDir)
   const media = new Media({
     graphApi,
     downloadDir,
-    dbPath: `${downloadDir}/ids.db`,
-  });
-  function cleanup() {
-    rmSync(downloadDir, { recursive: true, force: true });
+    dbPath: `${downloadDir}/ids.db`
+  })
+  function cleanup () {
+    rmSync(downloadDir, { recursive: true, force: true })
   }
-  return { media, requests, cleanup };
+  return { media, requests, cleanup }
 }
 
-const original = "./testing/image.jpg";
-const copied = "./testing/renamed-image.jpg";
+const original = './testing/image.jpg'
+const copied = './testing/renamed-image.jpg'
 
-describe("Media", async function () {
-  it("does not re-download uploaded media", async function () {
-    const { media, cleanup } = newMedia();
+describe('Media', async function () {
+  it('does not re-download uploaded media', async function () {
+    const { media, cleanup } = newMedia()
     try {
-      const id = await media.upload(original);
-      const downloaded = await media.download(id);
-      expect(downloaded).toEqual(original);
+      const id = await media.upload(original)
+      const downloaded = await media.download(id)
+      expect(downloaded).toEqual(original)
     } finally {
-      cleanup();
+      cleanup()
     }
-  });
-  it("downloads media, if it does not exist", async function () {
-    const { media, requests, cleanup } = newMedia();
+  })
+  it('downloads media, if it does not exist', async function () {
+    const { media, requests, cleanup } = newMedia()
     try {
-      await fs.copyFile(original, copied);
-      const id = await media.upload(copied);
-      await fs.rm(copied);
-      const downloaded = await media.download(id);
-      expect(downloaded.endsWith(`/${id}.jpeg`)).toBeTruthy();
-      expect(requests.length).toEqual(3);
-      expect(requests[0].req.method).toEqual("POST");
-      expect(requests[2].url.startsWith(downloadUrl));
-      expect(statSync(downloaded).size).toEqual(statSync(original).size);
+      await fs.copyFile(original, copied)
+      const id = await media.upload(copied)
+      await fs.rm(copied)
+      const downloaded = await media.download(id)
+      expect(downloaded.endsWith(`/${id}.jpeg`)).toBeTruthy()
+      expect(requests.length).toEqual(3)
+      expect(requests[0].req.method).toEqual('POST')
+      expect(requests[2].url.startsWith(downloadUrl))
+      expect(statSync(downloaded).size).toEqual(statSync(original).size)
     } finally {
-      cleanup();
+      cleanup()
     }
-  });
-});
+  })
+})

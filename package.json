@@ -1,6 +1,7 @@
 {
   "name": "chatally-monorepo",
   "description": "Your toolbox for self-hosted chat services",
+  "type": "module",
   "author": "info@chatally.org",
   "private": true,
   "license": "MIT",
@@ -17,7 +18,16 @@
     "packages/*",
     "scripts"
   ],
-  "type": "module",
+  "ts-standard": {
+    "globals": [
+      "describe",
+      "it",
+      "expect"
+    ],
+    "ignore": [
+      "packages/whatsapp-deno-server/"
+    ]
+  },
   "scripts": {
     "build": "turbo run build --no-daemon",
     "changeset:add": "changeset add",
@@ -28,11 +38,11 @@
     "docs": "npm run -w @apps/docs dev",
     "format": "prettier --write \"**/*.{d\\.ts,[c]js,md}\"",
     "tsc": "turbo run tsc --no-daemon",
-    "lint": "turbo run lint --no-daemon",
+    "lint": "ts-standard",
+    "lint:fix": "ts-standard --fix",
     "prepare:release": "npm run clean && npm run release:build && npm run release:check",
     "release:build": "turbo run build --filter=!./apps/* --no-daemon",
-    "release:check": "npm run release:lint && npm run release:test",
-    "release:lint": "turbo run lint --filter=!./apps/* --no-daemon",
+    "release:check": "npm run lint && npm run release:test",
     "release:test": "turbo run test --filter=!./apps/* -- run",
     "test": "turbo run test -- run"
   },
@@ -45,6 +55,7 @@
     "eslint-config-turbo": "^1.13.3",
     "eslint-plugin-only-warn": "^1.1.0",
     "prettier": "^3.2.5",
+    "ts-standard": "^12.0.2",
     "typescript": "^5.4.4",
     "vitest": "^1.6.0"
   },

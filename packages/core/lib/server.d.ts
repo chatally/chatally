@@ -1,8 +1,8 @@
-import type { Logger } from "@chatally/logger";
-import type { EventEmitter } from "node:events";
-import type { IRequest } from "./request.d.ts";
-import type { IResponse } from "./response.d.ts";
-import { IncomingMessage, OutgoingMessage } from "./message.js";
+import type { Logger } from '@chatally/logger'
+import type { EventEmitter } from 'node:events'
+import type { IRequest } from './request.d.ts'
+import type { IResponse } from './response.d.ts'
+import { IncomingMessage, OutgoingMessage } from './message.js'
 
 /**
  * Chat server
@@ -12,7 +12,7 @@ import { IncomingMessage, OutgoingMessage } from "./message.js";
  */
 export interface Server extends EventEmitter<ServerEvents> {
   /**  The server's name */
-  name: string;
+  name: string
 
   /**
    * The logger to use during runtime. Set this explicitly to false or NoLogger,
@@ -23,8 +23,8 @@ export interface Server extends EventEmitter<ServerEvents> {
    * You probably want to implement a setter method, that passes this logger
    * down to child modules, if your server contains any.
    */
-  get log(): Logger | undefined;
-  set log(log: Logger | undefined);
+  get log(): Logger | undefined
+  set log(log: Logger | undefined)
 
   /**
    * Starts the server.
@@ -32,18 +32,17 @@ export interface Server extends EventEmitter<ServerEvents> {
    * Called asynchronously (in background) when `listen()` is called on
    * ChatAlly application.
    */
-  listen: () => void;
+  listen: () => void
 }
 
 export abstract class BaseServer
   extends EventEmitter<ServerEvents>
-  implements Server
-{
-  name: string;
-  get log(): Logger | undefined;
-  set log(log: Logger | undefined);
-  constructor(name: string);
-  abstract listen(): void;
+  implements Server {
+  name: string
+  get log (): Logger | undefined
+  set log (log: Logger | undefined)
+  constructor (name: string)
+  abstract listen (): void
   /**
    * Dispatch an incoming message to all event listeners on the "dispatch"
    * event.
@@ -53,17 +52,17 @@ export abstract class BaseServer
    * @param incoming Message (string or fully typed)
    * @param callbacks will be registered on the respective response events.
    */
-  dispatch(
+  dispatch (
     incoming: IncomingMessage | string,
     callbacks?: {
-      onWrite?: (msg: OutgoingMessage) => void;
-      onFinished?: (res: IResponse) => void;
+      onWrite?: (msg: OutgoingMessage) => void
+      onFinished?: (res: IResponse) => void
     }
-  ): void;
+  ): void
 }
 
-export type ServerEvents = {
-  dispatch: [IRequest, IResponse];
-};
+export interface ServerEvents {
+  dispatch: [IRequest, IResponse]
+}
 
-export function isServer(obj: unknown): obj is Server;
+export function isServer (obj: unknown): obj is Server

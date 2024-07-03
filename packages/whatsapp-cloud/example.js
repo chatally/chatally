@@ -1,6 +1,6 @@
-import { Application } from "@chatally/core";
-import { WhatsAppCloud } from "./lib/index.js";
-import { BaseLogger } from "@chatally/logger";
+import { Application } from '@chatally/core'
+import { WhatsAppCloud } from './lib/index.js'
+import { BaseLogger } from '@chatally/logger'
 
 /**
  * If you want to try this example locally, you do not want to send anything to
@@ -19,79 +19,79 @@ import { BaseLogger } from "@chatally/logger";
  */
 const _request = async (url, request) => {
   if (request.body?.toString().endsWith('"status": "read"}')) {
-    return mockResponse({ success: true });
+    return mockResponse({ success: true })
   } else {
-    return mockResponse({ messages: [{ id: "2875634" }] });
+    return mockResponse({ messages: [{ id: '2875634' }] })
   }
-};
+}
 
 const whatsapp = new WhatsAppCloud({
   env: false, // do not read configuration from environment variables
   file: false, // do not read configuration from default configuration files
   graphApi: {
-    phoneNumberId: "10012345",
-    accessToken: "EAAADC___xyz",
-    _request,
+    phoneNumberId: '10012345',
+    accessToken: 'EAAADC___xyz',
+    _request
   },
   webhooks: {
-    path: "/whatsapp",
-    verifyToken: "verify",
-    secret: "secret",
-  },
-});
+    path: '/whatsapp',
+    verifyToken: 'verify',
+    secret: 'secret'
+  }
+})
 
-const log = new BaseLogger({ name: "MyBot", level: "debug" });
+const log = new BaseLogger({ name: 'MyBot', level: 'debug' })
 
 new Application({ log }) //
   .use(whatsapp)
-  .use(function echo({ req, res }) {
+  .use(function echo ({ req, res }) {
     if (res.isWritable) {
-      res.write(`You said '${req.text}' and I don't know what it means.`);
+      res.write(`You said '${req.text}' and I don't know what it means.`)
     }
   })
-  .listen();
+  .listen()
 
 /**
  * @param {unknown} response
  * @returns {import("./lib/graph-api.js").GraphApiResponse}
  */
-function mockResponse(response) {
-  let statusCode = 200;
-  let body;
-  let contentType;
+function mockResponse (response) {
+  let statusCode = 200
+  let body
+  let contentType
   if (response instanceof Error) {
-    statusCode = 400;
+    statusCode = 400
     body = {
       arrayBuffer: () => new ArrayBuffer(0),
       json: () => response,
-      text: () => "",
-    };
-    contentType = "application/json";
+      text: () => ''
+    }
+    contentType = 'application/json'
   } else if (response instanceof ArrayBuffer) {
     body = {
       arrayBuffer: () => response,
       json: () => {},
-      text: () => "",
-    };
-    contentType = "application/binary";
-  } else if (typeof response === "string") {
+      text: () => ''
+    }
+    contentType = 'application/binary'
+  } else if (typeof response === 'string') {
     body = {
       arrayBuffer: () => new ArrayBuffer(0),
       json: () => {},
-      text: () => response,
-    };
-    contentType = "text/plain";
+      text: () => response
+    }
+    contentType = 'text/plain'
   } else {
     body = {
       arrayBuffer: () => new ArrayBuffer(0),
       json: () => response,
-      text: () => "",
-    };
-    contentType = "application/json";
+      text: () => ''
+    }
+    contentType = 'application/json'
   }
   return {
     statusCode,
-    headers: { "content-type": contentType },
-    body,
-  };
+    headers: { 'content-type': contentType },
+    body
+  }
 }

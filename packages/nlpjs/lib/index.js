@@ -1,5 +1,5 @@
-import { dockStart } from "@nlpjs/basic";
-import { existsSync } from "node:fs";
+import { dockStart } from '@nlpjs/basic'
+import { existsSync } from 'node:fs'
 
 /**
  * @param {import("@chatally/logger").Logger
@@ -7,61 +7,61 @@ import { existsSync } from "node:fs";
  * @param {import("@nlpjs/basic").Configuration | string[]} [configuration]
  * @returns {Promise<import("@nlpjs/basic").Nlp>}
  */
-export async function trainNlp(logger, configuration) {
+export async function trainNlp (logger, configuration) {
   if (!isLogger(logger)) {
     if (configuration) {
       throw new Error(
         "Parameter 'logger' does not implement the ChatAlly Logger interface"
-      );
+      )
     }
-    configuration = logger;
-    logger = undefined;
+    configuration = logger
+    logger = undefined
   }
   if (Array.isArray(configuration)) {
     configuration = {
-      use: ["Basic"],
+      use: ['Basic'],
       settings: {
         nlp: {
-          corpora: configuration,
-        },
-      },
-    };
+          corpora: configuration
+        }
+      }
+    }
   }
-  if (!configuration && !existsSync("./conf.json")) {
+  if (!configuration && !existsSync('./conf.json')) {
     configuration = {
-      use: ["Basic"],
+      use: ['Basic'],
       settings: {
         nlp: {
-          corpora: ["./corpus.json"],
-        },
-      },
-    };
+          corpora: ['./corpus.json']
+        }
+      }
+    }
   }
-  const dock = await dockStart(configuration);
+  const dock = await dockStart(configuration)
 
-  const log = logger;
+  const log = logger
   if (log) {
-    dock.getContainer().register("logger", {
+    dock.getContainer().register('logger', {
       trace: (/** @type {string} */ msg) => log.trace(msg),
       debug: (/** @type {string} */ msg) => log.debug(msg),
       info: (/** @type {string} */ msg) => log.info(msg),
       log: (/** @type {string} */ msg) => log.info(msg),
       warn: (/** @type {string} */ msg) => log.warn(msg),
       error: (/** @type {string} */ msg) => log.error(msg),
-      fatal: (/** @type {string} */ msg) => log.error(`[FATAL] ${msg}`),
-    });
+      fatal: (/** @type {string} */ msg) => log.error(`[FATAL] ${msg}`)
+    })
   }
-  const nlp = dock.get("nlp");
-  await nlp.train();
-  return nlp;
+  const nlp = dock.get('nlp')
+  await nlp.train()
+  return nlp
 }
 
 /**
  * @param {any} obj
  * @returns {obj is import("@chatally/logger").Logger}
  */
-function isLogger(obj) {
-  return !!obj && obj.level && typeof obj.child === "function";
+function isLogger (obj) {
+  return !!obj && obj.level && typeof obj.child === 'function'
 }
 
 /**
@@ -79,24 +79,24 @@ function isLogger(obj) {
  *   threshold should end the response
  * @returns {import("@chatally/core").Middleware<{}>}
  */
-export function nlpjsMiddleware(nlp, options) {
-  const { name = "nlp.js", end = false } = options || {};
+export function nlpjsMiddleware (nlp, options) {
+  const { name = 'nlp.js', end = false } = options || {}
   const write = end //
-    ? // @ts-expect-error No typing required
-      (res, msg) => res.end(msg)
-    : // @ts-expect-error No typing required
-      (res, msg) => res.write(msg);
+    // @ts-expect-error No typing required
+    ? (res, msg) => res.end(msg)
+    // @ts-expect-error No typing required
+    : (res, msg) => res.write(msg)
 
   const obj = {
     /** @type {import("@chatally/core").Middleware<unknown>} */
     [name]: async function ({ req, res, data }) {
-      if (!res.isWritable) return;
-      const result = await nlp.process("en", req.text);
-      data[name] = result;
+      if (!res.isWritable) return
+      const result = await nlp.process('en', req.text)
+      data[name] = result
       if (result.answer) {
-        write(res, result.answer);
+        write(res, result.answer)
       }
-    },
-  };
-  return obj[name];
+    }
+  }
+  return obj[name]
 }
