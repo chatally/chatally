@@ -60,7 +60,7 @@ export class Webhooks extends EventEmitter {
           (err, req, res, next) => {
             if (this.log?.isLevel('debug')) {
               const body =
-                typeof req.body === 'object'
+                typeof req.body === 'object' && !(req.body instanceof Buffer)
                   ? JSON.stringify(req.body)
                   : req.body.toString()
               this.log.error(err.message, {
@@ -140,7 +140,8 @@ function verifySignature (req, secret) {
     .update(req.body)
     .digest('hex')
   if (signature !== xHubSignature) {
-    throw new HttpError(400, "Invalid 'x-hub-signature-256'.", signature)
+    throw new HttpError(400, "Invalid 'x-hub-signature-256'.",
+        `Expected 'x-hub-signature-256': '${signature}'.`)
   }
 }
 

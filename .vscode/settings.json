@@ -2,9 +2,12 @@
   "files.exclude": {
     "**/.turbo": true
   },
-  "js/ts.implicitProjectConfig.checkJs": true,
-  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "editor.defaultFormatter": "standard.vscode-standard",
+  "editor.formatOnSave": true,
+  "javascript.format.enable": true,
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "standard.enableGlobally": true,
   "standard.engine": "ts-standard",
-  "editor.formatOnSave": true
+  "typescript.format.enable": true,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

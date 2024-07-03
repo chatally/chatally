@@ -1,3 +1,4 @@
+import { Logger } from '@chatally/logger'
 import type { GraphApi } from './graph-api.d.ts'
 
 /**
