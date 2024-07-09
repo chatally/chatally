@@ -11,9 +11,9 @@ Dieses Impressum gilt für die Website chatally.org
 
 Inhaltlich verantwortlich und Ansprechpartner für den Datenschutz
 
-Christian Fuß  
-Pfarrstr. 107  
+Christian Fuß
+Pfarrstr. 107
 10317 Berlin
 
-Telefon +49 (0)30/28625264  
+Telefon +49 (0)30/28625264
 E-Mail info@chatally.org

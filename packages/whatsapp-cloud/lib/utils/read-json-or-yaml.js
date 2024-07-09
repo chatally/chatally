@@ -4,7 +4,7 @@ import YAML from 'js-yaml'
 /**
  * @param {string} path
  */
-export function readJsonOrYamlFile (path) {
+export function readJsonOrYamlFile(path) {
   try {
     const data = readFileSync(path, 'utf8')
     try {
@@ -33,10 +33,10 @@ export function readJsonOrYamlFile (path) {
 /**
  * @param {string} data
  */
-function parseYaml (data) {
+function parseYaml(data) {
   const object = YAML.load(data)
   if (typeof object !== 'object') {
-    throw new Error('File does not contain YAML')
+    throw new TypeError('File does not contain YAML')
   }
   return object
 }

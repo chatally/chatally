@@ -3,7 +3,7 @@
  *
  * @param {unknown} o The object
  * @param {PropertyKey} p The property key
- * @param {Object} [c] Additional characteristics required for the property
+ * @param {object} [c] Additional characteristics required for the property
  *   (AND logic)
  * @param {boolean} [c.enumerable] Property must be enumerable
  * @param {boolean} [c.writable] Property must be writable
@@ -12,15 +12,16 @@
  * @param {boolean} [c.set] Property must have a set accessor
  * @param {boolean} [c.settable] Property must be writable or have a set
  *   accessor
- * @returns {boolean}
+ * @returns {boolean} True if the object has a property with the given
+ *    characteristics.
  */
-export function hasProperty (o, p, c) {
+export function hasProperty(o, p, c) {
   if (!o) {
     return false
   }
-  const prop =
-    Object.getOwnPropertyDescriptor(o, p) ||
-    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(o), p)
+  const prop
+    = Object.getOwnPropertyDescriptor(o, p)
+    || Object.getOwnPropertyDescriptor(Object.getPrototypeOf(o), p)
   if (!prop) {
     return false
   }

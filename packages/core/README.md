@@ -14,17 +14,17 @@ Use the application
 
 ```js
 // index.js
-import { Application } from "@chatally/core";
-import { ConsoleServer } from "@chatally/console";
+import { Application } from '@chatally/core'
+import { ConsoleServer } from '@chatally/console'
 
 new Application({ log: false }) //
   .use(new ConsoleServer())
-  .use(function echo({ req, res }) {
+  .use(({ req, res }) => {
     if (res.isWritable) {
-      res.write(`You said '${req.text}'`);
+      res.write(`You said '${req.text}'`)
     }
   })
-  .listen();
+  .listen()
 ```
 
 ## Documentation

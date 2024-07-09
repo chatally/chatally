@@ -37,24 +37,24 @@ Create a child logger. The child logger inherits all properties of the parent lo
 ```ts
 export interface LoggerOptions {
   /** Initial log level of the logger */
-  level?: Level;
+  level?: Level
   /** Optional name of the logger */
-  name?: string;
+  name?: string
   /** Additional data to log with each call to a log method */
-  data?: unknown;
+  data?: unknown
 }
 ```
 
 ### Log methods
 
-The logger has log methods according to it's log levels:  
+The logger has log methods according to it's log levels:
 `debug(...)`, `info(...)`, `warn(...)`, `error(...)`
 
 All log methods have the same signature:
 
 ```ts
-(msg: string, ...args: any[]): void; // or
-(data: unknown, msg?: string, ...args: any[]): void;
+(msg: string, ...args: any[]) => unknown; // or
+(data: unknown, msg?: string, ...args: any[]) => unknown
 ```
 
 The message can be a printf-like template, it will be formatted using the rest arguments. The optional data will be logged after the message.
@@ -70,9 +70,9 @@ Basic logger implementation, that logs to the console by default.
 This logger is not optimized and should only be used for development. For test purposes, the output can be redirected to any `Writable` by setting the `out` property. Also for test purposes you can turn off the timestamps, by setting the `timestamps` property to false.
 
 ```js
-const log = new BaseLogger();
-log.out = new StringWritable();
-log.timestamps = false;
+const log = new BaseLogger()
+log.out = new StringWritable()
+log.timestamps = false
 ```
 
 #### NoLogger

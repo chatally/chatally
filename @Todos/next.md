@@ -3,18 +3,18 @@
 ## This Sprint
 
 - WhatsApp Cloud
-  - [x] Media upload/download
-  - [x] Mapping of all incoming messages
-  - [x] Mapping of all outgoing messages
-  - [x] Documentation
-  - [x] Initial publication
-  - [ ] Deployment
+  - Example
+    - [ ] Image download
+    - [ ] Image upload
+    - [ ] Audio upload
+    - [ ] Markdown
+    - [ ] Publish
   - [ ] Improve documentation
+- Signal Server
+  - [ ] General setup with libsignal
+  - [ ] Device Registration
 
 ## Next Sprint
-
-- Signal Server
-  - [ ] Device Registration
 
 ## Then
 

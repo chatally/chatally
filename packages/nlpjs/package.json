@@ -1,5 +1,6 @@
 {
   "name": "@chatally/nlpjs",
+  "type": "module",
   "version": "0.0.6",
   "description": "ChatAlly nlp.js middleware",
   "license": "MIT",
@@ -13,7 +14,6 @@
     "nlu",
     "wrapper"
   ],
-  "type": "module",
   "exports": {
     ".": {
       "import": {
@@ -23,11 +23,11 @@
     }
   },
   "scripts": {
-    "tsc": "tsc",
-    "repl": "nodemon repl.js"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@chatally/core": "*",
+    "@chatally/utils": "*",
     "@nlpjs/basic": "^4.27.0",
     "@nlpjs/nlp": "^4.27.0"
   },

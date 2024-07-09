@@ -1,0 +1,16 @@
+{
+  "name": "@chatally/servers",
+  "type": "module",
+  "private": true,
+  "description": "ChatAlly \"Servers\" example",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@chatally/core": "*",
+    "@chatally/logger": "*",
+    "@chatally/utils": "*",
+    "@chatally/whatsapp-cloud": "*",
+    "dotenv": "^16.4.5"
+  }
+}

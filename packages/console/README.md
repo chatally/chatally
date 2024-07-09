@@ -17,11 +17,11 @@ npm install @chatally/console
 Create a console server and start listening
 
 ```js
-import { ConsoleServer } from "@chatally/console";
+import { ConsoleServer } from '@chatally/console'
 
 new ConsoleServer(async (req, res) => {
-  res.end(`You said: '${req.text}'`);
-}).listen();
+  res.end(`You said: '${req.text}'`)
+}).listen()
 ```
 
 ## Documentation

@@ -27,19 +27,16 @@ export declare class Messages {
    * There is no guarantee about the order of delivery, even when awaiting the
    * method call.
    */
-  constructor (config: MessagesConfig)
+  constructor(config: MessagesConfig)
 
   /**
    * Wait for `delivered` status of previous message before sending the next.
    * This requires notifications from the Webhooks API.
    *
    * @param webhooks Webhooks API
-   * @param maxWait [Optional] Maximum time to wait for "delivered" status
-   *    before sending the next message
-   *    [default=-1 meaning forever]
    * @returns this
    */
-  waitForDelivered (webhooks: Webhooks, maxWait?: number): this
+  sequential?: (webhooks: Webhooks) => this
 
   /**
    * Wrapper around the Graph API request to send a message.
@@ -53,7 +50,7 @@ export declare class Messages {
    * @param replyTo [Optional] message id to reply to
    * @returns the message id from the WhatsApp server (WAMID)
    */
-  send (to: string, message: Message, replyTo?: string): Promise<string>
+  send(to: string, message: Message, replyTo?: string): Promise<string>
 
   /**
    * Mark a message as read.
@@ -68,7 +65,7 @@ export declare class Messages {
    * @param wamid The WAMID of the message to mark as read.
    * @returns true, if the message was marked as read, false otherwise.
    */
-  markAsRead (wamid: string): Promise<boolean>
+  markAsRead(wamid: string): Promise<boolean>
 }
 
 export interface Waiting {
@@ -82,6 +79,15 @@ export interface MessagesConfig {
    * Access to Meta's Graph API
    */
   graphApi: GraphApi
+
+  /**
+   * Flag, whether messages shall be delivered sequentially, i.e. the next
+   * message to the same recipient will only be delivered, after a status has
+   * been received for the previous message.
+   *
+   * This overrides the call to the method `sequential`.
+   */
+  sequential?: false
 
   /**
    * [Optional] logger to use
@@ -104,7 +110,7 @@ export type Message = {
   | TemplateMessage
   | TextMessage
   | VideoMessage
-)
+  )
 
 /**
  * Response from the Graph API when sending a message.
@@ -800,7 +806,8 @@ interface PayloadButtonParameter {
 
 interface TextButtonParameter {
   type: 'text'
-  /** Developer-provided suffix.
+  /**
+   * Developer-provided suffix.
    *
    * Will be appended to the predefined prefix URL in the template.
    */

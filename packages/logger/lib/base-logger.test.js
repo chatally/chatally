@@ -1,8 +1,8 @@
 import { StringWritable, TestError } from '@internal/test-utils'
 import { BaseLogger } from './base-logger.js'
 
-/** @param {import("./index.d.ts").LoggerOptions | undefined} [options] */
-function getLogger (options) {
+/** @param {import('./index.d.ts').LoggerOptions | undefined} [options] */
+function getLogger(options) {
   const actual = new StringWritable()
   const log = new BaseLogger(options)
   log.out = actual
@@ -10,7 +10,7 @@ function getLogger (options) {
   return { log, actual }
 }
 
-describe('BaseLogger', function () {
+describe('baseLogger', () => {
   it('logs on info level by default', () => {
     const { log, actual } = getLogger()
     log.info('foo')
@@ -24,7 +24,7 @@ describe('BaseLogger', function () {
     const child = log.child({ name: 'child', level: 'debug' })
     child.debug('bar')
 
-    expect(actual.data).toBe('DEBUG (parent/child): bar\n')
+    expect(actual.data).toBe('DEBUG (parent.child): bar\n')
   })
 
   it('logs data', () => {

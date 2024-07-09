@@ -1,6 +1,7 @@
 import { Application } from '@chatally/core'
-import { WhatsAppCloud } from './lib/index.js'
 import { BaseLogger } from '@chatally/logger'
+import { describe } from '@chatally/utils'
+import { WhatsAppCloud } from './lib/index.js'
 
 /**
  * If you want to try this example locally, you do not want to send anything to
@@ -15,9 +16,9 @@ import { BaseLogger } from '@chatally/logger'
  * --data '{"entry": [{"changes": [{"value": {"messages": [{"from": "foo", "type": "text", "text": { "body": "Hello!" }}]}}]}]}'
  * ```
  *
- * @type {import("./lib/graph-api.js").RequestFn}
+ * @type {import('./lib/graph-api.js').RequestFn}
  */
-const _request = async (url, request) => {
+async function _request(url, request) {
   if (request.body?.toString().endsWith('"status": "read"}')) {
     return mockResponse({ success: true })
   } else {
@@ -31,31 +32,32 @@ const whatsapp = new WhatsAppCloud({
   graphApi: {
     phoneNumberId: '10012345',
     accessToken: 'EAAADC___xyz',
-    _request
+    _request,
   },
   webhooks: {
     path: '/whatsapp',
     verifyToken: 'verify',
-    secret: 'secret'
-  }
+    secret: 'secret',
+  },
 })
 
 const log = new BaseLogger({ name: 'MyBot', level: 'debug' })
 
 new Application({ log }) //
   .use(whatsapp)
-  .use(function echo ({ req, res }) {
+  .use(function echo({ req, res }) {
     if (res.isWritable) {
-      res.write(`You said '${req.text}' and I don't know what it means.`)
+      res.write(`You said '${describe(req)}' and I don't know what it means.`)
     }
   })
   .listen()
 
 /**
  * @param {unknown} response
- * @returns {import("./lib/graph-api.js").GraphApiResponse}
+ * @returns {import('./lib/graph-api.js').GraphApiResponse}
+ *    A mock Graph API response
  */
-function mockResponse (response) {
+function mockResponse(response) {
   let statusCode = 200
   let body
   let contentType
@@ -64,34 +66,34 @@ function mockResponse (response) {
     body = {
       arrayBuffer: () => new ArrayBuffer(0),
       json: () => response,
-      text: () => ''
+      text: () => '',
     }
     contentType = 'application/json'
   } else if (response instanceof ArrayBuffer) {
     body = {
       arrayBuffer: () => response,
-      json: () => {},
-      text: () => ''
+      json: () => { },
+      text: () => '',
     }
     contentType = 'application/binary'
   } else if (typeof response === 'string') {
     body = {
       arrayBuffer: () => new ArrayBuffer(0),
-      json: () => {},
-      text: () => response
+      json: () => { },
+      text: () => response,
     }
     contentType = 'text/plain'
   } else {
     body = {
       arrayBuffer: () => new ArrayBuffer(0),
       json: () => response,
-      text: () => ''
+      text: () => '',
     }
     contentType = 'application/json'
   }
   return {
     statusCode,
     headers: { 'content-type': contentType },
-    body
+    body,
   }
 }

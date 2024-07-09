@@ -3,17 +3,18 @@
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      "NPM_PACKAGES": "turbo nodemon"
+      "NPM_PACKAGES": "turbo nodemon eslint"
     }
   },
-  "runArgs": ["--network=host"],
+  "runArgs": [
+    "--network=host"
+  ],
   "mounts": [
     "source=${localEnv:HOME}/.bashrc,target=/home/node/.bashrc,type=bind,consistency=cached"
   ],
   "containerEnv": {
     "LAUNCH_EDITOR": "code"
   },
-
   // Configure tool-specific properties.
   "customizations": {
     // Configure properties specific to VS Code.
@@ -27,12 +28,10 @@
         "editorconfig.editorconfig",
         "gruntfuggly.todo-tree",
         "jock.svg",
-        "standard.vscode-standard",
         "unifiedjs.vscode-mdx",
         "yzhang.markdown-all-in-one"
       ]
     }
   },
-
   "remoteUser": "node"
 }

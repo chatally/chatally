@@ -1,27 +1,31 @@
-import { Logger } from '@chatally/logger'
+import type { Logger } from '@chatally/logger'
 import { BaseError } from './errors.js'
 
 export declare class GraphApi {
   log?: Logger
 
-  constructor (config: GraphApiConfig)
+  protected _request: RequestFn
 
-  post (
+  constructor(config: GraphApiConfig)
+
+  post(
     endpoint: string,
     body: string | FormData | Record<string, unknown>,
     headers?: Record<string, string>
   ): Promise<GraphApiResult>
 
-  get (
+  get(
     endpoint: string,
     headers?: Record<string, string>
   ): Promise<GraphApiResult>
 
-  delete (
+  delete(
     endpoint: string,
     headers?: Record<string, string>
   ): Promise<GraphApiResult>
 }
+
+export declare class GraphApiMock extends GraphApi { }
 
 export interface GraphApiConfig {
   /**
@@ -110,4 +114,4 @@ export interface GraphApiErrorInit {
   fbtrace_id: string
 }
 
-export declare class GraphApiError extends BaseError implements GraphApiError {}
+export declare class GraphApiError extends BaseError implements GraphApiError { }

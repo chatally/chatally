@@ -21,17 +21,17 @@ Create a file `index.js` in which you configure your application
 
 ```js
 // index.js
-import { Application } from "@chatally/core";
-import { ConsoleServer } from "@chatally/console";
+import { Application } from '@chatally/core'
+import { ConsoleServer } from '@chatally/console'
 
 new Application({ log: false }) //
   .use(new ConsoleServer())
-  .use(function echo({ req, res }) {
+  .use(({ req, res }) => {
     if (res.isWritable) {
-      res.write(`You said '${req.text}'`);
+      res.write(`You said '${req.text}'`)
     }
   })
-  .listen();
+  .listen()
 ```
 
 Here we create a new chat application, register the `ConsoleServer` and implement a very simple middleware, that just echoes the user input.
@@ -58,17 +58,17 @@ and add it to your configuration instead of the function `echo`
 
 ```js
 // index.js
-import { Application } from "@chatally/core";
-import { ConsoleServer } from "@chatally/console";
-import { trainNlp, nlpjsMiddleware } from "@chatally/nlpjs";
+import { Application } from '@chatally/core'
+import { ConsoleServer } from '@chatally/console'
+import { nlpjsMiddleware, trainNlp } from '@chatally/nlpjs'
 
-const app = new Application({ log: false });
-const nlp = await trainNlp(app.getLogger("nlp.js"));
+const app = new Application({ log: false })
+const nlp = await trainNlp(app.getLogger('nlp.js'))
 
 app //
   .use(new ConsoleServer())
   .use(nlpjsMiddleware(nlp))
-  .listen();
+  .listen()
 ```
 
 The function `trainNlp` creates a trained NLP module and expects a training corpus at `corpus.json`. For this example you can [download a corpus.json](https://raw.githubusercontent.com/axa-group/nlp.js/master/examples/04-qna-web/corpus.json) from nlp.js' Github. We integrate nlp.js' logging with ChatAlly's by passing a logger from the application to nlp.js.

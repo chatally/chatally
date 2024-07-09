@@ -13,7 +13,7 @@ export declare class ConsoleServer extends BaseServer {
    * `stopToken` simply by setting these properties. There are also some colors
    * you can configure: `nameColor`, `promptColor` and `responseColor`.
    */
-  constructor (name?: string)
+  constructor(name?: string)
 
   listen: () => void
 }

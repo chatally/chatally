@@ -1,9 +1,10 @@
-import type { Level, Logger } from '@chatally/logger'
 import type { EventEmitter } from 'node:events'
+import type { Level, Logger, LoggerOptions } from '@chatally/logger'
+import type { ChatRequest } from './chat-request.d.ts'
+import type { ChatResponse } from './chat-response.d.ts'
+import type { MediaOptions } from './media.js'
 import type { Context, Middleware } from './middleware.d.ts'
 import type { Server } from './server.d.ts'
-import { IResponse } from './response.js'
-import { IRequest } from './request.js'
 
 /**
  * ChatAlly Application Class
@@ -14,10 +15,10 @@ export declare class Application<
   D extends Record<string, unknown>,
 > extends EventEmitter<ApplicationEvents<D>> {
   /**
-   * Create a Chatally application that dispatches incoming chat requests from
+   * Create a ChatAlly application that dispatches incoming chat requests from
    * all registered servers to all registered middleware.
    */
-  constructor (options?: ApplicationOptions<D>)
+  constructor(options?: ApplicationOptions<D>)
 
   /**
    * Register a Middleware or a Server
@@ -33,7 +34,7 @@ export declare class Application<
    * @param name [Optional] Name for the registered module.
    * @returns `this`
    */
-  use (m: Middleware<D> | Server, name?: string): this
+  use(m: Middleware<D> | Server, name?: string): this
 
   /**
    * Dispatch request and response to all middlewares.
@@ -46,14 +47,14 @@ export declare class Application<
    * The order is the order of registration. Middleware exceptions are
    * dispatched to the context. This method throws only, if the context throws.
    */
-  dispatch (req: IRequest, res: IResponse): Promise<void>
+  dispatch(req: ChatRequest, res: ChatResponse): Promise<void>
 
   /**
    * Start all registered servers in parallel.
    *
    * @returns never
    */
-  listen (): void
+  listen(): void
 
   /**
    * Get a child logger.
@@ -62,7 +63,7 @@ export declare class Application<
    * @param level [Optional] Log level other than parent level
    * @returns A child logger
    */
-  getLogger (name: string, level?: Level): Logger
+  getLogger(name: string, level?: Level): Logger
 }
 
 interface ApplicationEvents<D> {
@@ -80,10 +81,10 @@ export interface ApplicationOptions<D> {
   /**
    * [Optional] Custom logger.
    *
-   * [`default=new BaseLogger()`] If you want to turn of logging use `NoLogger`
-   * or `false`.
+   * [`default=new BaseLogger()`]
+   * If you want to turn of logging use `NoLogger` or `false`.
    */
-  log?: Logger | false
+  log?: false | LoggerOptions | Logger
 
   /**
    * [Optional] Flag to run application in development mode.
@@ -91,4 +92,6 @@ export interface ApplicationOptions<D> {
    * [`default=false`]
    */
   dev?: boolean
+
+  media?: MediaOptions
 }

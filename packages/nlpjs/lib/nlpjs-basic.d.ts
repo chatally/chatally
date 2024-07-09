@@ -1,5 +1,5 @@
 declare module '@nlpjs/basic' {
-  export function dockStart (conf?: Configuration): Promise<Dock>
+  export function dockStart(conf?: Configuration): Promise<Dock>
   export interface Configuration {
     settings?: {
       nlp?: {

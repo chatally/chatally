@@ -1,14 +1,15 @@
 {
   "name": "@apps/docs",
-  "description": "Docs website",
-  "private": true,
   "type": "module",
+  "private": true,
+  "description": "Docs website",
   "scripts": {
     "astro": "astro",
     "build": "CHECK_LINKS=true & astro build",
     "check": "astro check",
     "dev": "astro dev",
     "format": "prettier --write .",
+    "lint": "eslint .",
     "preview": "astro preview",
     "wrangler": "wrangler"
   },

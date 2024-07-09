@@ -13,11 +13,11 @@ export default defineConfig({
       logo: {
         alt: 'Two green shields looking like chat bubbles',
         src: './public/logo.svg',
-        replacesTitle: true
+        replacesTitle: true,
       },
       social: {
         github: 'https://github.com/chatally/chatally',
-        mastodon: 'https://mastodon.social/@chatally'
+        mastodon: 'https://mastodon.social/@chatally',
       },
       customCss: ['./src/styles/index.css'],
       sidebar: [
@@ -27,8 +27,8 @@ export default defineConfig({
             { label: 'Getting Started', link: 'guides' },
             { label: 'Writing Middleware', link: 'guides/middleware' },
             { label: 'Writing Servers', link: 'guides/servers' },
-            { label: 'Deploy your Application', link: 'guides/deployment' }
-          ]
+            { label: 'Deploy your Application', link: 'guides/deployment' },
+          ],
         },
         {
           label: 'Reference',
@@ -41,29 +41,29 @@ export default defineConfig({
                 { label: 'Middleware', link: 'reference/core/middleware' },
                 {
                   label: 'Context',
-                  link: 'reference/core/context'
+                  link: 'reference/core/context',
                 },
                 { label: 'Messages', link: 'reference/core/messages' },
-                { label: 'Logger', link: 'reference/core/logger' }
-              ]
+                { label: 'Logger', link: 'reference/core/logger' },
+              ],
             },
             {
               label: 'Middleware',
               collapsed: true,
               autogenerate: {
                 directory: 'reference/middleware',
-                collapsed: true
-              }
+                collapsed: true,
+              },
             },
             {
               label: 'Servers',
               collapsed: true,
               autogenerate: {
                 directory: 'reference/servers',
-                collapsed: true
-              }
-            }
-          ]
+                collapsed: true,
+              },
+            },
+          ],
         },
         {
           label: 'Examples',
@@ -71,29 +71,29 @@ export default defineConfig({
           items: [
             { label: 'Overview', link: 'examples' },
             { label: 'Console Chat', link: 'examples/console-chat' },
-            { label: 'nlp.js Web Chat', link: 'examples/nlpjs-web-chat' }
+            { label: 'nlp.js Web Chat', link: 'examples/nlpjs-web-chat' },
             // {
             //   label: "Group Moderation with TensorFlow",
             //   link: "examples/group-moderation",
             // },
-          ]
-        }
+          ],
+        },
       ],
       plugins: [
         blog({
           title: 'Blog',
           authors: {
             christian: {
-              name: 'Christian Fuss'
-            }
+              name: 'Christian Fuss',
+            },
           },
           postCount: 5,
-          recentPostCount: 5
-        })
+          recentPostCount: 5,
+        }),
       ],
       components: {
-        ThemeSelect: './src/overrides/ThemeSelect.astro'
-      }
-    })
-  ]
+        ThemeSelect: './src/overrides/ThemeSelect.astro',
+      },
+    }),
+  ],
 })

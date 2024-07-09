@@ -1,17 +1,19 @@
-import { dockStart } from '@nlpjs/basic'
 import { existsSync } from 'node:fs'
+import { describe } from '@chatally/utils'
+import { dockStart } from '@nlpjs/basic'
 
 /**
- * @param {import("@chatally/logger").Logger
- *    | import("@nlpjs/basic").Configuration | string[]} [logger]
- * @param {import("@nlpjs/basic").Configuration | string[]} [configuration]
- * @returns {Promise<import("@nlpjs/basic").Nlp>}
+ * @param {import('@chatally/logger').Logger
+ *    | import('@nlpjs/basic').Configuration | string[]} [logger]
+ * @param {import('@nlpjs/basic').Configuration | string[]} [configuration]
+ * @returns {Promise<import('@nlpjs/basic').Nlp>}
+ *    A trained nlp.js module
  */
-export async function trainNlp (logger, configuration) {
+export async function trainNlp(logger, configuration) {
   if (!isLogger(logger)) {
     if (configuration) {
       throw new Error(
-        "Parameter 'logger' does not implement the ChatAlly Logger interface"
+        'Parameter \'logger\' does not implement the ChatAlly Logger interface',
       )
     }
     configuration = logger
@@ -22,9 +24,9 @@ export async function trainNlp (logger, configuration) {
       use: ['Basic'],
       settings: {
         nlp: {
-          corpora: configuration
-        }
-      }
+          corpora: configuration,
+        },
+      },
     }
   }
   if (!configuration && !existsSync('./conf.json')) {
@@ -32,9 +34,9 @@ export async function trainNlp (logger, configuration) {
       use: ['Basic'],
       settings: {
         nlp: {
-          corpora: ['./corpus.json']
-        }
-      }
+          corpora: ['./corpus.json'],
+        },
+      },
     }
   }
   const dock = await dockStart(configuration)
@@ -48,7 +50,7 @@ export async function trainNlp (logger, configuration) {
       log: (/** @type {string} */ msg) => log.info(msg),
       warn: (/** @type {string} */ msg) => log.warn(msg),
       error: (/** @type {string} */ msg) => log.error(msg),
-      fatal: (/** @type {string} */ msg) => log.error(`[FATAL] ${msg}`)
+      fatal: (/** @type {string} */ msg) => log.error(`[FATAL] ${msg}`),
     })
   }
   const nlp = dock.get('nlp')
@@ -58,9 +60,10 @@ export async function trainNlp (logger, configuration) {
 
 /**
  * @param {any} obj
- * @returns {obj is import("@chatally/logger").Logger}
+ * @returns {obj is import('@chatally/logger').Logger}
+ *    True if the object is a logger
  */
-function isLogger (obj) {
+function isLogger(obj) {
   return !!obj && obj.level && typeof obj.child === 'function'
 }
 
@@ -70,16 +73,17 @@ function isLogger (obj) {
  * It will write the answer to the response only, if it is above the configured
  * threshold. It will not end the response.
  *
- * @param {import("@nlpjs/basic").Nlp} nlp The trained NLP module
- * @param {Object} [options] Options
- * @param {string} [options.name="nlp.js"] Optional name for the middleware
+ * @param {import('@nlpjs/basic').Nlp} nlp The trained NLP module
+ * @param {object} [options] Options
+ * @param {string} [options.name] Optional name for the middleware
  *   function. Default is 'nlp.js'. NOTE: Result data from the NLP process will
  *   be put into the context under this name.
  * @param {boolean} [options.end] Indicates, whether an answer above the
  *   threshold should end the response
- * @returns {import("@chatally/core").Middleware<{}>}
+ * @returns {import('@chatally/core').Middleware<{}>}
+ *    The trained nlp.js module wrapped in a ChatAlly middleware
  */
-export function nlpjsMiddleware (nlp, options) {
+export function nlpjsMiddleware(nlp, options) {
   const { name = 'nlp.js', end = false } = options || {}
   const write = end //
     // @ts-expect-error No typing required
@@ -88,15 +92,16 @@ export function nlpjsMiddleware (nlp, options) {
     : (res, msg) => res.write(msg)
 
   const obj = {
-    /** @type {import("@chatally/core").Middleware<unknown>} */
-    [name]: async function ({ req, res, data }) {
-      if (!res.isWritable) return
-      const result = await nlp.process('en', req.text)
+    /** @type {import('@chatally/core').Middleware<unknown>} */
+    [name]: async ({ req, res, data }) => {
+      if (!res.isWritable)
+        return
+      const result = await nlp.process('en', describe(req))
       data[name] = result
       if (result.answer) {
         write(res, result.answer)
       }
-    }
+    },
   }
   return obj[name]
 }

@@ -15,11 +15,11 @@ const endpoints = [
   'messages',
   'register',
   'request_code',
-  'whatsapp_business_profile'
+  'whatsapp_business_profile',
 ]
 
 export class GraphApi {
-  /** @type {import("@chatally/logger").Logger | undefined} */
+  /** @type {import('@chatally/logger').Logger | undefined} */
   log
   #url
   #phoneNumberId
@@ -27,12 +27,12 @@ export class GraphApi {
 
   /**
    * @protected
-   * @type {import("./graph-api.d.ts").RequestFn}
+   * @type {import('./graph-api.d.ts').RequestFn}
    */
   _request
 
-  /** @param {import("./graph-api.d.ts").GraphApiConfig} config */
-  constructor (config) {
+  /** @param {import('./graph-api.d.ts').GraphApiConfig} config */
+  constructor(config) {
     const {
       basePort,
       baseUrl = 'graph.facebook.com',
@@ -40,7 +40,7 @@ export class GraphApi {
       phoneNumberId,
       accessToken,
       log,
-      _request = undici.request
+      _request = undici.request,
     } = config
     this.log = log
 
@@ -51,14 +51,14 @@ export class GraphApi {
 
     if (!phoneNumberId) {
       throw new Error(
-        'No phoneNumberId provided for Graph API. Provide your WhatsApp business account phone number id in the configuration.'
+        'No phoneNumberId provided for Graph API. Provide your WhatsApp business account phone number id in the configuration.',
       )
     }
     this.#phoneNumberId = phoneNumberId
 
     if (!accessToken) {
       throw new Error(
-        'No accessToken provided for Graph API. Provide your WhatsApp business account access token in the configuration.'
+        'No accessToken provided for Graph API. Provide your WhatsApp business account access token in the configuration.',
       )
     }
     this.#accessToken = accessToken
@@ -71,18 +71,18 @@ export class GraphApi {
    * @param {string|FormData|Record<string,unknown>} body
    * @param {Record<string, string>} [headers]
    */
-  async post (endpoint, body, headers) {
+  async post(endpoint, body, headers) {
     headers = this.#headers(headers)
     if (typeof body === 'string') {
       headers['Content-Type'] = 'text/plain'
     } else if (body instanceof FormData) {
-      // We explicitly do NOT set headers["Content-Type"]
+      // We explicitly do NOT set headers['Content-Type']
       body.append('messaging_product', 'whatsapp')
     } else {
       headers['Content-Type'] = 'application/json'
       body = JSON.stringify({
         messaging_product: 'whatsapp',
-        ...body
+        ...body,
       })
     }
     return await this.#request({ method: 'POST', headers, body }, endpoint)
@@ -92,7 +92,7 @@ export class GraphApi {
    * @param {string} endpoint
    * @param {Record<string, string>} [headers]
    */
-  async get (endpoint, headers) {
+  async get(endpoint, headers) {
     headers = this.#headers(headers)
     return await this.#request({ method: 'GET', headers }, endpoint)
   }
@@ -101,17 +101,18 @@ export class GraphApi {
    * @param {string} endpoint
    * @param {Record<string, string>} [headers]
    */
-  async delete (endpoint, headers) {
+  async delete(endpoint, headers) {
     headers = this.#headers(headers)
     return await this.#request({ method: 'DELETE', headers }, endpoint)
   }
 
   /**
-   * @param {import("./graph-api.d.ts").GraphApiRequest} request
+   * @param {import('./graph-api.d.ts').GraphApiRequest} request
    * @param {string} endpoint
-   * @returns {Promise<import("./graph-api.d.ts").GraphApiResult>}
+   * @returns {Promise<import('./graph-api.d.ts').GraphApiResult>}
+   *    The parsed result from the Graph API request.
    */
-  async #request (request, endpoint) {
+  async #request(request, endpoint) {
     if (!endpoint || endpoint.length === 0) {
       throw new Error('Invalid Graph API fetch: endpoint may not be void.')
     }
@@ -129,15 +130,15 @@ export class GraphApi {
       const { error } = await response.body.json()
       throw new GraphApiError(error)
     }
-    const contentType =
-      /** @type {string} */ (response.headers['content-type']) || 'unknown'
+    const contentType
+      = /** @type {string} */ (response.headers['content-type']) || 'unknown'
 
-    /** @type {import("./graph-api.d.ts").GraphApiResult} */
+    /** @type {import('./graph-api.d.ts').GraphApiResult} */
     const result = {
       contentType,
       text: undefined,
       json: undefined,
-      buffer: undefined
+      buffer: undefined,
     }
     if (contentType.startsWith('application/json')) {
       /** @type {any} */
@@ -170,20 +171,21 @@ export class GraphApi {
   /**
    * @param {Record<string, string>} [headers]
    * @returns {Record<string, string>}
+   *    The default headers for Graph API requests
    */
-  #headers (headers = {}) {
+  #headers(headers = {}) {
     return {
-      Authorization: `Bearer ${this.#accessToken}`,
+      'Authorization': `Bearer ${this.#accessToken}`,
       'Cache-Control': 'no-cache',
       'User-Agent': 'GraphApiSdk/1.0.0',
-      ...headers
+      ...headers,
     }
   }
 }
 
 export class GraphApiError extends BaseError {
-  /** @param {import("./graph-api.js").GraphApiErrorInit} init */
-  constructor (init) {
+  /** @param {import('./graph-api.js').GraphApiErrorInit} init */
+  constructor(init) {
     super(init.error_user_msg)
     Object.assign(this, init)
   }

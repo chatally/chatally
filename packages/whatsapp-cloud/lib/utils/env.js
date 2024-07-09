@@ -1,9 +1,9 @@
 /**
  * @param {string} name
- * @param {boolean} [defaultValue=false]
- * @returns {boolean}
+ * @param {boolean} [defaultValue]
+ * @returns {boolean} The environment variable parsed as boolean.
  */
-export function envBoolean (name, defaultValue = false) {
+export function envBoolean(name, defaultValue = false) {
   const value = process.env[name]?.toLowerCase()
   if (value) {
     return Boolean(value)
@@ -15,9 +15,9 @@ export function envBoolean (name, defaultValue = false) {
  * @template {number | undefined} N
  * @param {string} name
  * @param {N} [defaultValue]
- * @returns {N | number}
+ * @returns {N | number} The environment variable parsed as number (maybe NaN).
  */
-export function envNumber (name, defaultValue) {
+export function envNumber(name, defaultValue) {
   const value = process.env[name]
   if (value) {
     return Number(value)

@@ -1,15 +1,14 @@
 {
   "name": "@chatally/getting_started",
-  "description": "ChatAlly \"Getting Started\" example",
-  "private": true,
   "type": "module",
+  "private": true,
+  "description": "ChatAlly \"Getting Started\" example",
   "scripts": {
-    "tsc": "tsc",
-    "dev": "nodemon index.js"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@chatally/core": "*",
     "@chatally/console": "*",
+    "@chatally/core": "*",
     "@chatally/nlpjs": "*"
   },
   "devDependencies": {}

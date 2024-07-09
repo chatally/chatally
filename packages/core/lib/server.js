@@ -1,54 +1,71 @@
 import { EventEmitter } from 'node:events'
-import { Request } from './request.js'
-import { Response } from './response.js'
+import { nanoid } from 'nanoid'
+import { ChatResponse } from './chat-response.js'
 
 /**
- * @typedef {import("./message.d.ts").IncomingMessage} IncomingMessage
- * @typedef {import("./message.d.ts").OutgoingMessage} OutgoingMessage
+ * @typedef {import('./chat-request.d.ts').ChatRequest} ChatRequest
+ * @typedef {import('./chat-message.d.ts').ChatMessage} ChatMessage
  */
 
 /**
- * @typedef {import("./server.d.ts").Server} Server
+ * @typedef {import('./server.d.ts').Server} Server
  *
  * @class
- * @extends {EventEmitter<import("./server.d.ts").ServerEvents>}
+ * @extends {EventEmitter<import('./server.d.ts').ServerEvents>}
  * @implements {Server}
  */
 export class BaseServer extends EventEmitter {
-  /** @type {import("@chatally/logger").Logger | undefined} */
+  /** @type {import('@chatally/logger').Logger | undefined} */
   #log
 
-  get log () {
+  get log() {
     return this.#log
   }
 
-  set log (log) {
+  set log(log) {
     this.#log = log
   }
 
   /**
    * @param {string} name
    */
-  constructor (name) {
+  constructor(name) {
     super()
     this.name = name
   }
 
-  listen () {
+  listen() {
     throw new Error(
-      'The method `listen()` in BaseServer is abstract and must be overridden'
+      'The method `listen()` in BaseServer is abstract and must be overridden',
     )
   }
 
   /**
-   * @param {string | IncomingMessage} incoming
+   * @param {string | ChatRequest} req
    * @param {object} callbacks
-   * @param {((msg: OutgoingMessage) => void) | ((msg: OutgoingMessage) => Promise<void>)} [callbacks.onWrite]
-   * @param {((res: Response) => void) | ((res: Response) => Promise<void>)} [callbacks.onFinished]
+   * @param {((msg: ChatMessage) => void) | ((msg: ChatMessage) => Promise<void>)} [callbacks.onWrite]
+   * @param {((res: ChatResponse) => void) | ((res: ChatResponse) => Promise<void>)} [callbacks.onFinished]
    */
-  dispatch (incoming, { onWrite, onFinished }) {
-    const req = new Request(incoming)
-    const res = new Response()
+  dispatch(req, { onWrite, onFinished }) {
+    if (typeof req === 'string') {
+      let [from, ...rest] = req.split(': ')
+      let content = ''
+      if (rest.length === 0) {
+        content = from
+        from = 'unknown'
+      } else {
+        content = rest.join(': ')
+      }
+      req = /** @type {ChatRequest} */ {
+        type: 'text',
+        source: this.name,
+        id: nanoid(),
+        timestamp: Date.now(),
+        from,
+        content,
+      }
+    }
+    const res = new ChatResponse()
     if (onWrite) {
       res.on('write', async (msg) => {
         try {
@@ -69,17 +86,37 @@ export class BaseServer extends EventEmitter {
     }
     this.emit('dispatch', req, res)
   }
+
+  /**
+   * @param {string} _url
+   */
+  canDownload(_url) {
+    return false
+  }
+
+  /**
+   * @param {string} _url
+   * @returns {Promise<Buffer>} Never returns, always throws an error
+   */
+  async download(_url) {
+    throw new Error('Method not implemented')
+  }
 }
 
 /**
  * @param {any} object
- * @returns {object is import("./index.d.ts").Server}
+ * @returns {object is import('./index.d.ts').Server}
+ *    True if the provided object is a ChatAlly server
  */
-export function isServer (object) {
-  if (!object) return false
-  if (object instanceof BaseServer) return true
+export function isServer(object) {
+  if (!object)
+    return false
+  if (object instanceof BaseServer)
+    return true
 
-  if (typeof object.listen !== 'function') return false
-  if (typeof object.on !== 'function') return false
+  if (typeof object.listen !== 'function')
+    return false
+  if (typeof object.on !== 'function')
+    return false
   return true
 }

@@ -1,5 +1,6 @@
 {
   "name": "@chatally/console",
+  "type": "module",
   "version": "0.0.6",
   "description": "ChatAlly Console Server",
   "license": "MIT",
@@ -10,7 +11,6 @@
     "readline",
     "server"
   ],
-  "type": "module",
   "exports": {
     ".": {
       "import": {
@@ -20,11 +20,11 @@
     }
   },
   "scripts": {
-    "tsc": "tsc",
-    "repl": "nodemon repl.js"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@chatally/core": "*"
+    "@chatally/core": "*",
+    "@chatally/utils": "*"
   },
   "devDependencies": {}
 }

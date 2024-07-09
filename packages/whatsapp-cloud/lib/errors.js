@@ -3,7 +3,7 @@
  */
 export class BaseError extends Error {
   /** @param {string} [message] */
-  constructor (message) {
+  constructor(message) {
     const proto = new.target.prototype
     super(message)
     Object.setPrototypeOf(this, proto)
@@ -21,19 +21,19 @@ export class HttpError extends BaseError {
    * @param {string} [message]
    * @param {string} [description]
    */
-  constructor (status, message, description) {
+  constructor(status, message, description) {
     super(message)
     this.#status = status
     this.#description = description
   }
 
   /** The HTTP error status code */
-  get status () {
+  get status() {
     return this.#status
   }
 
   /** An internal description */
-  get description () {
+  get description() {
     return this.#description
   }
 }

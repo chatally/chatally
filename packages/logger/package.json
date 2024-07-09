@@ -1,5 +1,6 @@
 {
   "name": "@chatally/logger",
+  "type": "module",
   "version": "0.0.7",
   "description": "ChatAlly Logger Facade",
   "license": "MIT",
@@ -13,7 +14,6 @@
     "pino",
     "winston"
   ],
-  "type": "module",
   "exports": {
     ".": {
       "import": {
@@ -23,8 +23,7 @@
     }
   },
   "scripts": {
-    "tsc": "tsc",
-    "repl": "nodemon repl.js",
+    "lint": "eslint .",
     "test": "vitest"
   },
   "dependencies": {},

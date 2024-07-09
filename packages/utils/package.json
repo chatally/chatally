@@ -1,0 +1,27 @@
+{
+  "name": "@chatally/utils",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "ChatAlly Utilities",
+  "license": "MIT",
+  "keywords": [
+    "utilities",
+    "chat",
+    "chatally"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@chatally/core": "*"
+  }
+}

@@ -1,8 +1,8 @@
 {
   "name": "@internal/utils",
-  "description": "Common utils, only for internal use",
-  "private": true,
   "type": "module",
+  "private": true,
+  "description": "Common utils, only for internal use",
   "exports": {
     ".": {
       "import": {
@@ -11,7 +11,7 @@
     }
   },
   "scripts": {
-    "repl": "nodemon repl.js"
+    "lint": "eslint ."
   },
   "dependencies": {
     "nanoid": "^5.0.7"

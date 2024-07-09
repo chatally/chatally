@@ -1,5 +1,6 @@
-import { BaseServer, text } from '@chatally/core'
 import { createInterface as readline } from 'node:readline'
+import { BaseServer } from '@chatally/core'
+import { describe } from '@chatally/utils'
 
 const grey = 30
 const green = 32
@@ -8,14 +9,15 @@ const onGreen = 42
 /**
  * @param {string} text
  * @param {string | number} color
- * @returns
+ * @returns {string} A TTY format string with the text wrapped in color
+ *    controls.
  */
-function color (text, color) {
-  return `\u001b[${color}m${text}\u001b[0m`
+function color(text, color) {
+  return `\u001B[${color}m${text}\u001B[0m`
 }
 
 export class ConsoleServer extends BaseServer {
-  constructor (name = 'ConsoleServer') {
+  constructor(name = 'ConsoleServer') {
     super(name)
   }
 
@@ -72,17 +74,18 @@ Waiting for your messages...`
    */
   goodBye = 'Good bye.'
 
-  listen () {
+  listen() {
     this.#printGreeting()
     this._interface = readline(process.stdin)
 
     this._interface
-      .on('line', (line) => this.#printResponse(line))
+      .on('line', line => this.#printResponse(line))
       .on('close', () => this.#printGoodBye())
   }
 
-  #printGreeting () {
+  #printGreeting() {
     process.nextTick(() => {
+      // eslint-disable-next-line no-console
       console.clear()
       if (this.greeting) {
         process.stdout.write(`${this.greeting}\n\n`)
@@ -92,24 +95,24 @@ Waiting for your messages...`
   }
 
   /**
-   * @param {String} line
+   * @param {string} line
    */
-  #printResponse (line) {
+  #printResponse(line) {
     if (this.stopToken && line === this.stopToken) {
       return this._interface?.close()
     }
     this.dispatch(line, {
       onWrite: (msg) => {
         this.#printName()
-        process.stdout.write(`${color(text(msg), this.responseColor)}\n`)
+        process.stdout.write(`${color(describe(msg), this.responseColor)}\n`)
       },
       onFinished: () => {
         this.#printPrompt()
-      }
+      },
     })
   }
 
-  #printGoodBye () {
+  #printGoodBye() {
     if (this.goodBye) {
       process.stdout.write(`\n${this.goodBye}`)
     }
@@ -117,16 +120,16 @@ Waiting for your messages...`
     process.exit()
   }
 
-  #printName () {
-    const length =
-      Math.max(this.name.length, this.prompt.length) - this.name.length
+  #printName() {
+    const length
+      = Math.max(this.name.length, this.prompt.length) - this.name.length
     const padStart = ''.padStart(length, ' ')
     process.stdout.write(`${padStart}${color(this.name, this.nameColor)} `)
   }
 
-  #printPrompt () {
-    const length =
-      Math.max(this.name.length, this.prompt.length) - this.prompt.length
+  #printPrompt() {
+    const length
+      = Math.max(this.name.length, this.prompt.length) - this.prompt.length
     const padStart = ' '.repeat(length)
     process.stdout.write(`${padStart}${color(this.prompt, this.promptColor)} `)
   }

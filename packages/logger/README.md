@@ -20,11 +20,11 @@ Use the logger
 
 ```js
 // index.js
-import { BaseLogger } from "@chatally/logger";
+import { BaseLogger } from '@chatally/logger'
 
-const log = BaseLogger.create({ name: "Test" });
-log.debug("Not logged"); // not logged, because default level is info
-log.info("Hello, world!");
+const log = BaseLogger.create({ name: 'Test' })
+log.debug('Not logged') // not logged, because default level is info
+log.info('Hello, world!')
 ```
 
 ## Documentation

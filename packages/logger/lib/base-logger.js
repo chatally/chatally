@@ -1,7 +1,7 @@
 import { format, formatWithOptions } from 'node:util'
 import { getLevel, getLevelIndex } from './levels.js'
 
-/** @type {import("./index.d.ts").Level} */
+/** @type {import('./index.d.ts').Level} */
 const DEFAULT_LEVEL = 'info'
 const TRACE = getLevelIndex('trace')
 const DEBUG = getLevelIndex('debug')
@@ -10,7 +10,7 @@ const WARN = getLevelIndex('warn')
 const ERROR = getLevelIndex('error')
 
 /**
- * @typedef {import("./index.d.ts").Logger} Logger
+ * @typedef {import('./index.d.ts').Logger} Logger
  * @class
  * @implements {Logger}
  */
@@ -18,9 +18,9 @@ export class BaseLogger {
   /**
    * Output writable, default is the console
    *
-   * @type {import("node:stream").Writable | undefined}
+   * @type {import('node:stream').Writable}
    */
-  out = undefined
+  out = process.stdout
 
   /** @type {undefined | false | (() => string)} Return the time part of an ISO-formatted date. */
   timestamp = () => {
@@ -37,24 +37,23 @@ export class BaseLogger {
 
   /**
    * @typedef LevelsFn
-   * @property {(level: import("./index.d.ts").Level) => number} index
-   * @property {(level: number) => import("./index.d.ts").Level} text
+   * @property {(level: import('./index.d.ts').Level) => number} index
+   *    An index function, returning the corresponding numeric index
+   * @property {(level: number) => import('./index.d.ts').Level} text
+   *    A function, returning the textual representation of a numeric level
    */
 
   /**
-   * Protected constructor for subclasses, use `BaseLogger.create()` instead,
-   * it gives you better typing.
-   *
    * @constructor
-   * @param {import("./index.d.ts").LoggerOptions} [options={}]
+   * @param {import('./index.d.ts').LoggerOptions} [options]
    * @param {LevelsFn} [levelsFn]
    */
-  constructor (
+  constructor(
     options = {},
     levelsFn = {
       index: getLevelIndex,
-      text: getLevel
-    }
+      text: getLevel,
+    },
   ) {
     // because this is used in the following setters, we need to set it first
     this.levels = levelsFn
@@ -64,29 +63,33 @@ export class BaseLogger {
     this.data = options.data
   }
 
-  /** @returns {import("./index.d.ts").Level} */
-  get level () {
+  /**
+   * @returns {import('./index.d.ts').Level} The current level of the logger
+   */
+  get level() {
     return this.levels.text(this._level)
   }
 
-  /** @param {import("./index.d.ts").Level} level */
-  set level (level) {
+  /** @param {import('./index.d.ts').Level} level */
+  set level(level) {
     this._level = this.levels.index(level)
   }
 
-  /** @param {import("./index.d.ts").Level} level */
-  isLevel (level) {
+  /** @param {import('./index.d.ts').Level} level */
+  isLevel(level) {
     return this._level >= this.levels.index(level)
   }
 
   /**
-   * @param {import("./index.d.ts").LoggerOptions} [options={}]
-   * @returns {import("./index.d.ts").Logger}
+   * @param {import('./index.d.ts').LoggerOptions} [options]
+   * @returns {import('./index.d.ts').Logger}
+   *    A child logger that overrides the parent's options with the given
+   *    options.
    */
-  child (options = {}) {
+  child(options = {}) {
     let name = this.name
     if (name && options.name) {
-      name = `${name}/${options.name}`
+      name = `${name}.${options.name}`
     } else {
       name = options.name
     }
@@ -94,32 +97,32 @@ export class BaseLogger {
       ...this,
       ...options,
       name,
-      data: mergeData(this.data, options.data)
+      data: mergeData(this.data, options.data),
     })
   }
 
   // @ts-expect-error Implementing overriding method
-  trace (...args) {
+  trace(...args) {
     this.log(TRACE, ...args)
   }
 
   // @ts-expect-error Implementing overriding method
-  debug (...args) {
+  debug(...args) {
     this.log(DEBUG, ...args)
   }
 
   // @ts-expect-error Implementing overriding method
-  info (data, msg, ...args) {
+  info(data, msg, ...args) {
     this.log(INFO, data, msg, ...args)
   }
 
   // @ts-expect-error Implementing overriding method
-  warn (data, msg, ...args) {
+  warn(data, msg, ...args) {
     this.log(WARN, data, msg, ...args)
   }
 
   // @ts-expect-error Implementing overriding method
-  error (data, msg, ...args) {
+  error(data, msg, ...args) {
     this.log(ERROR, data, msg, ...args)
   }
 
@@ -130,18 +133,20 @@ export class BaseLogger {
    * to generate and write a log message to `this.out`. Overwrite `this._log`
    * in your own logger.
    *
-   * @param {import("./index.d.ts").Level | number} level
+   * @param {import('./index.d.ts').Level | number} level
    *    The log level for the message
    * @param {unknown} [data] Optional data to log
    * @param {string} [msg] Message to log, optionally a format string
    * @param {any[]} args Arguments to use in the format string
    */
-  log (level, data, msg, ...args) {
-    // logger is "silent"
-    if (this._level < 0) return
+  log(level, data, msg, ...args) {
+    // logger is 'silent'
+    if (this._level < 0)
+      return
     const nLevel = typeof level === 'number' ? level : this.levels.index(level)
     // log level is smaller than logger's level
-    if (nLevel < this._level) return
+    if (nLevel < this._level)
+      return
 
     if (typeof data === 'string') {
       // shift msg into args,...
@@ -169,13 +174,13 @@ export class BaseLogger {
    * @param {string | undefined} msg
    * @param {unknown[]} args
    */
-  _log (nLevel, data, msg, ...args) {
+  _log(nLevel, data, msg, ...args) {
     if (!msg && data instanceof Error && Object.keys(data).length === 0) {
       msg = data.message
       data = undefined
     }
-    const msg_ =
-      !!msg && args && args.length > 0
+    const msg_
+      = !!msg && args && args.length > 0
         ? formatWithOptions({ depth: 3, colors: true }, msg || '', ...args)
         : msg || ''
     const sLevel = this.levels.text(nLevel).toUpperCase()
@@ -188,16 +193,9 @@ export class BaseLogger {
     }
     line = line.trim()
 
-    if (this.out) {
-      this.out.write(line + '\n')
-      if (data) {
-        this.out.write(JSON.stringify(data, stringifyError, 2) + '\n')
-      }
-    } else {
-      console.log(line)
-      if (data) {
-        console.log(data)
-      }
+    this.out.write(`${line}\n`)
+    if (data) {
+      this.out.write(`${JSON.stringify(data, stringifyError, 2)}\n`)
     }
   }
 }
@@ -206,7 +204,7 @@ export class BaseLogger {
  * @param {string} key
  * @param {unknown} value
  */
-function stringifyError (key, value) {
+function stringifyError(key, value) {
   // @ts-expect-error Making the error message enumerable
   return value instanceof Error ? { message: value.message, ...value } : value
 }
@@ -215,9 +213,11 @@ function stringifyError (key, value) {
  * @param {unknown} a
  * @param {unknown} b
  */
-function mergeData (a, b) {
-  if (!a) return b
-  if (!b) return a
+function mergeData(a, b) {
+  if (!a)
+    return b
+  if (!b)
+    return a
   if (a instanceof Error) {
     if (typeof b === 'object') {
       return { error: a, ...b }

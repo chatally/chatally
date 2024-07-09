@@ -1,4 +1,4 @@
-import type { BaseServer, OutgoingMessage } from '@chatally/core'
+import type { BaseServer, ChatMessage } from '@chatally/core'
 import type { GraphApi, GraphApiConfig } from './graph-api.d.ts'
 import type { MediaConfig } from './media.d.ts'
 import type { MediaObject, Messages, MessagesConfig } from './messages.d.ts'
@@ -66,7 +66,7 @@ export declare class WhatsAppCloud extends BaseServer {
    * **Media**
    * - https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media
    */
-  constructor (configObj?: Partial<WhatsAppCloudConfig>)
+  constructor(configObj?: Partial<WhatsAppCloudConfig>)
 
   /**
    * Start the underlying Webhooks API server.
@@ -98,7 +98,7 @@ export declare class WhatsAppCloud extends BaseServer {
    * @param to recipient
    * @param outgoing one or more messages
    */
-  send (to: string, ...outgoing: OutgoingMessage[]): Promise<void>
+  send(to: string, ...outgoing: ChatMessage[]): Promise<void>
 
   /**
    * Upload a local file to the Media endpoint.
@@ -106,15 +106,23 @@ export declare class WhatsAppCloud extends BaseServer {
    * @param file
    * @returns the media id
    */
-  upload (file: string): Promise<string>
+  upload(file: string): Promise<string>
+
+  /**
+   * Check if the URL belongs to this server.
+   *
+   * @param url the media url
+   * @returns True if it is a WhatsApp Cloud URL
+   */
+  canDownload(url: string): boolean
 
   /**
    * Download a media asset from the Media endpoint to a local file.
    *
-   * @param id the media id
-   * @returns the file path to the downloaded file
+   * @param url the media url
+   * @returns the raw data
    */
-  download (id: string): Promise<string>
+  download(url: string): Promise<Buffer>
 }
 
 export interface WhatsAppCloudConfig {

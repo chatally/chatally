@@ -1,6 +1,7 @@
 import type { Logger } from '@chatally/logger'
-import type { IRequest } from './request.d.ts'
-import type { IResponse } from './response.d.ts'
+import type { ChatRequest } from './chat-request.d.ts'
+import type { ChatResponse } from './chat-response.d.ts'
+import type { IMediaServer } from './media.js'
 
 /**
  * Sync or async middleware.
@@ -14,9 +15,11 @@ export type Middleware<D> =
  */
 export interface Context<D> {
   /** Request that triggered the handling */
-  readonly req: IRequest
+  readonly req: ChatRequest
   /** Response for the request */
-  readonly res: IResponse
+  readonly res: ChatResponse
+  /** Access to media assets */
+  readonly media: IMediaServer
   /** Trigger dispatching to the next middleware. */
   readonly next: () => Promise<void>
   /** Context-specific logger for the middleware */

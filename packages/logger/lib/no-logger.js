@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./index.d.ts").Logger} Logger
+ * @typedef {import('./index.d.ts').Logger} Logger
  * @class
  * @implements {Logger}
  */
@@ -7,22 +7,24 @@ export class NoLogger {
   name = 'NoLogger'
   data = undefined
 
-  /** @returns {import("./index.d.ts").Level} */
-  get level () {
+  /**
+   * @returns {import('./index.d.ts').Level} The logger's level (always silent).
+   */
+  get level() {
     return 'silent'
   }
 
-  isLevel () {
+  isLevel() {
     return false
   }
 
-  child () {
+  child() {
     return this
   }
 
-  trace () {}
-  debug () {}
-  info () {}
-  warn () {}
-  error () {}
+  trace() { }
+  debug() { }
+  info() { }
+  warn() { }
+  error() { }
 }

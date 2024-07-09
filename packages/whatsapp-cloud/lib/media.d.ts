@@ -1,4 +1,4 @@
-import { Logger } from '@chatally/logger'
+import type { Logger } from '@chatally/logger'
 import type { GraphApi } from './graph-api.d.ts'
 
 /**
@@ -7,7 +7,7 @@ import type { GraphApi } from './graph-api.d.ts'
 export declare class Media {
   log?: Logger
 
-  constructor (config: MediaConfig)
+  constructor(config: MediaConfig)
 
   /**
    * Upload media through a POST call to /PHONE_NUMBER_ID/media.
@@ -21,17 +21,17 @@ export declare class Media {
    * @returns The media id that can be used to reference the uploaded media in
    *    messages
    */
-  upload (file: string): Promise<string>
+  upload(file: string): Promise<string>
 
   /**
-   * Download a media asset to the downloadDir.
+   * Download a media asset.
    *
    * @see https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#download-media
    *
    * @param id The media id
-   * @returns The downloaded file's path
+   * @returns The downloaded media asset's raw data
    */
-  download (id: string): Promise<string>
+  download(id: string): Promise<Buffer>
 }
 
 export interface MediaConfig {

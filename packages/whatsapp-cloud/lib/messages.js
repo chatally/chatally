@@ -1,54 +1,41 @@
 export class Messages {
-  /** @type {import("./graph-api.d.ts").GraphApi} */
+  /** @type {import('./graph-api.d.ts').GraphApi} */
   #graphApi
 
-  /** @type {import("@chatally/logger").Logger | undefined} */
+  /** @type {import('@chatally/logger').Logger | undefined} */
   log
 
-  /** @param {import("./messages.d.ts").MessagesConfig} config */
-  constructor (config) {
+  /** @param {import('./messages.d.ts').MessagesConfig} config */
+  constructor(config) {
     this.log = config.log
     this.#graphApi = config.graphApi
-  }
-
-  /**
-   * @param {import("./webhooks.js").Webhooks} webhooks
-   * @param {number} [maxWait]
-   */
-  waitForDelivered (webhooks, maxWait = -1) {
-    webhooks.on('notification', ({ statuses }) => {
-      for (const status of statuses) {
-        const value = status.status
-        if (value === 'delivered' || value === 'read' || value === 'failed') {
-          this.#sendNext(status)
+    if (config.sequential !== false) {
+      this.sequential
+        = (/** @type {import('./webhooks.js').Webhooks} */ webhooks) => {
+          webhooks.on('notification', ({ statuses }) => {
+            for (const status of statuses) {
+              const value = status.status
+              if (value === 'delivered' || value === 'read' || value === 'failed') {
+                this.#sendNext(status)
+              }
+            }
+          })
+          return this
         }
-      }
-    })
-    // TODO: Implement max waiting for sending next message
-    this.#waitForDelivered = maxWait
-    return this
+    }
   }
-
-  /**
-   * Maximum seconds to wait before delivering the next message, even if no
-   * "delivered" status has been received
-   * [default=undefined] Meaning no waiting at all, if you want to wait
-   * forever, set this to -1
-   * @type {number | undefined}
-   */
-  #waitForDelivered = undefined
 
   /**
    * Map of waiting messages, meant to be used in tests or subclasses only.
    * @protected
-   * @type {Record<string, (import("./messages.d.ts").Waiting[] | undefined)>}
+   * @type {Record<string, (import('./messages.d.ts').Waiting[] | undefined)>}
    */
   _waiting = {}
 
   /**
-   * @param {import("./webhooks.d.ts").Status} status
+   * @param {import('./webhooks.d.ts').Status} status
    */
-  async #sendNext (status) {
+  async #sendNext(status) {
     const waiting = this._waiting[status.recipient_id]
     if (!waiting) return
 
@@ -58,7 +45,6 @@ export class Messages {
 expected ${previous.message.id}
 received ${status.id}.`)
     }
-
     if (waiting.length > 0) {
       const request = waiting[0]
       request.message.id = await this.#send(request)
@@ -69,37 +55,40 @@ received ${status.id}.`)
 
   /**
    * @param {string} to
-   * @param {import("./messages.js").Message} message
+   * @param {import('./messages.js').Message} message
    * @param {string} [replyTo]
    */
-  async send (to, message, replyTo) {
+  async send(to, message, replyTo) {
     const request = { to, message, replyTo }
-    if (this.#waitForDelivered !== undefined) {
+    if (this.sequential) {
       if (this._waiting[to]) {
         this._waiting[to]?.push(request)
         message.id = '<waiting>'
         return message.id
       }
+
       this._waiting[to] = [request]
     }
-    await this.#send(request)
-    return message.id
+    return await this.#send(request)
   }
 
   /**
    * @typedef SendMessageBody
-   * @property {"individual"} recipient_type
+   * @property {'individual'} recipient_type
+   *    Type of WhatsApp recipient, must be `individual`
    * @property {string} to
+   *    Id of the recipient (international phone number without `+`)
    * @property {{message_id: string}} [context]
+   *    Context, i.e. WAMID of message, if this is a reply to an older message
    */
 
-  /** @param {import("./messages.d.ts").Waiting} $ */
-  async #send ({ to, message, replyTo }) {
+  /** @param {import('./messages.d.ts').Waiting} $ */
+  async #send({ to, message, replyTo }) {
     /** @type {SendMessageBody} */
     const body = {
       recipient_type: 'individual',
       to,
-      ...message
+      ...message,
     }
     if (replyTo) {
       body.context = { message_id: replyTo }
@@ -111,7 +100,7 @@ received ${status.id}.`)
     if (!messages || messages.length === 0) {
       throw new Error(
         `Message was not sent, server responded with
-${JSON.stringify(response, null, 2)}`
+${JSON.stringify(response, null, 2)}`,
       )
     }
     message.id = messages[0].id
@@ -120,18 +109,20 @@ ${JSON.stringify(response, null, 2)}`
 
   /**
    * @typedef MarkAsRead
-   * @property {"read"} status
+   * @property {'read'} status
+   *    Status value, always 'read'
    * @property {string} message_id
+   *    WAMID of the message, where the status shall be set to 'read'
    */
 
   /**
    * @param {string} wamid
    */
-  async markAsRead (wamid) {
+  async markAsRead(wamid) {
     /** @type {MarkAsRead} */
     const body = {
       status: 'read',
-      message_id: wamid
+      message_id: wamid,
     }
     const response = await this.#graphApi.post('messages', body)
     return !!response.json?.success

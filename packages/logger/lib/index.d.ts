@@ -1,4 +1,4 @@
-import { Writable } from 'node:stream'
+import type { Writable } from 'node:stream'
 
 /**
  * Basic logger implementation, that logs to the console by default.
@@ -22,12 +22,12 @@ export declare class BaseLogger implements Logger {
    * @param options
    * @param levelsFn
    */
-  constructor (options?: LoggerOptions, levelsFn?: LevelsFn)
+  constructor(options?: LoggerOptions, levelsFn?: LevelsFn)
   level: Level
   name?: string | undefined
   data?: unknown
-  isLevel (level: Level): boolean
-  child (options?: LoggerOptions | undefined): Logger
+  isLevel(level: Level): boolean
+  child(options?: LoggerOptions | undefined): Logger
   trace: LogMethod
   debug: LogMethod
   info: LogMethod
@@ -149,7 +149,7 @@ export declare class NoLogger implements Logger {
    *
    * This logger causes no overhead, as it does nothing.
    */
-  constructor ()
+  constructor()
 
   /**
    * Log level of this logger. Will always return `"silent"`.
@@ -161,9 +161,9 @@ export declare class NoLogger implements Logger {
    * Check if this logger is active. Will always return `false`.
    * @param level
    */
-  isLevel (level: Level): boolean
+  isLevel(level: Level): boolean
   /** Create a child logger. Will always return `this`. */
-  child (options?: LoggerOptions | undefined): Logger
+  child(options?: LoggerOptions | undefined): Logger
   trace: LogMethod
   debug: LogMethod
   info: LogMethod
@@ -178,7 +178,7 @@ export declare class NoLogger implements Logger {
  * @returns the textual level; "silent" for < 0, and maximum the highest level,
  *   e.g. "error"
  */
-export declare function getLevel (numeric: number): Level
+export declare function getLevel(numeric: number): Level
 
 /**
  * Get index of textual representation of the level
@@ -187,4 +187,6 @@ export declare function getLevel (numeric: number): Level
  *   textual representation of the level, e.g. "debug"
  * @returns index of level; -1 ("silent") for unknown levels
  */
-export declare function getLevelIndex (level: Level): number
+export declare function getLevelIndex(level: Level): number
+
+export declare function isLogger(obj: unknown): obj is Logger

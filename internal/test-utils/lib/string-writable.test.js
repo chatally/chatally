@@ -1,6 +1,6 @@
 import { StringWritable } from './string-writable.js'
 
-describe('StringWritable', function () {
+describe('stringWritable', () => {
   it('writes to the buffer', () => {
     const sw = new StringWritable()
     sw.write('Foo')
@@ -12,7 +12,7 @@ describe('StringWritable', function () {
     await new Promise((resolve) => {
       const sw = new StringWritable()
         .on('finish', resolve)
-        .on('error', (err) => (error = err))
+        .on('error', err => (error = err))
       sw.write('Foo')
       sw.end()
       sw.write('Bar')

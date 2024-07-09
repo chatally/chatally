@@ -6,9 +6,9 @@ export class TestError extends Error {
   /**
    *
    * @param {string} message
-   * @param {Object} [x]
+   * @param {object} [x]
    */
-  constructor (message, x) {
+  constructor(message, x) {
     const proto = new.target.prototype
     super(message)
     Object.setPrototypeOf(this, proto)

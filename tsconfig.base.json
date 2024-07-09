@@ -2,32 +2,32 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Default",
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
-    "checkJs": true,
     "composite": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
+    "target": "ES2022",
     "lib": ["ES2022"],
+    "baseUrl": ".",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "noEmit": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
     "paths": {
       "@internal/*": ["internal/*/lib/index.js"],
       "@chatally/*": ["packages/*/lib/index.d.ts"]
     },
-    "preserveWatchOutput": true,
     "resolveJsonModule": true,
-    "skipLibCheck": false,
+    "types": ["vitest/globals"],
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "checkJs": true,
     "strict": true,
-    "target": "ES2022",
-    "types": ["vitest/globals"]
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "preserveWatchOutput": true,
+    "skipLibCheck": false
   },
   "include": ["./vitest.d.ts", "**/*.js", "**/*.ts"],
-  "exclude": ["**/dist/**/*", "**/node_modules/**/*"]
+  "exclude": ["**/dist/**/*", "**/node_modules/**/*", "**/*-deno-*/**/*", "**/*_gitignore/**/*"]
 }

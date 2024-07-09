@@ -1,6 +1,6 @@
+import type { EventEmitter } from 'node:events'
 import type { Logger } from '@chatally/logger'
 import type { Express } from 'express-serve-static-core'
-import type { EventEmitter } from 'node:events'
 
 /**
  * WhatsApp Webhooks Server Class
@@ -19,20 +19,20 @@ export declare class Webhooks extends EventEmitter<WebhooksEvents> {
    *
    * @param config
    */
-  constructor (config?: WebhooksConfig)
+  constructor(config?: WebhooksConfig)
 
   /**
    * Start the server
    * @param port [Optional] Port to listen on [`default=3000`]
    */
-  listen (port?: number): void
+  listen(port?: number): void
 
   /**
    * Get the underlying express app (for testing purposes).
    *
    * @protected
    */
-  get _app (): Express
+  get _app(): Express
 }
 
 interface WebhooksEvents {
@@ -203,10 +203,12 @@ export type IncomingMessage = {
    */
   id: string
 
-  /** Unix timestamp.
+  /**
+   * Unix timestamp.
    *
    * indicating when the WhatsApp server received the message from the
-   * customer. */
+   * customer.
+   */
   timestamp: string
 
   /**
@@ -360,28 +362,28 @@ export interface IncomingInteractive {
   type: 'interactive'
   /** When a customer has interacted with your message. */
   interactive:
-  | {
-    type: 'button_reply'
-    /** Sent when a customer clicks a button. */
-    button_reply: {
+    | {
+      type: 'button_reply'
+      /** Sent when a customer clicks a button. */
+      button_reply: {
       /** Unique ID of a button. */
-      id: string
-      /** Title of a button. */
-      title: string
+        id: string
+        /** Title of a button. */
+        title: string
+      }
     }
-  }
-  | {
-    type: 'list_reply'
-    /** Sent when a customer selects an item from a list. */
-    list_reply: {
+    | {
+      type: 'list_reply'
+      /** Sent when a customer selects an item from a list. */
+      list_reply: {
       /** Unique ID of the selected list item. */
-      id: string
-      /** Title of the selected list item. */
-      title: string
-      /** Description of the selected row. */
-      description?: string
+        id: string
+        /** Title of the selected list item. */
+        title: string
+        /** Description of the selected row. */
+        description?: string
+      }
     }
-  }
 }
 
 export interface IncomingLocation {
@@ -503,7 +505,8 @@ export type VideoMimeType = 'video/mp4' | 'video/3gp'
 export interface Metadata {
   /** The phone number that is displayed for a business. */
   display_phone_number: string
-  /** ID for the phone number.
+  /**
+   * ID for the phone number.
    *
    * A business can respond to a message using this ID.
    */
@@ -593,8 +596,8 @@ export interface SystemMessage {
     wa_id: string
     /** Type of system update. */
     type:
-    | 'customer_changed_number' // changed phone number
-    | 'customer_identity_changed' // changed profile information
+      | 'customer_changed_number' // changed phone number
+      | 'customer_identity_changed' // changed profile information
     /** The WhatsApp ID for the customer prior to the update. */
     customer: string
   }

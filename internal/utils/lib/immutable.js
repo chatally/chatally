@@ -1,9 +1,9 @@
 /**
- * @template {Array<*> | Object} T
+ * @template {Array<*> | object} T
  * @param {T} value
- * @returns {T}
+ * @returns {T} Immutable proxy of the value
  */
-export function immutable (value) {
+export function immutable(value) {
   const type = getType(value)
   const handler = getHandler(type)
   if (handler) {
@@ -15,17 +15,32 @@ export function immutable (value) {
 /**
  * @param {unknown} value
  */
-function getType (value) {
+function getType(value) {
   if (Array.isArray(value)) {
     return 'array'
   }
   return typeof value
 }
 
+/** @type {Record<string, string[]>} */
+const disallowedMethods = {
+  array: [
+    'push',
+    'pop',
+    'splice',
+    'shift',
+    'unshift',
+    'sort',
+    'reverse',
+    'copyWithin',
+    'fill',
+  ],
+}
+
 /**
  * @param {string} type
  */
-function getHandler (type) {
+function getHandler(type) {
   const disallowed = disallowedMethods[type]
   const get = disallowed
     ? (/** @type {any} */ target, /** @type {string} */ method) => {
@@ -42,31 +57,14 @@ function getHandler (type) {
     preventExtensions: disallow,
     defineProperty: disallow,
     deleteProperty: disallow,
-    get
+    get,
   }
 }
 
-/** @type {Record<string, string[]>} */
-const disallowedMethods = {
-  array: [
-    'push',
-    'pop',
-    'splice',
-    'shift',
-    'unshift',
-    'sort',
-    'reverse',
-    'copyWithin',
-    'fill'
-  ]
-}
-
 /**
- * Always throw an error, indicating that this object is immutable.
- *
  * @throws always
- * @returns {never}
+ * @returns {never} Always throw an error, indicating that this object is immutable.
  */
-function disallow () {
+function disallow() {
   throw new Error('Object is immutable')
 }

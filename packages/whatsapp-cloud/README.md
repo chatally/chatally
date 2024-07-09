@@ -15,32 +15,32 @@ Install the required packages
 npm install @chatally/core @chatally/whatsapp-cloud
 ```
 
-Create a main module, that sets up the WhatsApp cloud server and integrates it with your Chatally application.
+Create a main module, that sets up the WhatsApp cloud server and integrates it with your ChatAlly application.
 
 ```js
-import { Application } from "@chatally/core";
-import { WhatsAppCloud } from "./lib/index.js";
+import { Application } from '@chatally/core'
+import { WhatsAppCloud } from './lib/index.js'
 
-const phoneNumberId = "YOUR PHONE NUMBER";
-const accessToken = "YOUR ACCESS TOKEN";
-const verifyToken = "YOUR WEBHOOKS VERIFY TOKEN";
-const secret = "YOUR WEBHOOKS VALIDATION SECRET";
+const phoneNumberId = 'YOUR PHONE NUMBER'
+const accessToken = 'YOUR ACCESS TOKEN'
+const verifyToken = 'YOUR WEBHOOKS VERIFY TOKEN'
+const secret = 'YOUR WEBHOOKS VALIDATION SECRET'
 
 const whatsapp = new WhatsAppCloud({
   env: false, // do not read configuration from environment variables
   file: false, // do not read configuration from default configuration files
   graphApi: { phoneNumberId, accessToken },
   webhooks: { verifyToken, secret },
-});
+})
 
 new Application() //
   .use(whatsapp)
-  .use(function echo({ req, res }) {
+  .use(({ req, res }) => {
     if (res.isWritable) {
-      res.write(`You said '${req.text}' and I don't know what it means.`);
+      res.write(`You said '${req.text}' and I don't know what it means.`)
     }
   })
-  .listen();
+  .listen()
 ```
 
 `use(...)` registers the WhatsApp cloud server as a [server](https://chatally.org/reference/core/servers) in your ChatAlly application and hence connects it with your response-generating middleware.
@@ -98,7 +98,7 @@ media:
 
 ## Reference
 
-If you do not use the WhatsApp Cloud server in a Chatally application, you have to register a `dispatch` method explicitly and call `listen()` to start the server.
+If you do not use the WhatsApp Cloud server in a ChatAlly application, you have to register a `dispatch` method explicitly and call `listen()` to start the server.
 
 ### `set dispatch(dispatch: Dispatch)`
 
@@ -124,7 +124,7 @@ See https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks.
 
 Independent of the way you integrate the server, you can use some functionality of the integrated endpoints through the server's interface.
 
-### `async send(to: string, ...outgoing: OutgoingMessage[]): Promise<void>`
+### `async send(to: string, ...outgoing: ChatMessage[]): Promise<void>`
 
 Send message(s) to recipient.
 

@@ -1,8 +1,8 @@
-import type { Logger } from '@chatally/logger'
 import type { EventEmitter } from 'node:events'
-import type { IRequest } from './request.d.ts'
-import type { IResponse } from './response.d.ts'
-import { IncomingMessage, OutgoingMessage } from './message.js'
+import type { Logger } from '@chatally/logger'
+import type { ChatMessage } from './chat-message.d.ts'
+import type { ChatRequest } from './chat-request.d.ts'
+import type { ChatResponse } from './chat-response.d.ts'
 
 /**
  * Chat server
@@ -33,16 +33,19 @@ export interface Server extends EventEmitter<ServerEvents> {
    * ChatAlly application.
    */
   listen: () => void
+
+  canDownload: (url: string) => boolean
+  download: (url: string) => Promise<Buffer>
 }
 
 export abstract class BaseServer
   extends EventEmitter<ServerEvents>
   implements Server {
   name: string
-  get log (): Logger | undefined
-  set log (log: Logger | undefined)
-  constructor (name: string)
-  abstract listen (): void
+  get log(): Logger | undefined
+  set log(log: Logger | undefined)
+  constructor(name: string)
+  abstract listen(): void
   /**
    * Dispatch an incoming message to all event listeners on the "dispatch"
    * event.
@@ -52,17 +55,20 @@ export abstract class BaseServer
    * @param incoming Message (string or fully typed)
    * @param callbacks will be registered on the respective response events.
    */
-  dispatch (
-    incoming: IncomingMessage | string,
+  dispatch(
+    incoming: ChatRequest | string,
     callbacks?: {
-      onWrite?: (msg: OutgoingMessage) => void
-      onFinished?: (res: IResponse) => void
+      onWrite?: (msg: ChatMessage) => void
+      onFinished?: (res: ChatResponse) => void
     }
   ): void
+
+  canDownload(url: string): boolean
+  download(url: string): Promise<Buffer>
 }
 
 export interface ServerEvents {
-  dispatch: [IRequest, IResponse]
+  dispatch: [ChatRequest, ChatResponse]
 }
 
-export function isServer (obj: unknown): obj is Server
+export function isServer(obj: unknown): obj is Server
