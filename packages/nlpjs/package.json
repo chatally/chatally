@@ -1,7 +1,7 @@
 {
   "name": "@chatally/nlpjs",
   "type": "module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "ChatAlly nlp.js middleware",
   "license": "MIT",
   "keywords": [

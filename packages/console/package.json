@@ -1,7 +1,7 @@
 {
   "name": "@chatally/console",
   "type": "module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "ChatAlly Console Server",
   "license": "MIT",
   "keywords": [

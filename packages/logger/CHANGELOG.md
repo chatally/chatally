@@ -1,5 +1,11 @@
 # @chatally/logger
 
+## 0.0.8
+
+### Patch Changes
+
+- 457fb65: Refactored media handling
+
 ## 0.0.7
 
 ### Patch Changes
