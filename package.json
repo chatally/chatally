@@ -28,15 +28,14 @@
     "dev": "turbo run dev --parallel --no-daemon",
     "docs": "npm run -w @apps/docs dev",
     "format": "prettier --write \"**/*.{d\\.ts,[c]js,md}\"",
-    "tsc": "turbo run tsc --no-daemon",
     "lint": "turbo run lint",
-    "lint:check": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint:fix": "turbo run lint:fix",
     "prepare:release": "npm run clean && npm run release:build && npm run release:check",
     "release:build": "turbo run build --filter=!./apps/* --no-daemon",
-    "release:check": "npm run lint && npm run release:test",
+    "release:check": "npm run lint && npm run tsc && npm run release:test",
     "release:test": "turbo run test --filter=!./apps/* -- run",
-    "test": "turbo run test -- run"
+    "test": "turbo run test -- run",
+    "tsc": "turbo run tsc --no-daemon"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.3",

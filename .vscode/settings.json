@@ -81,5 +81,8 @@
   "typescript.format.enable": true,
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.quoteStyle": "single"
+  "typescript.preferences.quoteStyle": "single",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.minimumContrastRatio": 7,
+  "terminal.integrated.tabStopWidth": 4
 }

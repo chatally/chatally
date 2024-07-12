@@ -29,10 +29,25 @@
         "^build"
       ]
     },
+    "lint:fix": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "test": {
       "dependsOn": [],
       "outputs": [
         "coverage/**"
+      ]
+    },
+    "topo": {
+      "dependsOn": [
+        "^topo"
+      ]
+    },
+    "tsc": {
+      "dependsOn": [
+        "topo"
       ]
     }
   }

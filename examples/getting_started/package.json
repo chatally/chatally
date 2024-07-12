@@ -4,7 +4,9 @@
   "private": true,
   "description": "ChatAlly \"Getting Started\" example",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@chatally/console": "*",

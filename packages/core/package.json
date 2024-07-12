@@ -22,7 +22,9 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "vitest"
+    "lint:fix": "eslint . --fix",
+    "test": "vitest",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@chatally/logger": "*",

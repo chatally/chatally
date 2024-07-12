@@ -4,16 +4,24 @@
   "compilerOptions": {
     "composite": false,
     "target": "ES2022",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022"
+    ],
     "baseUrl": ".",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "paths": {
-      "@internal/*": ["internal/*/lib/index.js"],
-      "@chatally/*": ["packages/*/lib/index.d.ts"]
+      "@internal/*": [
+        "internal/*/lib/index.js"
+      ],
+      "@chatally/*": [
+        "packages/*/lib/index.d.ts"
+      ]
     },
     "resolveJsonModule": true,
-    "types": ["vitest/globals"],
+    "types": [
+      "vitest/globals"
+    ],
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "checkJs": true,
@@ -28,6 +36,14 @@
     "preserveWatchOutput": true,
     "skipLibCheck": false
   },
-  "include": ["./vitest.d.ts", "**/*.js", "**/*.ts"],
-  "exclude": ["**/dist/**/*", "**/node_modules/**/*", "**/*-deno-*/**/*", "**/*_gitignore/**/*"]
+  "include": [
+    "./vitest.d.ts",
+    "**/lib"
+  ],
+  "exclude": [
+    "**/dist/**/*",
+    "**/node_modules/**/*",
+    "**/*-deno-*/**/*",
+    "**/*_gitignore/**/*"
+  ]
 }
