@@ -1,7 +1,7 @@
 {
   "name": "@chatally/whatsapp-cloud",
   "type": "module",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "ChatAlly WhatsApp Cloud Server",
   "license": "MIT",
   "keywords": [

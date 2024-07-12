@@ -1,5 +1,13 @@
 # @chatally/core
 
+## 0.0.10
+
+### Patch Changes
+
+- 457fb65: Refactored media handling
+- Updated dependencies [457fb65]
+  - @chatally/logger@0.0.8
+
 ## 0.0.9
 
 ### Patch Changes
