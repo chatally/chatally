@@ -29,10 +29,7 @@ import 'dotenv/config'
  * in case you are running multiple ChatAlly servers on the same domain).
  */
 const whatsapp = new WhatsAppCloud({
-  graphApi: new GraphApiMock({
-    phoneNumberId: '1234',
-    accessToken: 'ABCD',
-  }),
+  graphApi: new GraphApiMock({ phoneNumberId: '1234', accessToken: 'ABCD' }),
   webhooks: { path: '/whatsappcloud' },
   messages: { sequential: false },
 })
