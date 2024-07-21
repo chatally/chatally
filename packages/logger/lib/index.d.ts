@@ -27,7 +27,7 @@ export declare class BaseLogger implements Logger {
   name?: string | undefined
   data?: unknown
   isLevel(level: Level): boolean
-  child(options?: LoggerOptions | undefined): Logger
+  child(options?: LoggerOptions | string | undefined): Logger
   trace: LogMethod
   debug: LogMethod
   info: LogMethod
@@ -88,8 +88,10 @@ export interface Logger extends LogMethods {
    *
    * @param options Override parent options
    */
-  child: (options?: LoggerOptions) => Logger
+  child: (options?: LoggerOptions | string) => Logger
 }
+
+export type LogWarn = Pick<Logger, 'warn'>
 
 interface LoggerOptions {
   /** Initial log level of the logger */
@@ -163,7 +165,7 @@ export declare class NoLogger implements Logger {
    */
   isLevel(level: Level): boolean
   /** Create a child logger. Will always return `this`. */
-  child(options?: LoggerOptions | undefined): Logger
+  child(options?: LoggerOptions | string | undefined): Logger
   trace: LogMethod
   debug: LogMethod
   info: LogMethod

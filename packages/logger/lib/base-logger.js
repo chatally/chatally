@@ -1,6 +1,8 @@
 import { format, formatWithOptions } from 'node:util'
 import { getLevel, getLevelIndex } from './levels.js'
 
+export const SEP = '::'
+
 /** @type {import('./index.d.ts').Level} */
 const DEFAULT_LEVEL = 'info'
 const TRACE = getLevelIndex('trace')
@@ -81,15 +83,18 @@ export class BaseLogger {
   }
 
   /**
-   * @param {import('./index.d.ts').LoggerOptions} [options]
+   * @param {import('./index.d.ts').LoggerOptions | string} [options]
    * @returns {import('./index.d.ts').Logger}
    *    A child logger that overrides the parent's options with the given
    *    options.
    */
   child(options = {}) {
+    if (typeof options === 'string') {
+      options = { name: options }
+    }
     let name = this.name
     if (name && options.name) {
-      name = `${name}::${options.name}`
+      name = `${name}${SEP}${options.name}`
     } else {
       name = options.name
     }

@@ -1,6 +1,6 @@
 /**
  * @param {unknown} object
- * @returns {object is Logger}
+ * @returns {object is Logger} 
  *    True if the given object implements the Logger interface
  */
 export function isLogger(object) {
