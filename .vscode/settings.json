@@ -84,5 +84,7 @@
   "typescript.preferences.quoteStyle": "single",
   "terminal.integrated.fontSize": 12,
   "terminal.integrated.minimumContrastRatio": 7,
-  "terminal.integrated.tabStopWidth": 4
+  "terminal.integrated.tabStopWidth": 4,
+  "workbench.colorTheme": "merko's green theme",
+  "workbench.iconTheme": "material-icon-theme"
 }
