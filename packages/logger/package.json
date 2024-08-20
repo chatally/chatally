@@ -1,7 +1,7 @@
 {
   "name": "@chatally/logger",
   "type": "module",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "ChatAlly Logger Facade",
   "license": "MIT",
   "homepage": "https://chatally.org/reference/core/logger/",
