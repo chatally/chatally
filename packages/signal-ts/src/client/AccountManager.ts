@@ -1,8 +1,8 @@
 import { noLogger, type Logger } from '@chatally/logger';
-import { generateKeyPair } from './Curve';
-import { ServiceIdKind } from './ServiceId';
+import { generateKeyPair } from '../crypto/Curve';
+import { ServiceIdKind } from '../ids/ServiceIdString';
+import type { Storage } from '../storage/Storage';
 import type { SignalServer } from './SignalServer';
-import type { Storage } from './Storage';
 import { signalservice as Proto } from './protos/compiled';
 import type { KeyPairType, UploadPreKeyType } from './types';
 import { toLogFormat } from './util/errors';

@@ -1,9 +1,9 @@
 import type { Logger } from '@chatally/logger';
 import _ from 'lodash';
-import type { ServiceIdString } from './ServiceId';
+import type { ServiceIdString } from '../ids/ServiceIdString';
 import type { StorageInterface } from './StorageInterface';
 
-export class StorageBlocked {
+export class Blocked {
   constructor(private readonly storage: StorageInterface, private readonly log: Logger) { }
 
   public getBlockedNumbers(): Array<string> {

@@ -2,18 +2,30 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import { HKDF } from '@signalapp/libsignal-client';
-import { Buffer } from 'buffer';
+// import { Buffer } from 'buffer';
 import Long from 'long';
-
-import * as Bytes from './Bytes';
+import { BaseError } from 'src/util/errors';
+import * as Bytes from '../util/bytes';
 import { calculateAgreement, generateKeyPair } from './Curve';
-import { Environment } from './environment';
-import { CipherType, HashType, UUID_BYTE_SIZE } from './types/Crypto';
-import { ProfileDecryptError } from './types/errors';
-import { logPadSize } from './util/logPadding';
-import { getBytesSubarray } from './util/uuidToBytes';
 
-export { CipherType, HashType };
+export enum HashType {
+  size256 = 'sha256',
+  size512 = 'sha512',
+}
+
+export enum CipherType {
+  AES256CBC = 'aes-256-cbc',
+  AES256CTR = 'aes-256-ctr',
+  AES256GCM = 'aes-256-gcm',
+}
+
+export const UUID_BYTE_SIZE = 16;
+
+export const KEY_LENGTH = 32;
+
+export const MAC_LENGTH = 32;
+
+export class ProfileDecryptError extends BaseError { }
 
 const PROFILE_IV_LENGTH = 12; // bytes
 const PROFILE_KEY_LENGTH = 32; // bytes
@@ -580,11 +592,7 @@ export function decryptAttachmentV1(
   return decryptAes256CbcPkcsPadding(aesKey, ciphertext, iv);
 }
 
-export function encryptAttachment({
-  plaintext,
-  keys,
-  dangerousTestOnlyIv,
-}: {
+export function encryptAttachment({ plaintext, keys }: {
   plaintext: Readonly<Uint8Array>;
   keys: Readonly<Uint8Array>;
   dangerousTestOnlyIv?: Readonly<Uint8Array>;
@@ -600,11 +608,7 @@ export function encryptAttachment({
     throw new Error(`${logId}: invalid length attachment keys`);
   }
 
-  if (dangerousTestOnlyIv && window.getEnvironment() !== Environment.Test) {
-    throw new Error(`${logId}: Used dangerousTestOnlyIv outside tests!`);
-  }
-
-  const iv = dangerousTestOnlyIv || getRandomBytes(16);
+  const iv = getRandomBytes(16);
   const aesKey = keys.slice(0, 32);
   const macKey = keys.slice(32, 64);
 
@@ -772,4 +776,19 @@ export function constantTimeEqual(
   right: Uint8Array
 ): boolean {
   return crypto.constantTimeEqual(left, right);
+}
+
+export function logPadSize(size: number): number {
+  return Math.max(
+    541,
+    Math.floor(1.05 ** Math.ceil(Math.log(size) / Math.log(1.05)))
+  );
+}
+
+export function getBytesSubarray(
+  data: Uint8Array,
+  start: number,
+  n: number
+): Uint8Array {
+  return data.subarray(start, start + n);
 }

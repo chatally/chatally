@@ -1,5 +1,5 @@
 import type { PlaintextContent } from '@signalapp/libsignal-client';
-import type { ServiceIdString } from './ServiceId';
+import type { ServiceIdString } from '../ids/ServiceIdString';
 import type { SignalServer } from './SignalServer';
 import { signalservice as Proto } from './protos/compiled';
 import type { SerializedCertificateType } from './schema';

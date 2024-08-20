@@ -3,7 +3,7 @@
 
 import type { KyberPreKeyRecord } from '@signalapp/libsignal-client';
 import * as client from '@signalapp/libsignal-client';
-import type { CompatPreKeyType, CompatSignedPreKeyType, KeyPairType } from './types';
+import type { CompatPreKeyType, CompatSignedPreKeyType, KeyPairType } from '../client/types';
 
 // import type {
 //   KeyPairType,

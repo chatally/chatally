@@ -25,3 +25,14 @@ export function explodePromise<T>(): ExplodePromiseResultType<T> {
     reject: reject!,
   };
 }
+
+export function promise<T>(): Readonly<[Promise<T>, (value: T) => void, (error: unknown) => void]> {
+  let resolve: (value: T) => void;
+  let reject: (error: unknown) => void;
+
+  const promise = new Promise<T>((innerResolve, innerReject) => {
+    resolve = innerResolve;
+    reject = innerReject;
+  });
+  return [promise, resolve, reject];
+}

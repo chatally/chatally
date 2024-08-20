@@ -1,12 +1,7 @@
-import { Client } from 'src/client/Client';
+import { getLogger } from '@chatally/logger';
+import { SignalApi } from 'src/SignalApi';
 
-// const dbKey = Client.generateDbKey();
-// console.log({ dbKey })
-const dbKey = "59dd4542be9d724fc84708cfd75f5eded5295858ef96422e37eed00620c6b3b2";
-const client = await new Client({ dbKey, log: "Signal" }).ready;
+const log = getLogger({ level: "trace", name: "SgnlDv" });
+const api = await new SignalApi({ log }).connected;
 
-// const id = await client.messaging.sendMessage({
-//   serviceId: "11111111-1111-4111-1111-111111111111",
-//   messageText: "Hello, from ChatAlly!"
-// });
-// console.log("Just sent my first message:", id);
+await api.send("PNI:+4917623975929", "Hello, I am ChatAlly.");

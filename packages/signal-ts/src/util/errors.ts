@@ -18,4 +18,14 @@ export function toLogFormat(error: unknown): string {
   return result;
 }
 
-export class ProfileDecryptError extends Error { }
+/**
+ * Base error class that supports `instanceof` checks also for subclasses
+ */
+export class BaseError extends Error {
+  /** @param {string} [message] */
+  constructor(message) {
+    const proto = new.target.prototype
+    super(message)
+    Object.setPrototypeOf(this, proto)
+  }
+}

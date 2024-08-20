@@ -27,7 +27,9 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
+    "protos/*.ts",
+    "protos/*.js",
     "debug.ts",
-    "scripts/*.ts"
+    "protos/compile-protos.ts"
   ]
 }

@@ -1,10 +1,9 @@
 import { getLogger, noLogger, type LoggerInit } from '@chatally/logger';
-import { randomBytes } from 'node:crypto';
+import { Storage } from '../storage/Storage';
 import { AccountManager } from './AccountManager';
 import { Messaging } from './Messaging';
 import { SignalServer } from './SignalServer';
 import { SocketManager } from './SocketManager';
-import { Storage } from './Storage';
 import { drop } from './util/drop';
 import { explodePromise } from './util/promise';
 
@@ -42,10 +41,5 @@ You can do that by 'const client = await new Client().ready'`);
     const { promise, resolve, reject } = explodePromise<this>();
     this.ready = promise;
     drop(this.account.register(() => resolve(this), reject));
-  }
-
-  static generateDbKey() {
-    // https://www.zetetic.net/sqlcipher/sqlcipher-api/#key
-    return randomBytes(32).toString('hex');
   }
 }

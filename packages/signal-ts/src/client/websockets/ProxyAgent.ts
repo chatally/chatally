@@ -5,9 +5,9 @@ import type { LookupAddress, LookupOptions } from 'dns';
 import { lookup } from 'dns/promises';
 import type { ProxyAgent } from 'proxy-agent';
 import { URL } from 'url';
+import { connectOneSocket } from '../../net/HTTPSAgent';
 import { drop } from '../util/drop';
 import { SECOND } from '../util/timeInMilliseconds';
-import { connectOneSocket } from './HTTPSAgent';
 
 // import * as log from '../logging/log';
 // import { happyEyeballs } from './createHTTPSAgent';

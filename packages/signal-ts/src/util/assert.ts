@@ -1,6 +1,5 @@
 import type { Logger } from '@chatally/logger';
-import { Environment, getEnvironment } from '../environment';
-import { toLogFormat } from './errors';
+import { Environment, getEnvironment } from './environment';
 import { stringify } from './stringify';
 
 /**
@@ -67,6 +66,6 @@ export function assertDev(
       }
       throw err;
     }
-    log.error('assert failure:', toLogFormat(err));
+    log.error('assert failure:', err);
   }
 }

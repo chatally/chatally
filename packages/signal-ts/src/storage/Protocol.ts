@@ -232,7 +232,7 @@ import type { StorageInterface } from './StorageInterface';
 //   callback(): void;
 // }>;
 
-export class SignalProtocolStore extends EventEmitter {
+export class Protocol extends EventEmitter {
   // Enums used across the app
 
   // VerifiedStatus = VerifiedStatus;

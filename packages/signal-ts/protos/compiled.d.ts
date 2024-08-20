@@ -379,6 +379,115 @@ export namespace signalservice {
         CURRENT = 1
     }
 
+    /** Properties of a DeviceName. */
+    interface IDeviceName {
+
+        /** DeviceName ephemeralPublic */
+        ephemeralPublic?: (Uint8Array|null);
+
+        /** DeviceName syntheticIv */
+        syntheticIv?: (Uint8Array|null);
+
+        /** DeviceName ciphertext */
+        ciphertext?: (Uint8Array|null);
+    }
+
+    /** Represents a DeviceName. */
+    class DeviceName implements IDeviceName {
+
+        /**
+         * Constructs a new DeviceName.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: signalservice.IDeviceName);
+
+        /** DeviceName ephemeralPublic. */
+        public ephemeralPublic: Uint8Array;
+
+        /** DeviceName syntheticIv. */
+        public syntheticIv: Uint8Array;
+
+        /** DeviceName ciphertext. */
+        public ciphertext: Uint8Array;
+
+        /**
+         * Creates a new DeviceName instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns DeviceName instance
+         */
+        public static create(properties?: signalservice.IDeviceName): signalservice.DeviceName;
+
+        /**
+         * Encodes the specified DeviceName message. Does not implicitly {@link signalservice.DeviceName.verify|verify} messages.
+         * @param message DeviceName message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: signalservice.IDeviceName, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified DeviceName message, length delimited. Does not implicitly {@link signalservice.DeviceName.verify|verify} messages.
+         * @param message DeviceName message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: signalservice.IDeviceName, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a DeviceName message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns DeviceName
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): signalservice.DeviceName;
+
+        /**
+         * Decodes a DeviceName message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns DeviceName
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): signalservice.DeviceName;
+
+        /**
+         * Verifies a DeviceName message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a DeviceName message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns DeviceName
+         */
+        public static fromObject(object: { [k: string]: any }): signalservice.DeviceName;
+
+        /**
+         * Creates a plain object from a DeviceName message. Also converts values to other types if specified.
+         * @param message DeviceName
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: signalservice.DeviceName, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this DeviceName to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for DeviceName
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
     /** Properties of an Envelope. */
     interface IEnvelope {
 
@@ -9295,5 +9404,366 @@ export namespace signalservice {
          * @returns The default type url
          */
         public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a WebSocketRequestMessage. */
+    interface IWebSocketRequestMessage {
+
+        /** WebSocketRequestMessage verb */
+        verb?: (string|null);
+
+        /** WebSocketRequestMessage path */
+        path?: (string|null);
+
+        /** WebSocketRequestMessage body */
+        body?: (Uint8Array|null);
+
+        /** WebSocketRequestMessage headers */
+        headers?: (string[]|null);
+
+        /** WebSocketRequestMessage id */
+        id?: (number|Long|null);
+    }
+
+    /** Represents a WebSocketRequestMessage. */
+    class WebSocketRequestMessage implements IWebSocketRequestMessage {
+
+        /**
+         * Constructs a new WebSocketRequestMessage.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: signalservice.IWebSocketRequestMessage);
+
+        /** WebSocketRequestMessage verb. */
+        public verb: string;
+
+        /** WebSocketRequestMessage path. */
+        public path: string;
+
+        /** WebSocketRequestMessage body. */
+        public body: Uint8Array;
+
+        /** WebSocketRequestMessage headers. */
+        public headers: string[];
+
+        /** WebSocketRequestMessage id. */
+        public id: (number|Long);
+
+        /**
+         * Creates a new WebSocketRequestMessage instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns WebSocketRequestMessage instance
+         */
+        public static create(properties?: signalservice.IWebSocketRequestMessage): signalservice.WebSocketRequestMessage;
+
+        /**
+         * Encodes the specified WebSocketRequestMessage message. Does not implicitly {@link signalservice.WebSocketRequestMessage.verify|verify} messages.
+         * @param message WebSocketRequestMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: signalservice.IWebSocketRequestMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified WebSocketRequestMessage message, length delimited. Does not implicitly {@link signalservice.WebSocketRequestMessage.verify|verify} messages.
+         * @param message WebSocketRequestMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: signalservice.IWebSocketRequestMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a WebSocketRequestMessage message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns WebSocketRequestMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): signalservice.WebSocketRequestMessage;
+
+        /**
+         * Decodes a WebSocketRequestMessage message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns WebSocketRequestMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): signalservice.WebSocketRequestMessage;
+
+        /**
+         * Verifies a WebSocketRequestMessage message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a WebSocketRequestMessage message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns WebSocketRequestMessage
+         */
+        public static fromObject(object: { [k: string]: any }): signalservice.WebSocketRequestMessage;
+
+        /**
+         * Creates a plain object from a WebSocketRequestMessage message. Also converts values to other types if specified.
+         * @param message WebSocketRequestMessage
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: signalservice.WebSocketRequestMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this WebSocketRequestMessage to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for WebSocketRequestMessage
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a WebSocketResponseMessage. */
+    interface IWebSocketResponseMessage {
+
+        /** WebSocketResponseMessage id */
+        id?: (number|Long|null);
+
+        /** WebSocketResponseMessage status */
+        status?: (number|null);
+
+        /** WebSocketResponseMessage message */
+        message?: (string|null);
+
+        /** WebSocketResponseMessage headers */
+        headers?: (string[]|null);
+
+        /** WebSocketResponseMessage body */
+        body?: (Uint8Array|null);
+    }
+
+    /** Represents a WebSocketResponseMessage. */
+    class WebSocketResponseMessage implements IWebSocketResponseMessage {
+
+        /**
+         * Constructs a new WebSocketResponseMessage.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: signalservice.IWebSocketResponseMessage);
+
+        /** WebSocketResponseMessage id. */
+        public id: (number|Long);
+
+        /** WebSocketResponseMessage status. */
+        public status: number;
+
+        /** WebSocketResponseMessage message. */
+        public message: string;
+
+        /** WebSocketResponseMessage headers. */
+        public headers: string[];
+
+        /** WebSocketResponseMessage body. */
+        public body: Uint8Array;
+
+        /**
+         * Creates a new WebSocketResponseMessage instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns WebSocketResponseMessage instance
+         */
+        public static create(properties?: signalservice.IWebSocketResponseMessage): signalservice.WebSocketResponseMessage;
+
+        /**
+         * Encodes the specified WebSocketResponseMessage message. Does not implicitly {@link signalservice.WebSocketResponseMessage.verify|verify} messages.
+         * @param message WebSocketResponseMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: signalservice.IWebSocketResponseMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified WebSocketResponseMessage message, length delimited. Does not implicitly {@link signalservice.WebSocketResponseMessage.verify|verify} messages.
+         * @param message WebSocketResponseMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: signalservice.IWebSocketResponseMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a WebSocketResponseMessage message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns WebSocketResponseMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): signalservice.WebSocketResponseMessage;
+
+        /**
+         * Decodes a WebSocketResponseMessage message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns WebSocketResponseMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): signalservice.WebSocketResponseMessage;
+
+        /**
+         * Verifies a WebSocketResponseMessage message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a WebSocketResponseMessage message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns WebSocketResponseMessage
+         */
+        public static fromObject(object: { [k: string]: any }): signalservice.WebSocketResponseMessage;
+
+        /**
+         * Creates a plain object from a WebSocketResponseMessage message. Also converts values to other types if specified.
+         * @param message WebSocketResponseMessage
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: signalservice.WebSocketResponseMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this WebSocketResponseMessage to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for WebSocketResponseMessage
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a WebSocketMessage. */
+    interface IWebSocketMessage {
+
+        /** WebSocketMessage type */
+        type?: (signalservice.WebSocketMessage.Type|null);
+
+        /** WebSocketMessage request */
+        request?: (signalservice.IWebSocketRequestMessage|null);
+
+        /** WebSocketMessage response */
+        response?: (signalservice.IWebSocketResponseMessage|null);
+    }
+
+    /** Represents a WebSocketMessage. */
+    class WebSocketMessage implements IWebSocketMessage {
+
+        /**
+         * Constructs a new WebSocketMessage.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: signalservice.IWebSocketMessage);
+
+        /** WebSocketMessage type. */
+        public type: signalservice.WebSocketMessage.Type;
+
+        /** WebSocketMessage request. */
+        public request?: (signalservice.IWebSocketRequestMessage|null);
+
+        /** WebSocketMessage response. */
+        public response?: (signalservice.IWebSocketResponseMessage|null);
+
+        /**
+         * Creates a new WebSocketMessage instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns WebSocketMessage instance
+         */
+        public static create(properties?: signalservice.IWebSocketMessage): signalservice.WebSocketMessage;
+
+        /**
+         * Encodes the specified WebSocketMessage message. Does not implicitly {@link signalservice.WebSocketMessage.verify|verify} messages.
+         * @param message WebSocketMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: signalservice.IWebSocketMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified WebSocketMessage message, length delimited. Does not implicitly {@link signalservice.WebSocketMessage.verify|verify} messages.
+         * @param message WebSocketMessage message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: signalservice.IWebSocketMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a WebSocketMessage message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns WebSocketMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): signalservice.WebSocketMessage;
+
+        /**
+         * Decodes a WebSocketMessage message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns WebSocketMessage
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): signalservice.WebSocketMessage;
+
+        /**
+         * Verifies a WebSocketMessage message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a WebSocketMessage message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns WebSocketMessage
+         */
+        public static fromObject(object: { [k: string]: any }): signalservice.WebSocketMessage;
+
+        /**
+         * Creates a plain object from a WebSocketMessage message. Also converts values to other types if specified.
+         * @param message WebSocketMessage
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: signalservice.WebSocketMessage, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this WebSocketMessage to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for WebSocketMessage
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    namespace WebSocketMessage {
+
+        /** Type enum. */
+        enum Type {
+            UNKNOWN = 0,
+            REQUEST = 1,
+            RESPONSE = 2
+        }
     }
 }

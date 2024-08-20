@@ -1,5 +1,5 @@
-import type { ServiceIdString } from './ServiceId';
-import type { SerializedCertificateType } from './schema';
+import type { SerializedCertificateType } from '../client/schema';
+import type { ServiceIdString } from '../ids/ServiceIdString';
 
 export type StorageItem = {
   // areWeASubscriber: boolean;
@@ -40,8 +40,8 @@ export type StorageItem = {
   // manifestVersion: number;
   // masterKey: string;
   // masterKeyLastRequestTime: number;
-  // maxKyberPreKeyId: number;
-  // maxKyberPreKeyIdPNI: number;
+  maxKyberPreKeyId: number;
+  maxKyberPreKeyIdPNI: number;
   // maxPreKeyId: number;
   // maxPreKeyIdPNI: number;
   // needOrphanedAttachmentCheck: boolean;
@@ -66,8 +66,8 @@ export type StorageItem = {
   // serverTimeSkew: number;
   // sessionResets: SessionResetsType;
   // setBackupSignatureKey: boolean;
-  // signedKeyId: number;
-  // signedKeyIdPNI: number;
+  signedKeyId: number;
+  signedKeyIdPNI: number;
   // signedKeyUpdateTime: number;
   // signedKeyUpdateTimePNI: number;
   // storageCredentials: StorageServiceCredentials;

@@ -1,10 +1,12 @@
 import type { Logger } from '@chatally/logger';
-import { ServiceIdKind, isAciString, isPniString, type AciString, type PniString, type ServiceIdString } from './ServiceId';
+import { isAciString, type AciString } from 'src/ids/AciString';
+import { isPniString, type PniString } from 'src/ids/PniString';
+import type { WebAPICredentials } from '../client/types';
+import { ServiceIdKind, type ServiceIdString } from '../ids/ServiceIdString';
+import { strictAssert } from '../util/assert';
 import type { StorageInterface } from './StorageInterface';
-import type { WebAPICredentials } from './types';
-import { strictAssert } from './util/assert';
 
-export class StorageUser {
+export class User {
   constructor(private readonly storage: StorageInterface, private readonly log: Logger) { }
 
   public async setAciAndDeviceId(
