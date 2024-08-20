@@ -19,3 +19,8 @@ repl.js
 
 # Environment variables
 .env*
+
+# Debug run artifacts
+*.db
+*.db-shm
+*.db-wal

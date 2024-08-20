@@ -1,0 +1,40 @@
+{
+  "name": "@chatally/consent-manager",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "ChatAlly consent manager middleware to comply with GDPR",
+  "homepage": "https://chatally.org/reference/middleware/consent-manager/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatally/chatally.git",
+    "directory": "packages/consent-manager"
+  },
+  "license": "MIT",
+  "keywords": [
+    "chat",
+    "chatbot",
+    "middleware",
+    "consent",
+    "GDPR"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "tsc": "tsc"
+  },
+  "dependencies": {
+    "@chatally/core": "*",
+    "@chatally/utils": "*"
+  },
+  "devDependencies": {
+    "@chatally/console": "*"
+  }
+}
