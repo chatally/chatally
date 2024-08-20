@@ -24,7 +24,7 @@ describe('baseLogger', () => {
     const child = log.child({ name: 'child', level: 'debug' })
     child.debug('bar')
 
-    expect(actual.data).toBe('DEBUG (parent.child): bar\n')
+    expect(actual.data).toBe('DEBUG (parent::child): bar\n')
   })
 
   it('logs data', () => {

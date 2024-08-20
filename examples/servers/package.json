@@ -1,5 +1,5 @@
 {
-  "name": "@chatally/servers",
+  "name": "example_servers",
   "type": "module",
   "private": true,
   "description": "ChatAlly \"Servers\" example",

@@ -89,7 +89,7 @@ export class BaseLogger {
   child(options = {}) {
     let name = this.name
     if (name && options.name) {
-      name = `${name}.${options.name}`
+      name = `${name}::${options.name}`
     } else {
       name = options.name
     }

@@ -31,15 +31,15 @@ export function toChatally(wa) {
     case 'order':
     case 'referral':
     default:
-      {
-        /** @type {import('@chatally/core').Custom} */
-        return {
-          ...message,
-          type: 'custom',
-          schema: 'whatsappcloud',
-          custom: wa,
-        }
+    {
+      /** @type {import('@chatally/core').Custom} */
+      return {
+        ...message,
+        type: 'custom',
+        schema: 'whatsappcloud',
+        custom: wa,
       }
+    }
   }
 }
 

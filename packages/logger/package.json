@@ -3,13 +3,13 @@
   "type": "module",
   "version": "0.0.8",
   "description": "ChatAlly Logger Facade",
+  "license": "MIT",
   "homepage": "https://chatally.org/reference/core/logger/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chatally/chatally.git",
     "directory": "packages/logger"
   },
-  "license": "MIT",
   "keywords": [
     "chat",
     "chatbot",

@@ -3,12 +3,12 @@
   "type": "module",
   "version": "0.0.10",
   "description": "ChatAlly Core Modules",
+  "license": "MIT",
   "homepage": "https://chatally.org/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chatally/chatally.git"
   },
-  "license": "MIT",
   "keywords": [
     "chat",
     "chatbot",

@@ -1,12 +1,12 @@
-import Database from 'better-sqlite3';
+import Database from 'better-sqlite3'
 
 export class Store {
   /**
    * @param {string} path
    */
   constructor(path) {
-    const db = new Database(path);
-    db.pragma('journal_mode = WAL');
+    const db = new Database(path)
+    db.pragma('journal_mode = WAL')
     db.exec(`
     CREATE TABLE IF NOT EXISTS visitors (
       'rowid' integer PRIMARY KEY AUTOINCREMENT,
@@ -17,21 +17,21 @@ export class Store {
       'timestamp' INTEGER
     );
     CREATE INDEX IF NOT EXISTS visitor_by_id ON visitors(id);
-  `);
+  `)
     /** @type {import("better-sqlite3").Statement<[string], {consent?: number}>} */
     this.selectConsent = db.prepare(
-      'SELECT consent FROM visitors WHERE id = ?'
-    );
+      'SELECT consent FROM visitors WHERE id = ?',
+    )
     /** @type {import("better-sqlite3").Statement<[string], {original?: string}>} */
     this.selectOriginal = db.prepare(
-      'SELECT original FROM visitors WHERE id = ?'
-    );
+      'SELECT original FROM visitors WHERE id = ?',
+    )
     this.updateConsent = db.prepare(
-      'UPDATE visitors SET consent=1, original=NULL, message_id=?, timestamp=? WHERE id=?'
-    );
+      'UPDATE visitors SET consent=1, original=NULL, message_id=?, timestamp=? WHERE id=?',
+    )
     this.insertOriginal = db.prepare(
-      'INSERT INTO visitors (id, original) VALUES (?, ?)'
-    );
+      'INSERT INTO visitors (id, original) VALUES (?, ?)',
+    )
   }
 
   /**
@@ -40,25 +40,25 @@ export class Store {
    * @returns {boolean|undefined} Undefined is returned if no entry is found
    */
   hasConsent(from) {
-    const result = this.selectConsent.get(from);
-    if (!result) return undefined;
-    return result.consent === 1;
+    const result = this.selectConsent.get(from)
+    if (!result) return undefined
+    return result.consent === 1
   };
 
   /**
    * Get the original message.
    * @param {string} from sender id
-   * @returns {import('@chatally/core').ChatRequest|undefined}
+   * @returns {import('@chatally/core').ChatRequest|undefined} The original request (parsed from the stored JSON).
    */
   getOriginal(from) {
-    const result = this.selectOriginal.get(from);
+    const result = this.selectOriginal.get(from)
     if (result?.original) {
       try {
-        return JSON.parse(result.original);
-      } catch (e) {
+        return JSON.parse(result.original)
+      } catch (_e) {
       }
     }
-    return undefined;
+    return undefined
   };
 
   /**

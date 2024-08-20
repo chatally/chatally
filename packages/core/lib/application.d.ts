@@ -1,5 +1,5 @@
-import type { Level, Logger, LoggerOptions } from '@chatally/logger'
 import type { EventEmitter } from 'node:events'
+import type { Level, Logger, LoggerOptions } from '@chatally/logger'
 import type { ChatRequest } from './chat-request.d.ts'
 import type { ChatResponse } from './chat-response.d.ts'
 import type { MediaOptions } from './media.js'

@@ -156,7 +156,7 @@ export class GraphApi {
           throw new GraphApiError(json.error)
         }
         result.json = json
-      } catch (e) {
+      } catch (_e) {
         result.text = text
       }
     } else if (contentType.startsWith('text/')) {

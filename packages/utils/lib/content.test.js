@@ -1,4 +1,4 @@
-import { content } from "./content.js"
+import { content } from './content.js'
 
 describe('content', () => {
   it('handles unknown message type', () => {

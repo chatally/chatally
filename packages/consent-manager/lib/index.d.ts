@@ -1,21 +1,21 @@
-import type { ChatMessage, Middleware } from '@chatally/core';
+import type { ChatMessage, Middleware } from '@chatally/core'
 
 export interface Options {
   /** Path to the database file */
-  path: string,
-  /** 
+  path: string
+  /**
    * Message to ask for consent.
-   * 
+   *
    * If you use a button message, make sure that the first button is the accept
-   * button or define the acceptCommand 
+   * button or define the acceptCommand
    */
-  askForConsent: string | ChatMessage,
+  askForConsent: string | ChatMessage
   /** Command id for acceptance, default "accept" */
-  acceptCommand: string,
+  acceptCommand: string
   /** Regular expression for acceptance, default "/I accept/i" */
-  acceptRegExp: RegExp,
+  acceptRegExp: RegExp
   /** Message to thank for consent */
-  thankForConsent: string | ChatMessage,
+  thankForConsent: string | ChatMessage
 }
 
 /**
@@ -24,4 +24,4 @@ export interface Options {
  * @constructor
  * @param config
  */
-export declare const GdprConsent: new (config?: Partial<Options>) => Middleware;
+export declare const ConsentManager: new (config?: Partial<Options>) => Middleware

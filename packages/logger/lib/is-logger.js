@@ -1,6 +1,7 @@
 /**
  * @param {unknown} object
- * @returns {boolean} True if the given object implements the Logger interface
+ * @returns {object is Logger}
+ *    True if the given object implements the Logger interface
  */
 export function isLogger(object) {
   if (!object) return false

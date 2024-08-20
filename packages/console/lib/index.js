@@ -1,6 +1,6 @@
+import { createInterface as readline } from 'node:readline'
 import { BaseServer } from '@chatally/core'
 import { content } from '@chatally/utils'
-import { createInterface as readline } from 'node:readline'
 
 const grey = 30
 const green = 32
@@ -17,25 +17,29 @@ function color(text, color) {
 }
 
 export class ConsoleServer extends BaseServer {
-  #displayName;
-  #prompt;
-  #namePad = "";
-  #promptPad = "";
+  #displayName
+  #prompt
+  #namePad = ''
+  #promptPad = ''
 
   constructor(name = 'ConsoleServer') {
     super(name)
-    this.#displayName = name;
-    this.#prompt = ">";
-    this.#updatePadding();
+    this.#displayName = name
+    this.#prompt = '>'
+    this.#updatePadding()
+  }
+
+  get displayName() {
+    return this.#displayName
   }
 
   /**
    * The name displayed before each message from your bot.
-   * @param {string} displayName 
+   * @param {string} displayName
    */
   set displayName(displayName) {
-    this.#displayName = displayName;
-    this.#updatePadding();
+    this.#displayName = displayName
+    this.#updatePadding()
   }
 
   /**
@@ -46,19 +50,23 @@ export class ConsoleServer extends BaseServer {
    */
   nameColor = green
 
+  get prompt() {
+    return this.#prompt
+  }
+
   /**
    * The prompt displayed before the user input.
    * @param {string} prompt
    */
   set prompt(prompt) {
-    this.#prompt = prompt;
-    this.#updatePadding();
+    this.#prompt = prompt
+    this.#updatePadding()
   }
 
   #updatePadding() {
-    const max = Math.max(this.#displayName.length, this.#prompt.length);
-    this.#namePad = ' '.repeat(max - this.#displayName.length);
-    this.#promptPad = ' '.repeat(max - this.#prompt.length);
+    const max = Math.max(this.#displayName.length, this.#prompt.length)
+    this.#namePad = ' '.repeat(max - this.#displayName.length)
+    this.#promptPad = ' '.repeat(max - this.#prompt.length)
   }
 
   /**
@@ -144,11 +152,13 @@ Waiting for your messages...`
 
   #printName() {
     process.stdout.write(
-      `${this.#namePad}${color(this.#displayName, this.nameColor)} `)
+      `${this.#namePad}${color(this.#displayName, this.nameColor)} `,
+    )
   }
 
   #printPrompt() {
     process.stdout.write(
-      `${this.#promptPad}${color(this.#prompt, this.promptColor)} `)
+      `${this.#promptPad}${color(this.#prompt, this.promptColor)} `,
+    )
   }
 }

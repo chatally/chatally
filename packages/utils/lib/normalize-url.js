@@ -13,7 +13,7 @@ export function normalizeUrl(input) {
   let url
   try {
     url = new URL(input)
-  } catch (e) {
+  } catch (_e) {
     url = new URL(input, __cwd)
   }
   return url.toString()

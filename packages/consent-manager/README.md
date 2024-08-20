@@ -23,13 +23,13 @@ Use the middleware
 import { ConsoleServer } from '@chatally/console'
 import { Application } from '@chatally/core'
 import { content } from '@chatally/utils'
-import { GdprConsent } from './lib/index.js'
+import { ConsentManager } from '@chatally/consent-manager'
 
 const app = new Application({ log: false })
 
 app //
-  .use(new ConsoleServer("Bot"))
-  .use(new GdprConsent())
+  .use(new ConsoleServer('Bot'))
+  .use(new ConsentManager())
   .use(({ req, res }) => {
     res.write(`You said: ${content(req)}`)
   })

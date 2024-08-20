@@ -62,7 +62,7 @@ new Application({
         res.write(`You sent me an image without any text (${raw.length}bytes, ${req.mimeType}) and I do not recognize it.
   Can you please describe it for me?`)
       }
-    } catch (e) {
+    } catch (_e) {
       res.write(`Something went wrong, I cannot see the image you sent! Can you describe what's in it?
 Image URL: ${req.url}`)
     }

@@ -190,3 +190,9 @@ export declare function getLevel(numeric: number): Level
 export declare function getLevelIndex(level: Level): number
 
 export declare function isLogger(obj: unknown): obj is Logger
+
+export type LoggerInit = Logger | LoggerOptions | string
+
+export declare function getLogger(init?: LoggerInit): Logger
+
+export declare const noLogger: Logger

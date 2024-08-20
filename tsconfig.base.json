@@ -38,9 +38,10 @@
   },
   "include": [
     "./vitest.d.ts",
-    "**/repl.js",
-    "**/lib",
-    "**/src"
+    "packages/*/repl.js",
+    "packages/*/lib",
+    "packages/*/src",
+    "examples/*/src"
   ],
   "exclude": [
     "**/dist/**/*",

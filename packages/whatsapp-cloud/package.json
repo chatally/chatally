@@ -3,13 +3,13 @@
   "type": "module",
   "version": "0.0.9",
   "description": "ChatAlly WhatsApp Cloud Server",
+  "license": "MIT",
   "homepage": "https://chatally.org/reference/servers/whatsapp-cloud/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chatally/chatally.git",
     "directory": "packages/whatsapp-cloud"
   },
-  "license": "MIT",
   "keywords": [
     "chat",
     "chatbot",

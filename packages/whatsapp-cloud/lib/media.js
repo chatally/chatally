@@ -53,7 +53,7 @@ export class Media {
       this.#selectId = db.prepare('SELECT id FROM ids WHERE file = ?')
       this.#insertId = db.prepare('INSERT INTO ids (id, file) VALUES (?, ?)')
       this.#deleteId = db.prepare('DELETE FROM ids WHERE id = ?')
-    } catch (err) {
+    } catch (_e) {
       throw new Error(`Failed to open media database at '${dbPath}'`)
     }
 
@@ -73,7 +73,7 @@ export class Media {
       try {
         await this.#getUrl(id)
         return id
-      } catch (e) {
+      } catch (_e) {
         this.#deleteId.run(id)
       }
     }

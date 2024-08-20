@@ -22,26 +22,26 @@ Use the logger
 
 ```js
 // index.js
-import { BaseLogger } from '@chatally/logger';
+import { BaseLogger } from '@chatally/logger'
 
 class MyClass {
   /** @param {import('@chatally/logger').Logger} log */
   constructor(log) {
-    this.log = log;
+    this.log = log
   }
 
   doSomething() {
-    this.log.debug("I am about to do something");
+    this.log.debug('I am about to do something')
     // do something
-    this.log.info("Just did something.");
+    this.log.info('Just did something.')
   }
 }
 
-const log = new BaseLogger({ name: 'foo' });
-const foo = new MyClass(log);
+const log = new BaseLogger({ name: 'foo' })
+const foo = new MyClass(log)
 // with the default settings from BaseLogger, it logs
 // [<timestamp>] INFO (foo): Just did something.
-foo.doSomething(); 
+foo.doSomething()
 ```
 
 ## Documentation

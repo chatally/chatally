@@ -3,13 +3,13 @@
   "type": "module",
   "version": "0.0.7",
   "description": "ChatAlly nlp.js middleware",
+  "license": "MIT",
   "homepage": "https://chatally.org/reference/middleware/nlpjs/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chatally/chatally.git",
     "directory": "packages/nlpjs"
   },
-  "license": "MIT",
   "keywords": [
     "chat",
     "chatbot",

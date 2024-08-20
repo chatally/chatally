@@ -16,10 +16,11 @@ export function content(msg) {
       )
     case 'action':
       return `${msg.command}: ${msg.title}`
-    case 'buttons':
-      const text = msg.content || "";
-      const actions = msg.actions.map(a => `<${a.command}> ${a.title}`).join('\n');
+    case 'buttons': {
+      const text = msg.content || ''
+      const actions = msg.actions.map(a => `<${a.command}> ${a.title}`).join('\n')
       return ([text, actions].join('\n').trim() || '<buttons>')
+    }
     case 'menu':
       return `${msg.title}: ${msg.content}`
     case 'reaction':

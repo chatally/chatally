@@ -3,8 +3,10 @@ import antfu from '@antfu/eslint-config'
 
 export default antfu(
   {
+    type: 'lib',
     formatters: true,
     astro: true,
+    markdown: false,
     ignores: [
       '**/*-deno-*/**',
       '**/.astro/**',
@@ -19,6 +21,14 @@ export default antfu(
       'node/prefer-global/process': 'off',
       'prefer-arrow-callback': ['error', { allowNamedFunctions: true }],
       'style/brace-style': ['error', '1tbs'],
+      'unused-imports/no-unused-vars': [
+        'error',
+        {
+          'argsIgnorePattern': '^_',
+          'varsIgnorePattern': '^_',
+          'caughtErrorsIgnorePattern': '^_'
+        }
+      ]
     },
   },
   {

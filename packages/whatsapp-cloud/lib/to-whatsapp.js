@@ -27,7 +27,7 @@ export async function toWhatsApp(message, upload) {
               type: 'reply',
               reply: {
                 id: a.command,
-                title: a.title
+                title: a.title,
               },
             })),
           },

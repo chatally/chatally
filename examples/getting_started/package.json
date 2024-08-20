@@ -1,5 +1,5 @@
 {
-  "name": "@chatally/getting_started",
+  "name": "examples_getting_started",
   "type": "module",
   "private": true,
   "description": "ChatAlly \"Getting Started\" example",

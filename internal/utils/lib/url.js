@@ -1,12 +1,12 @@
-import { fileURLToPath } from 'node:url'
 import { basename } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 /** @param {string} url */
 export function fileURLtoFileName(url) {
   try {
     const filename = fileURLToPath(url)
     return basename(filename)
-  } catch (err) {
+  } catch (_e) {
     return basename(url || '')
   }
 }
