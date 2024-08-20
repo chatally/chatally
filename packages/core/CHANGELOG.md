@@ -1,5 +1,13 @@
 # @chatally/core
 
+## 0.0.11
+
+### Patch Changes
+
+- 6eba307: Updated README and package.json files
+- Updated dependencies [6eba307]
+  - @chatally/logger@0.0.9
+
 ## 0.0.10
 
 ### Patch Changes

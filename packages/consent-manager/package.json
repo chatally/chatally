@@ -1,7 +1,7 @@
 {
   "name": "@chatally/consent-manager",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "ChatAlly consent manager middleware to comply with GDPR",
   "license": "MIT",
   "homepage": "https://chatally.org/reference/middleware/consent-manager/",

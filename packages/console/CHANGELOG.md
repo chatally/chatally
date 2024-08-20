@@ -1,5 +1,14 @@
 # @chatally/console
 
+## 0.0.8
+
+### Patch Changes
+
+- 6eba307: Updated README and package.json files
+- Updated dependencies [6eba307]
+  - @chatally/utils@0.0.1
+  - @chatally/core@0.0.11
+
 ## 0.0.7
 
 ### Patch Changes
