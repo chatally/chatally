@@ -4,7 +4,7 @@
  *    A textual description of the message, the actual returned value depends
  *    on the type of message.
  */
-export function describe(msg) {
+export function content(msg) {
   switch (msg.type) {
     case 'text':
       return msg.content
@@ -15,13 +15,11 @@ export function describe(msg) {
         || `location: lon ${msg.longitude} lat ${msg.latitude}`
       )
     case 'action':
-      return `${msg.id}: ${msg.title}`
+      return `${msg.command}: ${msg.title}`
     case 'buttons':
-      return (
-        msg.content
-        || msg.actions.map(a => a.title).join(', ')
-        || '<buttons>'
-      )
+      const text = msg.content || "";
+      const actions = msg.actions.map(a => `<${a.command}> ${a.title}`).join('\n');
+      return ([text, actions].join('\n').trim() || '<buttons>')
     case 'menu':
       return `${msg.title}: ${msg.content}`
     case 'reaction':

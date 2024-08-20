@@ -1,10 +1,10 @@
 # @chatally/nlpjs
 
-## ChatAlly nlp.js Middleware
+**ChatAlly nlp.js Middleware** is a middleware wrapper around a trained nlp.js NLP module and provides a utility function to train an NLP module.
 
 [nlp.js](https://github.com/axa-group/nlp.js) is a FOSS chatbot library provided by the Axa insurance group.
 
-This package provides a middleware wrapper for a trained nlp.js NLP module and a utility function to train an NLP module.
+> This package is meant to be used within a [ChatAlly](https://chatally.org) chatbot application.
 
 ## Documentation
 

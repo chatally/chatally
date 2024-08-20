@@ -1,12 +1,12 @@
-import { describe as describeFn } from './describe.js'
+import { content } from "./content.js"
 
-describe('describe', () => {
+describe('content', () => {
   it('handles unknown message type', () => {
     const msg = {
       type: 'manual',
     }
     // @ts-ignore
-    const actual = describeFn(msg)
+    const actual = content(msg)
     expect(actual).toEqual('unknown message type: {"type":"manual"}')
   })
 })

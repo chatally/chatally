@@ -1,6 +1,6 @@
-import { createInterface as readline } from 'node:readline'
 import { BaseServer } from '@chatally/core'
-import { describe } from '@chatally/utils'
+import { content } from '@chatally/utils'
+import { createInterface as readline } from 'node:readline'
 
 const grey = 30
 const green = 32
@@ -17,14 +17,26 @@ function color(text, color) {
 }
 
 export class ConsoleServer extends BaseServer {
+  #displayName;
+  #prompt;
+  #namePad = "";
+  #promptPad = "";
+
   constructor(name = 'ConsoleServer') {
     super(name)
+    this.#displayName = name;
+    this.#prompt = ">";
+    this.#updatePadding();
   }
 
   /**
    * The name displayed before each message from your bot.
+   * @param {string} displayName 
    */
-  name = 'bot'
+  set displayName(displayName) {
+    this.#displayName = displayName;
+    this.#updatePadding();
+  }
 
   /**
    * The color used to display the name.
@@ -36,8 +48,18 @@ export class ConsoleServer extends BaseServer {
 
   /**
    * The prompt displayed before the user input.
+   * @param {string} prompt
    */
-  prompt = '>'
+  set prompt(prompt) {
+    this.#prompt = prompt;
+    this.#updatePadding();
+  }
+
+  #updatePadding() {
+    const max = Math.max(this.#displayName.length, this.#prompt.length);
+    this.#namePad = ' '.repeat(max - this.#displayName.length);
+    this.#promptPad = ' '.repeat(max - this.#prompt.length);
+  }
 
   /**
    * The color used to display the prompt.
@@ -104,7 +126,7 @@ Waiting for your messages...`
     this.dispatch(line, {
       onWrite: (msg) => {
         this.#printName()
-        process.stdout.write(`${color(describe(msg), this.responseColor)}\n`)
+        process.stdout.write(`${color(content(msg), this.responseColor)}\n`)
       },
       onFinished: () => {
         this.#printPrompt()
@@ -121,16 +143,12 @@ Waiting for your messages...`
   }
 
   #printName() {
-    const length
-      = Math.max(this.name.length, this.prompt.length) - this.name.length
-    const padStart = ''.padStart(length, ' ')
-    process.stdout.write(`${padStart}${color(this.name, this.nameColor)} `)
+    process.stdout.write(
+      `${this.#namePad}${color(this.#displayName, this.nameColor)} `)
   }
 
   #printPrompt() {
-    const length
-      = Math.max(this.name.length, this.prompt.length) - this.prompt.length
-    const padStart = ' '.repeat(length)
-    process.stdout.write(`${padStart}${color(this.prompt, this.promptColor)} `)
+    process.stdout.write(
+      `${this.#promptPad}${color(this.#prompt, this.promptColor)} `)
   }
 }

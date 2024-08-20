@@ -18,7 +18,7 @@ export type Action = {
 } & _Action
 
 interface _Action {
-  id: string
+  command: string
   title: string
   description?: string
 }

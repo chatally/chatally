@@ -1,8 +1,14 @@
 # @chatally/core
 
-## ChatAlly Core
+**ChatAlly Core** contains the application components and types for creating a chatbot application. It resembles the structure of an Express web server, but for chat applications.
 
-## Getting started
+The whole framework is very modular and extendible. It provides some middleware and servers (which are used to communicate with chat clients like WhatsApp or Signal), that you can use to create your individual chat application.
+
+[See all ChatAlly packages](https://www.npmjs.com/search?q=chatally).
+
+Help the community and publish your own ChatAlly modules with the tag `chatally`.
+
+## Usage
 
 Install the package and for testing a console chat server
 

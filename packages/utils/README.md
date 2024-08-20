@@ -1,8 +1,10 @@
 # @chatally/utils
 
-## ChatAlly Utilities
+**ChatAlly Utilities** that are used througout the ChatAlly application, but are also valuable in your own chatbot applications.
 
-## Getting started
+> This package is meant to be used within a [ChatAlly](https://chatally.org) chatbot application.
+
+## Usage
 
 Install the package
 
@@ -10,23 +12,6 @@ Install the package
 npm install @chatally/utils
 ```
 
-Use the application
-
-```js
-// index.js
-import { Application } from '@chatally/core'
-import { ConsoleServer } from '@chatally/console'
-
-new Application({ log: false }) //
-  .use(new ConsoleServer())
-  .use(({ req, res }) => {
-    if (res.isWritable) {
-      res.write(`You said '${req.text}'`)
-    }
-  })
-  .listen()
-```
-
 ## Documentation
 
-Find the full documentation at https://chatally.org/guides.
+Find the full documentation at https://chatally.org/reference/core/utils.

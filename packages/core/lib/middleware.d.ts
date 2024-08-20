@@ -6,7 +6,7 @@ import type { IMediaServer } from './media.js'
 /**
  * Sync or async middleware.
  */
-export type Middleware<D> =
+export type Middleware<D = unknown> =
   | ((params: Context<D>) => unknown)
   | ((params: Context<D>) => Promise<unknown>)
 

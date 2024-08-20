@@ -3,13 +3,21 @@
   "type": "module",
   "version": "0.0.7",
   "description": "ChatAlly Console Server",
+  "homepage": "https://chatally.org/reference/servers/console/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatally/chatally.git",
+    "directory": "packages/console"
+  },
   "license": "MIT",
   "keywords": [
     "chat",
+    "chatbot",
+    "server",
+    "channel",
     "console",
     "prompt",
-    "readline",
-    "server"
+    "readline"
   ],
   "exports": {
     ".": {

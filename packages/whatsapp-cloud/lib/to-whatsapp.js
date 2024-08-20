@@ -25,7 +25,10 @@ export async function toWhatsApp(message, upload) {
           action: {
             buttons: message.actions.map(a => ({
               type: 'reply',
-              reply: a,
+              reply: {
+                id: a.command,
+                title: a.title
+              },
             })),
           },
         },
@@ -76,7 +79,11 @@ export async function toWhatsApp(message, upload) {
             button: message.title,
             sections: message.sections.map(s => ({
               title: s.title,
-              rows: s.actions,
+              rows: s.actions.map(a => ({
+                id: a.command,
+                title: a.title,
+                description: a.description,
+              })),
             })),
           },
         },

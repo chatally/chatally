@@ -3,16 +3,22 @@
   "type": "module",
   "version": "0.0.7",
   "description": "ChatAlly nlp.js middleware",
+  "homepage": "https://chatally.org/reference/middleware/nlpjs/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatally/chatally.git",
+    "directory": "packages/nlpjs"
+  },
   "license": "MIT",
   "keywords": [
     "chat",
-    "intent recognition",
+    "chatbot",
     "middleware",
     "natural language processing",
-    "nlp.js",
     "nlp",
     "nlu",
-    "wrapper"
+    "intent recognition",
+    "nlp.js"
   ],
   "exports": {
     ".": {

@@ -3,16 +3,22 @@
   "type": "module",
   "version": "0.0.8",
   "description": "ChatAlly Logger Facade",
+  "homepage": "https://chatally.org/reference/core/logger/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatally/chatally.git",
+    "directory": "packages/logger"
+  },
   "license": "MIT",
   "keywords": [
     "chat",
-    "facade",
+    "chatbot",
     "log",
-    "log4js",
     "logger",
     "logging",
-    "pino",
-    "winston"
+    "winston",
+    "log4js",
+    "pino"
   ],
   "exports": {
     ".": {

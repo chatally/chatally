@@ -1,5 +1,5 @@
-import type { EventEmitter } from 'node:events'
 import type { Level, Logger, LoggerOptions } from '@chatally/logger'
+import type { EventEmitter } from 'node:events'
 import type { ChatRequest } from './chat-request.d.ts'
 import type { ChatResponse } from './chat-response.d.ts'
 import type { MediaOptions } from './media.js'
@@ -11,9 +11,7 @@ import type { Server } from './server.d.ts'
  *
  * Dispatches incoming requests to registered middleware.
  */
-export declare class Application<
-  D extends Record<string, unknown>,
-> extends EventEmitter<ApplicationEvents<D>> {
+export declare class Application<D> extends EventEmitter<ApplicationEvents<D>> {
   /**
    * Create a ChatAlly application that dispatches incoming chat requests from
    * all registered servers to all registered middleware.

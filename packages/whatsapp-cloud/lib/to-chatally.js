@@ -31,15 +31,15 @@ export function toChatally(wa) {
     case 'order':
     case 'referral':
     default:
-    {
-      /** @type {import('@chatally/core').Custom} */
-      return {
-        ...message,
-        type: 'custom',
-        schema: 'whatsappcloud',
-        custom: wa,
+      {
+        /** @type {import('@chatally/core').Custom} */
+        return {
+          ...message,
+          type: 'custom',
+          schema: 'whatsappcloud',
+          custom: wa,
+        }
       }
-    }
   }
 }
 
@@ -159,12 +159,15 @@ function interactive(wa) {
   if (wa.interactive.type === 'button_reply') {
     return {
       type: 'action',
-      ...wa.interactive.button_reply,
+      command: wa.interactive.button_reply.id,
+      title: wa.interactive.button_reply.title,
     }
   } else {
     return {
       type: 'action',
-      ...wa.interactive.list_reply,
+      command: wa.interactive.list_reply.id,
+      title: wa.interactive.list_reply.title,
+      description: wa.interactive.list_reply.description,
     }
   }
 }

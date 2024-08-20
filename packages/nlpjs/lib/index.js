@@ -1,6 +1,6 @@
-import { existsSync } from 'node:fs'
-import { describe } from '@chatally/utils'
+import { content } from '@chatally/utils'
 import { dockStart } from '@nlpjs/basic'
+import { existsSync } from 'node:fs'
 
 /**
  * @param {import('@chatally/logger').Logger
@@ -96,7 +96,7 @@ export function nlpjsMiddleware(nlp, options) {
     [name]: async ({ req, res, data }) => {
       if (!res.isWritable)
         return
-      const result = await nlp.process('en', describe(req))
+      const result = await nlp.process('en', content(req))
       data[name] = result
       if (result.answer) {
         write(res, result.answer)

@@ -1,6 +1,6 @@
 import { Application } from '@chatally/core'
 import { BaseLogger } from '@chatally/logger'
-import { describe } from '@chatally/utils'
+import { content } from '@chatally/utils'
 import { WhatsAppCloud } from './lib/index.js'
 
 /**
@@ -47,7 +47,7 @@ new Application({ log }) //
   .use(whatsapp)
   .use(function echo({ req, res }) {
     if (res.isWritable) {
-      res.write(`You said '${describe(req)}' and I don't know what it means.`)
+      res.write(`You said '${content(req)}' and I don't know what it means.`)
     }
   })
   .listen()

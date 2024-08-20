@@ -1,12 +1,12 @@
 # @chatally/console
 
-## ChatAlly Console Server
+**ChatAlly Console Server** that reads input from the console, dispatches it to a chat application and outputs responses on the console.
 
-A console chat server that reads input from the console, dispatches it to a chat application and outputs responses on the console.
+You can configure the `displayName`, `prompt`, `greeting`, `goodBye` and the `stopToken` simply by setting these properties. There are also some colors you can configure: `nameColor`, `promptColor` and `responseColor`.
 
-You can configure the `name`, `prompt`, `greeting`, `goodBye` and the `stopToken` simply by setting these properties. There are also some colors you can configure: `nameColor`, `promptColor` and `responseColor`.
+> This package is meant to be used within a [ChatAlly](https://chatally.org) chatbot application.
 
-## Getting started
+## Usage
 
 Install the package
 

@@ -5,11 +5,6 @@
   "description": "Your toolbox for self-hosted chat services",
   "author": "info@chatally.org",
   "license": "MIT",
-  "keywords": [
-    "chat",
-    "whatsapp",
-    "signal"
-  ],
   "workspaces": [
     "apps/*",
     "config/*",
@@ -49,5 +44,6 @@
     "turbo": "^2.0.6",
     "typescript": "^5.4.4",
     "vitest": "^1.6.0"
-  }
+  },
+  "dependencies": {}
 }
