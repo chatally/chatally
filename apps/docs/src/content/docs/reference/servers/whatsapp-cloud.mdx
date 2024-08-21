@@ -2,24 +2,37 @@
 title: WhatsApp Cloud
 ---
 
-WhatsApp Cloud is a ChatAlly server that integrates the WhatsApp endpoints
+import { Aside } from '@astrojs/starlight/components';
+import ModuleLinks from '../../../../components/ModuleLinks.astro';
+
+<ModuleLinks id="whatsapp-cloud" />
+
+WhatsApp Cloud is a ChatAlly server that integrates the _WhatsApp Cloud API_ endpoints
 [Webhooks](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks),
 [Messages](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages) and
-[Media](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media).
+[Media](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media) into one server module, that can be used in a ChatAlly application.
+
+<Aside>
+⚠️ The WhatsApp Cloud API is only available to WhatsApp Business accounts. One phone mumber can only be registered as business account _or_ as a personal number for the WhatsApp app. So, you will probably need a new phone number for your chatbot.
+
+🧪 However, for test purposes, you can use a WhatsApp test number, where you can add up to five users, that can communicate with this number.
+
+🚧 There are other limitations, that apply to WhatsApp business accounts, e.g. you cannot add them to groups and you cannot send out initiative messages, except for approved templates.
+</Aside>
 
 ## Usage
 
 Install the required packages
 
 ```sh
-npm install @chatally/core @chatally/whatsapp-cloud
+npm install @chatally/whatsapp-cloud
 ```
 
 Create a main module, that sets up the WhatsApp cloud server and integrates it with your ChatAlly application.
 
 ```js
 import { Application } from '@chatally/core'
-import { WhatsAppCloud } from './lib/index.js'
+import { WhatsAppCloud } from '@chatally/whatsapp-cloud'
 
 const phoneNumberId = 'YOUR PHONE NUMBER'
 const accessToken = 'YOUR ACCESS TOKEN'
@@ -37,28 +50,28 @@ new Application() //
   .use(whatsapp)
   .use(({ req, res }) => {
     if (res.isWritable) {
-      res.write(`You said '${req.text}' and I don't know what it means.`)
+      res.write(`You said '${req.content}' and I don't know what it means.`)
     }
   })
   .listen()
 ```
 
-`use(...)` registers the WhatsApp cloud server as a [server](https://chatally.org/reference/core/servers) in your ChatAlly application and hence connects it with your response-generating middleware.
+In this example, we fully configure the WhatsApp Cloud server with a Javascript object. You could also provide options as environment variable and from a file.
 
-The ChatAlly application will be calling the method `listen(...)` to start the integrated Webhooks endpoint. Once this is started, you can [register your WhatsApp business account](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks) to receive notifications, whenever your WhatsApp phone number receives a message or a status update.
+The WhatsApp Cloud server starts a webserver in the background, that provides the webhooks callback endpoint to the WhatsApp cloud.
 
-Registration is only required once.
+Once you have this [deployed to a publicly accessible web server](/guides/deployment), you can [register your WhatsApp business account](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks) to receive notifications for incoming messages or status updates. Registration is only required once.
 
 ## Configuration
 
 To set up a WhatsApp Cloud server, you must provide some configuration, either explicitly as a Javascript object, a configuration file, environment variables or a combination of it. A minimal configuration must contain:
 
-- `graphApi.phoneNumberId` The id of the registered WhatsApp number.
+- `graphApi.phoneNumberId` The id of the registered WhatsApp number (this is **not** the phone number itself).
 - `graphApi.accessToken` A cryptographic token used as `Authorization: Bearer` in each call to an endpoint. See the Facebook documentation on [how to create access tokens](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started#access-tokens).
 - `webhooks.verifyToken` A shared secret used to [register the webhooks endpoint](https://developers.facebook.com/docs/graph-api/webhooks/getting-started#verification-requests) with your WhatsApp business account.
 - `webhooks.secret` A cryptographic token to verify the payload of received [event notifications](https://developers.facebook.com/docs/graph-api/webhooks/getting-started#event-notifications) on the webhooks endpoint.
 
-This is an example configuration file (`whatsapp-cloud.config.yaml`) with all configuration options:
+There are some more options. This is an example configuration file (`whatsapp-cloud.config.yaml`) with all configuration options and there default values:
 
 ```yaml
 # name: WhatsAppCloud
@@ -66,10 +79,6 @@ This is an example configuration file (`whatsapp-cloud.config.yaml`) with all co
 webhooks:
   # [Optional] Port to listen on [`default=3000`]
   # port: 3000
-  # [Optional] directory to static assets to be served at assetsPath
-  # assetsDir: ./assets
-  # [Optional] file path to static assets, has no effect if assetsDir is not set
-  # assetsPath: "/assets"
   # Look these up in your WhatsApp Business settings
   # Token to verify webhooks registration
   verifyToken: <YOUR VERIFY TOKEN>
@@ -98,6 +107,37 @@ media:
 
 ## Reference
 
+In your application, you can use some functionality of the integrated endpoints through the server's interface.
+
+### `async send(to: string, ...outgoing: ChatMessage[]): Promise<void>`
+
+Send message(s) to recipient.
+
+Messages are sent "in order" once the Webhooks server has been started
+with a call to `listen()`, i.e. the next message to the same recipient is
+only sent out, once a `delivered` status has been received.
+
+- `to` recipient's phone number, with country code but without `+`.
+- `...outgoing` one or more messages to send.
+
+<Aside>
+🚧 Remember the above limitations. You can only send messages to a user within a 24 hour window, if the user has initiated the conversation.
+</Aside>
+
+### `async upload(file: string): Promise<string>`
+
+Upload a file to Facebook's media endpoint.
+
+- `file` Path to the file to be uploaded.
+- `@returns` the media id that can be referenced in messages
+
+### `async download(id): Promise<string>`
+
+- `id` Media id of the asset to be downloaded to `downloadDir`.
+- `@returns` the file path to the downloaded file
+
+## Running standalone
+
 If you do not use the WhatsApp Cloud server in a ChatAlly application, you have to register a `dispatch` method explicitly and call `listen()` to start the server.
 
 ### `set dispatch(dispatch: Dispatch)`
@@ -119,33 +159,6 @@ This call is long-running and will only return, once the server has stopped. You
 - `port` [Optional] Port to listen on with the Webhooks server.
 
 See https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks.
-
----
-
-Independent of the way you integrate the server, you can use some functionality of the integrated endpoints through the server's interface.
-
-### `async send(to: string, ...outgoing: ChatMessage[]): Promise<void>`
-
-Send message(s) to recipient.
-
-Messages are sent "in order" once the Webhooks server has been started
-with a call to `listen()`, i.e. the next message to the same recipient is
-only sent out, once a `delivered` status has been received.
-
-- `to` recipient's phone number, with country code but without `+`.
-- `...outgoing` one or more messages to send.
-
-### `async upload(file: string): Promise<string>`
-
-Upload a file to Facebook's media endpoint.
-
-- `file` Path to the file to be uploaded.
-- `@returns` the media id that can be referenced in messages
-
-### `async download(id): Promise<string>`
-
-- `id` Media id of the asset to be downloaded to `downloadDir`.
-- `@returns` the file path to the downloaded file
 
 ## See also the WhatsApp Business Documentation
 

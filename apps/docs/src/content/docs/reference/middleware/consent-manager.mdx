@@ -1,0 +1,65 @@
+---
+title: Consent Manager
+---
+
+import ModuleLinks from '../../../../components/ModuleLinks.astro';
+
+<ModuleLinks id="consent-manager" />
+
+The Consent Manager makes it easy, to require from each new user of the chatbot, to consent to automatic processing of their data before proceeding. This allows you to comply with your local data protection laws, e.g. GDPR or DSGVO.
+
+## Usage
+
+Install the required packages
+
+```sh
+npm install @chatally/consent-manager
+```
+
+Create a main module, that sets up the Consent Manager and integrates it with your ChatAlly application.
+
+```js
+// index.js
+import { ConsoleServer } from '@chatally/console'
+import { Application } from '@chatally/core'
+import { content } from '@chatally/utils'
+import { ConsentManager } from '@chatally/consent-manager'
+
+const app = new Application({ log: false })
+
+app //
+  .use(new ConsoleServer('Bot'))
+  .use(new ConsentManager())
+  .use(({ req, res }) => {
+    res.write(`You said: ${content(req)}`)
+  })
+  .listen()
+```
+
+The consent manager will repeat the request for consent until a new user consents. It will then store the message id and a timestamp for the user's consent and continue the conversation with the initial message from the user.
+
+## Configuration
+
+The Consent Manager has meaningful defaults and will ask new users for consent in a fairly generic manner (in English). Consent data will be stored in a local SQLite database.
+
+You can configure the following aspects of the Consent Manager.
+
+```ts
+export interface Options {
+  /** Path to the database file */
+  path: string
+  /**
+   * Message to ask for consent.
+   *
+   * If you use a button message, make sure that the first button is the accept
+   * button or define the acceptCommand
+   */
+  askForConsent: string | ChatMessage
+  /** Command id for acceptance, default "accept" */
+  acceptCommand: string
+  /** Regular expression for acceptance, default "/I accept/i" */
+  acceptRegExp: RegExp
+  /** Message to thank for consent */
+  thankForConsent: string | ChatMessage
+}
+```

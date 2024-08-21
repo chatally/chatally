@@ -27,7 +27,7 @@ new Application({ log: false }) //
   .use(new ConsoleServer())
   .use(({ req, res }) => {
     if (res.isWritable) {
-      res.write(`You said '${req.text}'`)
+      res.write(`You said '${req.content}'`)
     }
   })
   .listen()

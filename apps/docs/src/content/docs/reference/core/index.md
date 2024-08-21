@@ -2,15 +2,19 @@
 title: "Core"
 ---
 
-The core modules are published as [@chatally/core](https://www.npmjs.com/package/@chatally/core) on npmjs.com. Find the [sources on Github](https://github.com/chatally/chatally/tree/main/packages/core).
+A web application starts off with an HTTP server that creates a request and an empty response object and hands it over to the application framework, e.g. Express or Koa to generate a response.
 
-## TLDR;
+A ChatAlly chat application is very similar: It starts off with a chat server that creates a request and response object and hands it over to the ChatAlly application. The application dispatches it to all the middleware that should generate the response and returns it to the server to send it out to the user client.
 
-If you want to get your fingers dirty quickly, go to the [Getting started](/guides) guide. Or check out any of the [examples](/examples)
+> The core module is published as [@chatally/core](https://www.npmjs.com/package/@chatally/core) on npmjs.com. Find the [sources on Github](https://github.com/chatally/chatally/tree/main/packages/core).
+
+**TLDR;**
+
+If you want to get your fingers dirty quickly, go to the [Getting started](/guides) guide. Or check out any of the [examples](/examples).
 
 ## Structure
 
-The core consists of the following modules:
+The core consists of the following parts:
 
 - Class [`Application`](/reference/core/application): Instantiate an application, configure it by registering your server(s) and middleware. The application receives requests and dispatches them to all middleware. It provides error handling and logging.
 - [Servers](/reference/core/servers) are the bridge to proprietary chat protocols and clients. They must allow registering the application as dispatcher and to be started by a call to `listen()`. Servers trigger the application on incoming messages and are responsible to deliver outgoing messages.

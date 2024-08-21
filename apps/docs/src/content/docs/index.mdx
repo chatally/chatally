@@ -3,12 +3,12 @@ title: Chatbots made easy
 description: Your toolbox for self-hosted chat services
 template: splash
 hero:
-  tagline: ChatAlly | Your toolbox for self-hosted chat services
+  tagline: Unopinionated, minimalist chat framework for Node.js
   image:
     file: ../../assets/green-bot.png
   actions:
     - text: Get started
-      link: /guides/
+      link: /guides
       icon: rocket
       variant: primary
     - text: Read the blog
@@ -18,16 +18,72 @@ hero:
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-ChatAlly is a [collection of modules](https://www.npmjs.com/search?q=%40chatally) that help you build your own self-hosted chatbots. If you know, how to build websites you won't have much trouble to build chatbots with ChatAlly. It is implemented in JavaScript, so you do not have to learn another language when already learning a new technology. But we also support integrating solutions written in Python or other languages.
+## Hosting your own chatbot is as easy as hosting an _Express.js_ application
+
+If you are a web developer and know how to host a web application with Express and [node.js](https://nodejs.org), ChatAlly will only surprise you with it's ease of use.
+
+You won't need to start from scratch and learn a new language with all of it's development environment. Build on the skills that you already have.
+
+Install two npm packages...
+
+```bash
+npm install @chatally/core @chatally/console
+```
+
+...create one Javascript file...
+
+```js
+// index.js
+import { Application } from '@chatally/core'
+import { ConsoleServer } from '@chatally/console'
+
+new Application({ log: false }) //
+  .use(new ConsoleServer("ChatAlly"))
+  .use(({ req, res }) => {
+    if (res.isWritable) {
+      res.write(`You said '${req.content}'`)
+    }
+  })
+  .listen()
+```
+
+...and start chatting with your bot on the console
+
+!["Screenshot of console chat"](../../assets/first-chat.png)
+
+For a full example, see our [Getting Started](/guides/) guide.
+
+## Integrate your chatbot with WhatsApp, Signal and AI without crazy hosting costs
 
 <CardGrid stagger>
+  <Card title="Modules" icon="module">
+    ChatAlly is a minimal and flexible Node.js chat application framework that
+    provides a robust set of features for your chatbot. It consists of a
+    [collection of npm modules](https://www.npmjs.com/search?q=chatally) that
+    make building your own self-hosted chatbots quick and easy.
+  </Card>
   <Card title="Integration" icon="integration">
-    ChatAlly is all about integration: Use your machine learning framework of
-    choice to create a natural chat experience, e.g. Huggingface's
-    [transformers.js](https://huggingface.co/docs/transformers.js/en/index),
-    [TensorFlow.js](https://www.tensorflow.org/js) or other more dedicated chat
-    frameworks like
+    Connect your chatbot to [WhatsApp](/reference/servers/whatsapp-cloud) or
+    [Signal](/reference/servers/signal), so your users can communicate with
+    your application easily. Use one of the many modules readily available.
+    Create your own natural chat experience with open-source AI, e.g. with
+    [TensorFlow.js](/reference/middleware/tensorflow) or other more dedicated
+    chat frameworks like 
     [nlp.js](https://github.com/axa-group/nlp.js?tab=readme-ov-file#nlpjs).
+  </Card>
+  <Card title="Middleware" icon="middleware">
+    It is also easy to build your own integration, e.g. for Huggingface's
+    [transformers.js](https://huggingface.co/docs/transformers.js/en/index).
+    Natural language processing is only one part, add a consent manager, log
+    training data from real chats, integrate your knowledge base or speech
+    features. If you can't find, what you need,
+    [write your own middleware](/guides/middleware) easily.
+  </Card>
+  <Card title="Community" icon="community">
+    Share your own middlware with others, get help from experienced users, share
+    ideas for new features or fix a bug. Checkout our [Github
+    project](https://github.com/orgs/chatally/projects/1/views/3) or join our
+    [Discord server](https://discord.gg/Sb8ECsQCgr).
   </Card>
   <Card title="Documentation" icon="docs">
     ChatAlly gives you all the tools to [get started quickly](/guides) and
@@ -36,38 +92,13 @@ ChatAlly is a [collection of modules](https://www.npmjs.com/search?q=%40chatally
     an explicit work package in our project and will account for at least half
     of the effort. Check out our guides and [examples](/examples).
   </Card>
-  <Card title="Servers" icon="server">
-    Connecting your chatbot to the channels that your users use is often a
-    challenging task in the beginning, because of the proprietary protocols
-    being used. That's why we offer reference implementation of
-    [servers](/reference/servers), talking to your WhatsApp, Signal or web
-    channels.
-  </Card>
-  <Card title="Middleware" icon="middleware">
-    Easily integrate all kinds of [middleware](/reference/middleware) to create
-    a rich user experience. Natural language processing is only one part, add a
-    consent manager, log training data from real chats, integrate your knowledge
-    base or speech features. If you can't find, what you need, [write your own
-    middleware](/guides/middleware) easily.
-  </Card>
-  <Card title="Community" icon="community">
-    Share your own middlware with others, get help from experienced users, share
-    ideas for new features or fix a bug. Checkout our [Github
-    project](https://github.com/orgs/chatally/projects/1/views/3) or join our
-    Discord server (soon to come).
-  </Card>
 </CardGrid>
 
-## Who is behind ChatAlly
+## Contribute to ChatAlly
 
-For now it is only me, Christian, co-founder of the non-profit organization [dooiy](https://dooiy.org), that provides step-by-step instructions for _good hacks, that make life easier_. dooiy's focus audience are users in underserved communities, i.e. mainly people in slums or rural areas living in extreme poverty.
+All contributions are welcome: Join the community on
+[Discord](https://discord.gg/Sb8ECsQCgr), provide feedback or bug fixes on
+[Github](https://github.com/chatally/chatally/issues), provide more usage
+examples, provide interesting middleware or another server (e.g. Telegram).
 
-In this context, for a few reasons, we were looking for an easy way to distribute these instructions via WhatsApp. Only to find out, that this becomes very expensive or complicated, if you want to do it right and according to European data protection laws. Because of lack of money, we chose the difficult route and implemented our own solution that allows us, to (fairly) easily create chatbots from Markdown files. It is currently being prototyped in Mali with an instruction from [CoolVeg](https://www.coolveg.org/) for a [clay pot cooler](https://wa.me/491744899585/?text=%2Fcarl).
-
-I proposed to the [Prototype Fund](https://prototypefund.de) to enhance this solution and make it free open-source. This is how ChatAlly was born. I am currently in the process of developing the first version of ChatAlly and am looking for contributors and users to help make it a success, so that it can empower small organizations and communities to deploy their own chatbots affordably and GDPR-compliant.
-
-While there may seem to be open-source or free platforms at first glance, the quotas of free offerings are severely limited, and open-source typically only refers to the Software Development Kit (SDK). Data control usually lies with the platform providers. True FOSS alternatives such as frameworks and libraries for chatbots are complex to set up and do not support seamless integration with popular messenger clients.
-
-With ChatAlly, our aim is to bring these components together into a plug-and-play solution that can be easily self-hosted.
-
-[Impressum](/impressum)
+[About us](/about) | [Impressum](/impressum)

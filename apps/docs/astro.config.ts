@@ -1,5 +1,5 @@
-import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
+import { defineConfig } from 'astro/config'
 import blog from 'starlight-blog'
 
 // https://astro.build/config
@@ -38,6 +38,7 @@ export default defineConfig({
               items: [
                 { label: 'Overview', link: 'reference/core' },
                 { label: 'Application', link: 'reference/core/application' },
+                { label: 'Servers', link: 'reference/core/servers' },
                 { label: 'Middleware', link: 'reference/core/middleware' },
                 {
                   label: 'Context',

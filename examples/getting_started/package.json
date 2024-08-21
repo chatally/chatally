@@ -11,7 +11,8 @@
   "dependencies": {
     "@chatally/console": "*",
     "@chatally/core": "*",
-    "@chatally/nlpjs": "*"
+    "@chatally/nlpjs": "*",
+    "@chatally/utils": "*"
   },
   "devDependencies": {}
 }

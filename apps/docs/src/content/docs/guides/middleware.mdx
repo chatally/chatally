@@ -1,0 +1,72 @@
+---
+title: Writing Middleware
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A ChatAlly application consists of one or more servers that connect the application to external clients, like WhatsApp, Signal or websockets, and middleware. The middleware is responsible for processing the request from any server and eventually generating a response. The work can be shared between all the middleware modules.
+
+## Execution context
+
+All middleware modules are provided with an application context. The context contains the incoming request and a response object, that can be used to transmit outgoing messages.
+
+See the [reference documentation](/reference/core/middleware#context) for details.
+
+## async, await next() and execution order
+
+All modules are executed in order. Modules can be **synchronous or asynchronous** and will be awaited by the application before continuing with the next module.
+
+In the upstream leg of the processing pipeline you could add middleware that analyzes the request or prepares data and puts it into the processing context. You could then add some middleware that manages the dialog flow and finally some modules that generate a response and finalize it.
+
+The following example demonstrates different ways to use the execution order of middleware modules and how they can exchange data throughout the request handling.
+
+```js
+import { ConsoleServer } from '@chatally/console';
+import { Application } from '@chatally/core';
+
+/**
+ * Small helper to demonstrate async execution
+ * @param {number} seconds 
+ */
+async function sleep(seconds) {
+  await new Promise(resolve => setTimeout(resolve, seconds * 1000))
+}
+
+new Application({
+  // You should initialize data, to have type checking in the middleware
+  data: {
+    aName: "",
+    bName: "",
+  }
+}) //
+  .use(new ConsoleServer("ChatAlly"))
+  .use(async function a({ res, next, data }) {
+    // You can await promises in your middleware,
+    // your middleware will also be awaited by the application
+    await sleep(1);
+    res.write("My name is Anne. What is your name?");
+    data.aName = "Anne";
+    // Wait for all other downstream modules and execute the rest of this
+    // middleware after them (on the downstream leg)
+    await next();
+    // Results from following middleware should now be accessible
+    if (data.bName) {
+      res.write(`I guess ${data.bName} said something, too.`)
+    }
+  })
+  .use(async function b({ res, data, log }) {
+    // Define an async background task
+    const bgTask = async () => {
+      await sleep(2);
+      log.info("Something happened in the background.");
+    };
+    // Do not await background tasks
+    bgTask();
+    await sleep(1);
+    res.write("My name is Bob.");
+    data.bName = "Bob";
+  })
+  .listen()
+```
+
+You can even execute middleware after a request has been ended, e.g. for logging data.

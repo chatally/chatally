@@ -1,0 +1,20 @@
+---
+import { Icon } from '@astrojs/starlight/components'
+
+let { id, npmUrl, githubUrl } = Astro.props
+npmUrl ??= `https://www.npmjs.com/package/@chatally/${id}`
+githubUrl ??= `https://github.com/chatally/chatally/tree/main/packages/${id}`
+---
+
+<div>
+  <a href={githubUrl}><Icon name="github" color="#00ff00" size="1.6rem" /></a>
+  <a href={npmUrl}><Icon name="seti:npm" color="#00ff00" size="2rem" /></a>
+</div>
+
+<style>
+  div {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+</style>

@@ -37,7 +37,7 @@ new Application() //
   .use(whatsapp)
   .use(({ req, res }) => {
     if (res.isWritable) {
-      res.write(`You said '${req.text}' and I don't know what it means.`)
+      res.write(`You said '${req.content}' and I don't know what it means.`)
     }
   })
   .listen()
