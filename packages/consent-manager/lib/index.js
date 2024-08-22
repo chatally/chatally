@@ -28,7 +28,8 @@ export function ConsentManager(options = {}) {
   let acceptRegExp = options.acceptRegExp
   if (!acceptRegExp) {
     if (acceptAction) {
-      acceptRegExp = new RegExp(acceptAction.title, 'i')
+      const { ascii, nonascii } = filterAscii(acceptAction.title);
+      acceptRegExp = [new RegExp(ascii, 'i'), new RegExp(nonascii, 'i')]
     } else {
       acceptRegExp = /I accept/i
     }
@@ -42,7 +43,14 @@ export function ConsentManager(options = {}) {
    */
   function isConsent(req) {
     if (req.type === 'text') {
-      return acceptRegExp?.test(req.content) || false
+      if (req.content === acceptCommand || `<${req.content}>` === acceptCommand) {
+        return true;
+      }
+      if (Array.isArray(acceptRegExp)) {
+        return acceptRegExp.findIndex(regex => regex.test(req.content)) >= 0
+      } else {
+        return acceptRegExp?.test(req.content) || false
+      }
     } else if (req.type === 'action') {
       return req.command === acceptCommand
     } else if (req.type === 'reaction') {
@@ -97,4 +105,20 @@ function findAcceptAction(msg, command) {
   } else {
     return msg.actions[0]
   }
+}
+
+/** @param {string} input */
+function filterAscii(input) {
+  let ascii = "";
+  let nonascii = "";
+  for (var i = 0; i < input.length; i++) {
+    if (input.charCodeAt(i) <= 127) {
+      ascii += input.charAt(i);
+    } else {
+      nonascii += input.charAt(i);
+    }
+  }
+  ascii = ascii.trim();
+  nonascii = nonascii.trim();
+  return { ascii, nonascii };
 }

@@ -13,7 +13,7 @@ export interface Options {
   /** Command id for acceptance, default "accept" */
   acceptCommand: string
   /** Regular expression for acceptance, default "/I accept/i" */
-  acceptRegExp: RegExp
+  acceptRegExp: RegExp | RegExp[]
   /** Message to thank for consent */
   thankForConsent: string | ChatMessage
 }
