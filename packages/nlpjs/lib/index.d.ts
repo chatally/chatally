@@ -69,4 +69,15 @@ interface Options {
    * [`default=false`]
    */
   end?: boolean
+  /**
+   * [Optional] Threshold for confidence score that must be reached before answering to the request, must be between 0 and 1.
+   * [`default=0.8`]
+   */
+  threshold?: number
+  /**
+   * [Optional] Indicate, whether NLP should only generate an answer if there 
+   * is none, yet
+   * [`default=false`]
+   */
+  onlyEmptyResponse?: boolean
 }

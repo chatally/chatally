@@ -1,6 +1,6 @@
-import { existsSync } from 'node:fs'
 import { content } from '@chatally/utils'
 import { dockStart } from '@nlpjs/basic'
+import { existsSync } from 'node:fs'
 
 /**
  * @param {import('@chatally/logger').Logger
@@ -74,17 +74,17 @@ function isLogger(obj) {
  * threshold. It will not end the response.
  *
  * @param {import('@nlpjs/basic').Nlp} nlp The trained NLP module
- * @param {object} [options] Options
- * @param {string} [options.name] Optional name for the middleware
- *   function. Default is 'nlp.js'. NOTE: Result data from the NLP process will
- *   be put into the context under this name.
- * @param {boolean} [options.end] Indicates, whether an answer above the
- *   threshold should end the response
+ * @param {import('./index.d.ts').Options} [options] Options
  * @returns {import('@chatally/core').Middleware<{}>}
  *    The trained nlp.js module wrapped in a ChatAlly middleware
  */
 export function nlpjsMiddleware(nlp, options) {
-  const { name = 'nlp.js', end = false } = options || {}
+  const {
+    name = 'nlp.js',
+    end = false,
+    threshold = 0.8,
+    onlyEmptyResponse = false,
+  } = options || {}
   const write = end //
     // @ts-expect-error No typing required
     ? (res, msg) => res.end(msg)
@@ -94,14 +94,20 @@ export function nlpjsMiddleware(nlp, options) {
   const obj = {
     /** @type {import('@chatally/core').Middleware<unknown>} */
     [name]: async ({ req, res, data }) => {
-      if (!res.isWritable)
+      if (!res.isWritable || (onlyEmptyResponse && res.messages.length > 0)) {
         return
+      }
       const result = await nlp.process('en', content(req))
       data[name] = result
-      if (result.answer) {
+      if (result.answer && result.score >= threshold) {
         write(res, result.answer)
       }
     },
   }
   return obj[name]
+}
+
+/** @param {number} value */
+function round(value) {
+  return Math.round(value * 100) / 100
 }
