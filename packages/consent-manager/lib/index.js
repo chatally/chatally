@@ -16,6 +16,7 @@ export function ConsentManager(options = {}) {
       ],
     },
     thankForConsent = '🫶   Thank you for consenting.',
+    nextCommand,
   } = options
 
   let acceptCommand = options.acceptCommand
@@ -79,7 +80,16 @@ export function ConsentManager(options = {}) {
     if (consent === false) {
       if (isConsent(req)) {
         res.write(thankForConsent)
-        restoreOriginal(req)
+        if (nextCommand) {
+          /** @type {Partial<import('@chatally/core').ChatRequest>} */
+          const action = {
+            type: "action",
+            command: nextCommand
+          }
+          Object.assign(req, action)
+        } else {
+          restoreOriginal(req)
+        }
         store.storeConsent(from, req.id)
       } else {
         res.end(askForConsent)

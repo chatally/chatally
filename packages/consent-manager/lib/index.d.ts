@@ -16,6 +16,7 @@ export interface Options {
   acceptRegExp: RegExp | RegExp[]
   /** Message to thank for consent */
   thankForConsent: string | ChatMessage
+  nextCommand?: string
 }
 
 /**
