@@ -1,5 +1,14 @@
 # @chatally/console
 
+## 0.0.11
+
+### Patch Changes
+
+- 8d7c439: Exporting config types
+- ac119a1: Updated text conversions
+- Updated dependencies [ac119a1]
+  - @chatally/utils@0.0.2
+
 ## 0.0.10
 
 ### Patch Changes

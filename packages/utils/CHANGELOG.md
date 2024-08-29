@@ -1,5 +1,11 @@
 # @chatally/core
 
+## 0.0.2
+
+### Patch Changes
+
+- ac119a1: Updated text conversions
+
 ## 0.0.1
 
 ### Patch Changes
