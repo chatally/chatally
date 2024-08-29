@@ -1,0 +1,4 @@
+#!/usr/local/bin/node
+
+import { nanoid } from "nanoid";
+console.log(nanoid())
