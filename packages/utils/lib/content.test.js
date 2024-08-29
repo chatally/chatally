@@ -7,6 +7,6 @@ describe('content', () => {
     }
     // @ts-ignore
     const actual = content(msg)
-    expect(actual).toEqual('unknown message type: {"type":"manual"}')
+    expect(actual).toEqual('<unknown> {"type":"manual"}')
   })
 })

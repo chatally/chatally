@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid'
 import { toWhatsApp } from './to-whatsapp.js'
 
 /** @param {string} _id  */
@@ -6,8 +5,8 @@ async function upload(_id) {
   return `<mediaid>`
 }
 
-describe('toWhatsApp', function () {
-  it('normalizes Markdown in text messages', async function () {
+describe('toWhatsApp', () => {
+  it('normalizes Markdown in text messages', async () => {
     /** @type {import('@chatally/core').ChatMessage} */
     const chatMessage = {
       type: 'text',
@@ -21,7 +20,7 @@ describe('toWhatsApp', function () {
       },
     })
   })
-  it('normalizes Markdown in images', async function () {
+  it('normalizes Markdown in images', async () => {
     /** @type {import('@chatally/core').ChatMessage} */
     const chatMessage = {
       type: 'image',
@@ -33,8 +32,8 @@ describe('toWhatsApp', function () {
     expect(waMessage).toStrictEqual({
       type: 'image',
       image: {
-        'caption': '_This_ is a ~bad~*great* idea',
-        'id': '<mediaid>',
+        caption: '_This_ is a ~bad~*great* idea',
+        id: '<mediaid>',
       },
     })
   })

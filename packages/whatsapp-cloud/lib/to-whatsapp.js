@@ -1,6 +1,7 @@
 /**
- * @param {import('@chatally/core').ChatMessage} message
+ * @param {import('@chatally/core').ChatMessage} message ChatAlly message
  * @param {(url: string) => Promise<string>} upload
+ *    Callback to retrieve a media id for an asset
  * @returns {Promise<import('./messages.js').Message>}
  *    An outgoing WhatsApp message (from the Message API)
  */
@@ -116,8 +117,8 @@ export async function toWhatsApp(message, upload) {
 
 /**
  * @template {string|undefined} T
- * @param {T} text
- * @returns {T}
+ * @param {T} text Input
+ * @returns {T} Normalized text
  */
 function normalizeText(text) {
   if (text === undefined) {
