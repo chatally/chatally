@@ -1,5 +1,11 @@
 # @chatally/nlpjs
 
+## 0.0.9
+
+### Patch Changes
+
+- 7dd5a58: Added configurable confidence threshold for answering requests
+
 ## 0.0.8
 
 ### Patch Changes
