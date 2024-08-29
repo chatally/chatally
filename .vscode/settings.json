@@ -5,7 +5,7 @@
   // Auto fix
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
-    "source.organizeImports": "explicit"
+    "source.organizeImports": "never"
   },
   // "editor.formatOnSave": false,
   // Silent the stylistic rules in you IDE, but still auto fix them
@@ -84,5 +84,6 @@
   "typescript.preferences.quoteStyle": "single",
   "terminal.integrated.fontSize": 12,
   "terminal.integrated.minimumContrastRatio": 7,
-  "terminal.integrated.tabStopWidth": 4
+  "terminal.integrated.tabStopWidth": 4,
+  "javascript.preferences.importModuleSpecifierEnding": "js"
 }

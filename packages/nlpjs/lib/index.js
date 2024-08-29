@@ -1,6 +1,6 @@
+import { existsSync } from 'node:fs'
 import { content } from '@chatally/utils'
 import { dockStart } from '@nlpjs/basic'
-import { existsSync } from 'node:fs'
 
 /**
  * @param {import('@chatally/logger').Logger
@@ -105,9 +105,4 @@ export function nlpjsMiddleware(nlp, options) {
     },
   }
   return obj[name]
-}
-
-/** @param {number} value */
-function round(value) {
-  return Math.round(value * 100) / 100
 }

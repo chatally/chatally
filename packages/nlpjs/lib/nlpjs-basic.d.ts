@@ -31,7 +31,7 @@ declare module '@nlpjs/basic' {
   }
   export type Language = 'en'
   export interface Result {
-    answer?: string,
-    score: number,
+    answer?: string
+    score: number
   }
 }

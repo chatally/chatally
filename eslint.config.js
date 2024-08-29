@@ -26,15 +26,22 @@ export default antfu(
         {
           'argsIgnorePattern': '^_',
           'varsIgnorePattern': '^_',
-          'caughtErrorsIgnorePattern': '^_'
+          'caughtErrorsIgnorePattern': '^_',
         }
-      ]
+      ],
+      'no-unused-vars': 'off',
     },
   },
   {
     files: ['**/repl.js'],
     rules: {
       'no-console': 'off',
+    },
+  },
+  {
+    files: ['**/*.astro'],
+    rules: {
+      'format/prettier': 'off',
     },
   },
   {

@@ -29,7 +29,7 @@ export function ConsentManager(options = {}) {
   let acceptRegExp = options.acceptRegExp
   if (!acceptRegExp) {
     if (acceptAction) {
-      const { ascii, nonascii } = filterAscii(acceptAction.title);
+      const { ascii, nonascii } = filterAscii(acceptAction.title)
       acceptRegExp = [new RegExp(ascii, 'i'), new RegExp(nonascii, 'i')]
     } else {
       acceptRegExp = /I accept/i
@@ -45,7 +45,7 @@ export function ConsentManager(options = {}) {
   function isConsent(req) {
     if (req.type === 'text') {
       if (req.content === acceptCommand || `<${req.content}>` === acceptCommand) {
-        return true;
+        return true
       }
       if (Array.isArray(acceptRegExp)) {
         return acceptRegExp.findIndex(regex => regex.test(req.content)) >= 0
@@ -83,8 +83,8 @@ export function ConsentManager(options = {}) {
         if (nextCommand) {
           /** @type {Partial<import('@chatally/core').ChatRequest>} */
           const action = {
-            type: "action",
-            command: nextCommand
+            type: 'action',
+            command: nextCommand,
           }
           Object.assign(req, action)
         } else {
@@ -119,16 +119,16 @@ function findAcceptAction(msg, command) {
 
 /** @param {string} input */
 function filterAscii(input) {
-  let ascii = "";
-  let nonascii = "";
-  for (var i = 0; i < input.length; i++) {
+  let ascii = ''
+  let nonascii = ''
+  for (let i = 0; i < input.length; i++) {
     if (input.charCodeAt(i) <= 127) {
-      ascii += input.charAt(i);
+      ascii += input.charAt(i)
     } else {
-      nonascii += input.charAt(i);
+      nonascii += input.charAt(i)
     }
   }
-  ascii = ascii.trim();
-  nonascii = nonascii.trim();
-  return { ascii, nonascii };
+  ascii = ascii.trim()
+  nonascii = nonascii.trim()
+  return { ascii, nonascii }
 }
