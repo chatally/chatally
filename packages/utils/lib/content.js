@@ -21,38 +21,37 @@ export function content(msg) {
       const actions = msg.actions.map(a => `<${a.command}> ${a.title}`).join('\n')
       return ([text, actions].join('\n').trim() || '<buttons>')
     }
-    case 'menu':
-      return `${msg.title}: ${msg.content}`
+    case 'menu': {
+      const text = `${msg.title}: ${msg.content}`
+      const actions = msg.sections.flatMap(s => s.actions).map(a => `<${a.command}> ${a.title}`).join('\n')
+      return ([text, actions].join('\n').trim() || '<buttons>')
+    }
     case 'reaction':
       return msg.emoji
     case 'image':
-      return (
+      return `<image> ${(
         msg.description
         || msg.caption
-        || `image: ${msg.url} (${msg.mimeType}))`
-      )
+        || `${msg.url} (${msg.mimeType})`)}`
     case 'audio':
-      return (
+      return `<audio> ${(
         msg.transcript
         || msg.caption
-        || `audio: ${msg.url} (${msg.mimeType})`
-      )
+        || `${msg.url} (${msg.mimeType})`)}`
     case 'video':
-      return (
+      return `<video> ${(
         msg.transcript
         || msg.caption
-        || `video: ${msg.url} (${msg.mimeType})`
-      )
+        || `${msg.url} (${msg.mimeType})`)}`
     case 'document':
-      return (
+      return `<document> ${(
         msg.description
         || msg.caption
         || msg.filename
-        || '<document>'
-      )
+        || '')}`.trim()
     case 'custom':
-      return `custom:${JSON.stringify(msg.custom)}`
+      return `<custom> ${JSON.stringify(msg.custom)}`
     default:
-      return `unknown message type: ${JSON.stringify(msg)}`
+      return `<unknown> ${JSON.stringify(msg)}`
   }
 }

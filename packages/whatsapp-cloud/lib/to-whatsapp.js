@@ -14,13 +14,13 @@ export async function toWhatsApp(message, upload) {
         },
       }
     case 'buttons':
-      // TODO: Chack validity of input, i.e. at most 3 buttons
+      // TODO: Check validity of input, i.e. at most 3 buttons
       return {
         type: 'interactive',
         interactive: {
           type: 'button',
           body: {
-            text: message.content,
+            text: normalizeText(message.content),
           },
           action: {
             buttons: message.actions.map(a => ({
@@ -40,7 +40,7 @@ export async function toWhatsApp(message, upload) {
         type: 'document',
         document: {
           id: await upload(message.url),
-          caption: message.caption,
+          caption: normalizeText(message.caption),
           filename: message.filename,
         },
       }
@@ -57,7 +57,7 @@ export async function toWhatsApp(message, upload) {
           type: 'image',
           image: {
             id: await upload(message.url),
-            caption: message.caption,
+            caption: normalizeText(message.caption),
           },
         }
       }
@@ -73,7 +73,7 @@ export async function toWhatsApp(message, upload) {
         interactive: {
           type: 'list',
           body: {
-            text: message.content,
+            text: normalizeText(message.content),
           },
           action: {
             button: message.title,
@@ -100,7 +100,7 @@ export async function toWhatsApp(message, upload) {
       return {
         type: 'text',
         text: {
-          body: message.content,
+          body: normalizeText(message.content),
         },
       }
     case 'video':
@@ -108,8 +108,23 @@ export async function toWhatsApp(message, upload) {
         type: 'video',
         video: {
           id: await upload(message.url),
-          caption: message.caption,
+          caption: normalizeText(message.caption),
         },
       }
   }
+}
+
+/**
+ * @template {string|undefined} T
+ * @param {T} text
+ * @returns {T}
+ */
+function normalizeText(text) {
+  if (text === undefined) {
+    return text
+  }
+  return /** @type {T} */ (text //
+    .replace(/\*\*(.*?)\*\*/g, '*$1*')
+    .replace(/__(.*?)__/g, '_$1_')
+    .replace(/~~(.*?)~~/g, '~$1~'))
 }
