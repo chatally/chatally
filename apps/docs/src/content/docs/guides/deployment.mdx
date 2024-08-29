@@ -1,0 +1,118 @@
+---
+title: Deploy Your Application
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+How you will deploy your ChatAlly application depends very much on the modules that you use, specifically the servers/channels that you use to connect to your users' clients.
+
+In this guide, we will explain an exemplary deployment of a WhatsApp Cloud chat application.
+
+## Create the application
+
+<Steps>
+
+1. Follow the [Getting Started](/guides) guide to create an initial application in the directory `app`
+1. In the `app` directory, install additional modules
+
+   ```bash
+     npm install @chatally/whatsapp-cloud
+   ```
+
+1. Add WhatsApp to the application (instead of the ConsoleServer)
+
+   ```js
+      // index.js
+      import { Application } from '@chatally/core'
+      import { nlpjsMiddleware, trainNlp } from '@chatally/nlpjs'
+      import { WhatsAppCloud } from '@chatally/whatsapp-cloud'
+
+      const app = new Application({ log: false })
+      const nlp = await trainNlp(app.getLogger('nlp.js'))
+
+      app //
+        .use(new WhatsAppCloud({
+          webhooks: { path: '/whatsappcloud' }
+          media: { dbPath: './data/media-ids.db' },
+        }))
+        .use(nlpjsMiddleware(nlp))
+        .listen()
+   ```
+
+   - using `webhooks.path` would allow us, to run multiple servers for webhooks within one container, e.g. if you want to add a Signal server later
+   - changing `media.dbPath` from the default to a subdirectory, will allow us to map a docker volume to that location and thus persist the database
+
+1. [Provide WhatsApp configuration](/reference/servers/whatsapp-cloud/#configuration)
+
+</Steps>
+
+## Create a Docker container
+
+<Steps>
+
+1. Create the `Dockerfile`
+
+   ```docker
+      # Use the official Node.js image from Docker Hub
+      FROM node:20
+
+      # Copy the app to the container
+      WORKDIR /app
+      COPY app .
+
+      # Install app dependencies
+      RUN npm install
+
+      # Expose the port the app runs on
+      EXPOSE 3000
+
+      # Start the app
+      CMD ["node", "index.js"]
+   ```
+
+   The WhatsApp Cloud server will run a webhooks endpoint at port 3000. If you reconfigure this, you will need to expose a different port here.
+
+1. Build the image
+
+   ```bash
+      docker build --tag "chatally/whatsapp-cloud" .
+   ```
+
+1. Run the container
+
+   We deploy our containers with docker swarm behind a [Traefik proxy](https://traefik.io/traefik/), but you are free to do however you prefer
+
+   ```yaml
+      version: "3.9"
+      networks:
+        bridge:
+          external: true
+        traefik_net:
+          external: true
+
+      services:
+        app:
+          image: chatally/whatsapp-cloud
+          networks:
+            - traefik_net
+            - bridge
+          volumes:
+            - ${PWD}/data:/app/data
+          deploy:
+            labels:
+              - traefik.enable=true
+              - traefik.http.routers.whatsapp_chat.middlewares=sec-headers@file
+              - traefik.http.routers.whatsapp_chat.rule=Host(`chat.example.org`)
+              - traefik.http.routers.whatsapp_chat.tls.certresolver=letsencrypt
+              - traefik.http.routers.whatsapp_chat.tls=true
+              - traefik.http.services.whatsapp_chat.loadbalancer.server.port=3000
+   ```
+
+   - We map a local `data` directory to `/app/data`, which we have configured as target for our media id database
+   - Adapt the `Host` rule according to your domain.
+
+   ```bash
+      docker stack deploy -c docker-compose.yml whatsapp_chat
+   ```
+
+</Steps>

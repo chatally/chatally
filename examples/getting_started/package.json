@@ -12,7 +12,8 @@
     "@chatally/console": "*",
     "@chatally/core": "*",
     "@chatally/nlpjs": "*",
-    "@chatally/utils": "*"
+    "@chatally/utils": "*",
+    "@chatally/whatsapp-cloud": "*"
   },
   "devDependencies": {}
 }

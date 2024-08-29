@@ -46,6 +46,7 @@ export default defineConfig({
                 },
                 { label: 'Messages', link: 'reference/core/messages' },
                 { label: 'Logger', link: 'reference/core/logger' },
+                { label: 'Utils', link: 'reference/core/utils' },
               ],
             },
             {
