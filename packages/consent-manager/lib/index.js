@@ -11,8 +11,8 @@ export function ConsentManager(options = {}) {
       type: 'buttons',
       content: '✅ This is a chat bot, i.e. that we will process the data that you provide. We will only store the minimum data required to provide our services and will not share any data with third parties. Other parties could be involved in the message transportation, depending on the client you are using. If you do not accept, we will not be able to serve you. See https://chatally.org/impressum for more details.',
       actions: [
-        { command: 'accept', title: 'I accept' },
-        { command: 'reject', title: 'I do not accept' },
+        { command: '/accept', title: 'I accept' },
+        { command: '/reject', title: 'I do not accept' },
       ],
     },
     thankForConsent = '🫶   Thank you for consenting.',
