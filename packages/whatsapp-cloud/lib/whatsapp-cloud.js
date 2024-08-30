@@ -36,6 +36,9 @@ export class WhatsAppCloud extends BaseServer {
     const config = readConfigs(configObj)
     super(config.name || 'WhatsAppCloud')
     this.#config = config
+    if (config.log) {
+      this.log = config.log
+    }
   }
 
   init() {
@@ -46,33 +49,24 @@ export class WhatsAppCloud extends BaseServer {
       messages,
       media,
     } = this.#config
-    const log = this.log || this.#config.log
-
     this.immediate = immediate
 
     if (webhooks instanceof Webhooks) {
       this.#webhooks = webhooks
     } else {
-      this.#webhooks = new Webhooks({
-        log: log?.child({ name: 'Webhooks' }),
-        ...webhooks,
-      })
+      this.#webhooks = new Webhooks(webhooks)
     }
 
     if (graphApi instanceof GraphApi) {
       this.#graphApi = graphApi
     } else {
-      this.#graphApi = new GraphApi({
-        log: log?.child({ name: 'GraphApi' }),
-        ...graphApi,
-      })
+      this.#graphApi = new GraphApi(graphApi)
     }
 
     if (messages instanceof Messages) {
       this.#messages = messages
     } else {
       this.#messages = new Messages({
-        log: log?.child({ name: 'Messages' }),
         graphApi: this.#graphApi,
         ...messages,
       })
@@ -82,12 +76,12 @@ export class WhatsAppCloud extends BaseServer {
       this.#media = media
     } else {
       this.#media = new Media({
-        log: log?.child({ name: 'Media' }),
         graphApi: this.#graphApi,
         ...media,
       })
     }
-    this.log = log
+    // (Re-)set the log, so all children get the correct logger
+    this.log = this.log || this.#config.log
   }
 
   /** @type {import('@chatally/logger').Logger | undefined} */
