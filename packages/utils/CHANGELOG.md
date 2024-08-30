@@ -1,5 +1,11 @@
 # @chatally/core
 
+## 0.0.3
+
+### Patch Changes
+
+- 3e713bf: WhatsApp: Added timeout for sequential messaging
+
 ## 0.0.2
 
 ### Patch Changes
