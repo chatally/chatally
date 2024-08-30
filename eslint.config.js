@@ -21,6 +21,7 @@ export default antfu(
       'node/prefer-global/process': 'off',
       'prefer-arrow-callback': ['error', { allowNamedFunctions: true }],
       'style/brace-style': ['error', '1tbs'],
+      'style/indent-binary-ops': 'off',
       'unused-imports/no-unused-vars': [
         'error',
         {

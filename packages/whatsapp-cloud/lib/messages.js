@@ -1,3 +1,5 @@
+import { runIn } from '@chatally/utils'
+
 export class Messages {
   /** @type {import('./graph-api.d.ts').GraphApi} */
   #graphApi
@@ -5,11 +7,17 @@ export class Messages {
   /** @type {import('@chatally/logger').Logger | undefined} */
   log
 
+  /** @type {number|undefined} */
+  #timeout
+
   /** @param {import('./messages.d.ts').MessagesConfig} config */
   constructor(config) {
     this.log = config.log
     this.#graphApi = config.graphApi
     if (config.sequential !== false) {
+      if (typeof config.sequential === 'number') {
+        this.#timeout = config.sequential
+      }
       this.sequential
         = (/** @type {import('./webhooks.js').Webhooks} */ webhooks) => {
           webhooks.on('notification', ({ statuses }) => {
@@ -26,30 +34,41 @@ export class Messages {
   }
 
   /**
-   * Map of waiting messages, meant to be used in tests or subclasses only.
+   * Map of waiting messages.
+   *
+   * The map contains a queue per recipient_id. Each queue starts with the
+   * previous message being sent, until we receive a status that it has been
+   * delivered.
+   *
+   * Published only for tests or subclasses.
    * @protected
    * @type {Record<string, (import('./messages.d.ts').Waiting[] | undefined)>}
    */
-  _waiting = {}
+  _queues = {}
 
   /**
    * @param {import('./webhooks.d.ts').Status} status
    */
   async #sendNext(status) {
-    const waiting = this._waiting[status.recipient_id]
-    if (!waiting) return
+    const queue = this._queues[status.recipient_id]
+    if (!queue || queue.length === 0) return
 
-    const previous = waiting.shift()
+    const previous = queue[0]
     if (previous && previous.message.id !== status.id) {
-      this.log?.warn(`Received delivery status for unexpected message,
-expected ${previous.message.id}
-received ${status.id}.`)
+      if (status.timestamp !== 'timeout') {
+        this.log?.warn(`Ignoring delivery status for unexpected message,
+  expected ${previous.message.id}
+  received ${status.id}.`)
+      }
+      return
     }
-    if (waiting.length > 0) {
-      const request = waiting[0]
+
+    if (queue.length > 1) {
+      queue.shift()
+      const request = queue[0]
       request.message.id = await this.#send(request)
     } else {
-      this._waiting[status.recipient_id] = undefined
+      this._queues[status.recipient_id] = undefined
     }
   }
 
@@ -61,13 +80,13 @@ received ${status.id}.`)
   async send(to, message, replyTo) {
     const request = { to, message, replyTo }
     if (this.sequential) {
-      if (this._waiting[to]) {
-        this._waiting[to]?.push(request)
-        message.id = '<waiting>'
-        return message.id
+      if (this._queues[to]) {
+        this._queues[to]?.push(request)
+        message.waitingSince = Date.now()
+        return undefined
       }
 
-      this._waiting[to] = [request]
+      this._queues[to] = [request]
     }
     return await this.#send(request)
   }
@@ -104,6 +123,16 @@ ${JSON.stringify(response, null, 2)}`,
       )
     }
     message.id = messages[0].id
+    if (this.#timeout) {
+      /** @type {import('./webhooks.js').Status} */
+      const status = {
+        id: messages[0].id,
+        recipient_id: to,
+        status: 'delivered',
+        timestamp: 'timeout',
+      }
+      runIn(this.#timeout, () => this.#sendNext(status))
+    }
     return message.id
   }
 

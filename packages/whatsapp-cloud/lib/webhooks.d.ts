@@ -219,20 +219,20 @@ export type IncomingMessage = {
    */
   identity?: Identity
 } & (
-  | IncomingAudio
-  | IncomingButton
-  | IncomingDocument
-  | IncomingImage
-  | IncomingInteractive
-  | IncomingLocation
-  | IncomingOrder
-  | IncomingReaction
-  | IncomingReferral
-  | IncomingSticker
-  | IncomingText
-  | IncomingVideo
-  | SystemMessage
-)
+    | IncomingAudio
+    | IncomingButton
+    | IncomingDocument
+    | IncomingImage
+    | IncomingInteractive
+    | IncomingLocation
+    | IncomingOrder
+    | IncomingReaction
+    | IncomingReferral
+    | IncomingSticker
+    | IncomingText
+    | IncomingVideo
+    | SystemMessage
+  )
 
 export interface Context {
   /** Set to true if the message received has been forwarded. */
@@ -362,28 +362,28 @@ export interface IncomingInteractive {
   type: 'interactive'
   /** When a customer has interacted with your message. */
   interactive:
-    | {
-      type: 'button_reply'
-      /** Sent when a customer clicks a button. */
-      button_reply: {
+  | {
+    type: 'button_reply'
+    /** Sent when a customer clicks a button. */
+    button_reply: {
       /** Unique ID of a button. */
-        id: string
-        /** Title of a button. */
-        title: string
-      }
+      id: string
+      /** Title of a button. */
+      title: string
     }
-    | {
-      type: 'list_reply'
-      /** Sent when a customer selects an item from a list. */
-      list_reply: {
+  }
+  | {
+    type: 'list_reply'
+    /** Sent when a customer selects an item from a list. */
+    list_reply: {
       /** Unique ID of the selected list item. */
-        id: string
-        /** Title of the selected list item. */
-        title: string
-        /** Description of the selected row. */
-        description?: string
-      }
+      id: string
+      /** Title of the selected list item. */
+      title: string
+      /** Description of the selected row. */
+      description?: string
     }
+  }
 }
 
 export interface IncomingLocation {
@@ -523,19 +523,20 @@ export interface Metadata {
  * For details see https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/components#statuses-object
  */
 export interface Status {
-  /** Information about the conversation. */
-  conversation: Conversation
-  /** An array of error objects describing the error. */
-  errors?: Error[]
   /** The ID for the message that the business sent to a customer */
   id: string
-  /** An object containing billing information. */
-  pricing: Pricing
   /** The WhatsApp ID for the customer */
   recipient_id: string
+  /** The kind of status change */
   status: StatusType
   /** Date for the status message */
   timestamp: string
+  /** Information about the conversation. */
+  conversation?: Conversation
+  /** An array of error objects describing the error. */
+  errors?: Error[]
+  /** An object containing billing information. */
+  pricing?: Pricing
 }
 
 export interface Conversation {
@@ -596,8 +597,8 @@ export interface SystemMessage {
     wa_id: string
     /** Type of system update. */
     type:
-      | 'customer_changed_number' // changed phone number
-      | 'customer_identity_changed' // changed profile information
+    | 'customer_changed_number' // changed phone number
+    | 'customer_identity_changed' // changed profile information
     /** The WhatsApp ID for the customer prior to the update. */
     customer: string
   }

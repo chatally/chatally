@@ -6,10 +6,16 @@ export declare class Messages {
   log: Logger | undefined
 
   /**
-   * Map of waiting messages, meant to be used in tests or subclasses only.
+   * Map of waiting messages.
+   *
+   * The map contains a queue per recipient_id. Each queue starts with the
+   * previous message being sent, until we receive a status that it has been
+   * delivered.
+   *
+   * Published only for tests or subclasses.
    * @protected
    */
-  _waiting: Record<string, Waiting[]>
+  _queues: Record<string, Waiting[]>
 
   /**
    * Send WhatsApp messages using the Graph API. Abstracts the
@@ -85,9 +91,12 @@ export interface MessagesConfig {
    * message to the same recipient will only be delivered, after a status has
    * been received for the previous message.
    *
+   * If you provide a number, the message will be considered delivered after
+   * that amount of seconds.
+   *
    * This overrides the call to the method `sequential`.
    */
-  sequential?: false
+  sequential?: false | number
 
   /**
    * [Optional] logger to use
@@ -98,18 +107,19 @@ export interface MessagesConfig {
 
 export type Message = {
   id?: string
+  waitingSince?: number
 } & (
-  | AudioMessage
-  | ContactsMessage
-  | DocumentMessage
-  | ImageMessage
-  | InteractiveMessage
-  | LocationMessage
-  | ReactionMessage
-  | StickerMessage
-  | TemplateMessage
-  | TextMessage
-  | VideoMessage
+    | AudioMessage
+    | ContactsMessage
+    | DocumentMessage
+    | ImageMessage
+    | InteractiveMessage
+    | LocationMessage
+    | ReactionMessage
+    | StickerMessage
+    | TemplateMessage
+    | TextMessage
+    | VideoMessage
   )
 
 /**

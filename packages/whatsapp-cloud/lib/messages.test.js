@@ -10,8 +10,13 @@ class Messages_ extends Messages {
    * @type {Array<{url: string|URL|Request, request: any|undefined}>}
    */
   requests = []
-  constructor() {
+
+  /**
+   * @param {number|false} [sequential]
+   */
+  constructor(sequential) {
     super({
+      sequential,
       graphApi: new GraphApi({
         phoneNumberId: 'ID',
         accessToken: 'ACCESS_TOKEN',
@@ -42,8 +47,8 @@ class Messages_ extends Messages {
   }
 
   /** @param {string} to */
-  countWaiting(to) {
-    return (this._waiting[to] || []).length
+  queueLength(to) {
+    return (this._queues[to] || []).length
   }
 }
 
@@ -85,8 +90,8 @@ describe('messages', () => {
       expect(firstId).toEqual('wamid-1')
       expect(texts[0].id).toEqual('wamid-1')
       expect(messages.requests.length).toEqual(1)
-      expect(messages.countWaiting('foo')).toEqual(2)
-      expect(secondId).toEqual('<waiting>')
+      expect(messages.queueLength('foo')).toEqual(2)
+      expect(secondId).toBeUndefined()
     })
     it('sends second message on webhook notification', async () => {
       const messages = new Messages_()
@@ -104,17 +109,7 @@ describe('messages', () => {
             recipient_id: to,
             id: texts[0].id || '',
             status: 'delivered',
-            pricing: {
-              billable: false,
-              category: 'customer_initiated',
-              pricing_model: 'CBP',
-            },
             timestamp: String(Date.now()),
-            conversation: {
-              origin: { type: 'customer_initiated' },
-              id: '',
-              expiration_timestamp: String(Date.now() + 24 * 60 * 60 * 1000),
-            },
           },
         ],
       })
@@ -123,8 +118,28 @@ describe('messages', () => {
       await new Promise(_resolve => process.nextTick(_resolve))
       expect(texts[1].id).toEqual('wamid-2')
       expect(messages.requests.length).toEqual(2)
-      expect(messages.countWaiting(to)).toEqual(2)
-      expect(texts[2].id).toEqual('<waiting>')
+      expect(messages.queueLength(to)).toEqual(2)
+      expect(texts[2].id).toBeUndefined()
+    })
+    // @longrunning-test
+    it.skip('sends second message after timeout', async () => {
+      const messages = new Messages_(2)
+      const to = 'foo'
+      messages.sequential && messages.sequential(webhooks)
+      const texts = text(3)
+      await messages.send(to, texts[0])
+      await messages.send(to, texts[1])
+      await messages.send(to, texts[2])
+
+      expect(texts[1].id).toBeUndefined()
+      expect(messages.queueLength(to)).toEqual(3)
+      expect(texts[2].id).toBeUndefined()
+
+      await new Promise(resolve => setTimeout(resolve, 2500))
+
+      expect(texts[1].id).toEqual('wamid-2')
+      expect(messages.queueLength(to)).toEqual(2)
+      expect(texts[2].id).toBeUndefined()
     })
   })
 })
