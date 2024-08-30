@@ -1,5 +1,11 @@
 # @chatally/console
 
+## 0.0.13
+
+### Patch Changes
+
+- 3f0f528: Fixed logger setting
+
 ## 0.0.12
 
 ### Patch Changes
