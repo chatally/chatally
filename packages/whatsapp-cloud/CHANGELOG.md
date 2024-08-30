@@ -1,5 +1,13 @@
 # @chatally/console
 
+## 0.0.12
+
+### Patch Changes
+
+- 3e713bf: WhatsApp: Added timeout for sequential messaging
+- Updated dependencies [3e713bf]
+  - @chatally/utils@0.0.3
+
 ## 0.0.11
 
 ### Patch Changes
