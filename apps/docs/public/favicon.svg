@@ -3,11 +3,11 @@
    viewBox="0 0 84 84"
    version="1.1"
    id="svg27"
-   sodipodi:docname="favicon-simple.svg"
+   sodipodi:docname="favicon.svg"
    width="84"
    height="84"
    inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
-   inkscape:export-filename="favicon-simple.png"
+   inkscape:export-filename="favicon.png"
    inkscape:export-xdpi="292.57144"
    inkscape:export-ydpi="292.57144"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -26,31 +26,177 @@
      inkscape:pagecheckerboard="1"
      inkscape:deskcolor="#505050"
      inkscape:zoom="8.3888886"
-     inkscape:cx="59.423843"
-     inkscape:cy="40.291392"
+     inkscape:cx="53.28477"
+     inkscape:cy="31.4702"
      inkscape:window-width="2560"
      inkscape:window-height="1417"
-     inkscape:window-x="2552"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g6" />
+     inkscape:current-layer="svg27" />
+  <path
+     d="M 28.883163,54.817273 2.7499998,39.090234 54.953578,7.7499876 81.18478,23.419457 Z"
+     fill="#00ff00"
+     id="path1"
+     style="fill:none;stroke:#00ff00;stroke-width:3;stroke-linejoin:round;stroke-dasharray:none" />
+  <path
+     d="M 2.7813738,60.116317 2.7499998,39.090234 28.883163,54.817273 v 20.969822 z"
+     fill="#00d000"
+     id="path2"
+     style="fill:none;stroke:#00ff00;stroke-width:3;stroke-linejoin:round;stroke-dasharray:none" />
   <g
-     id="g6"
-     transform="matrix(1.3367893,0,0,1.3997836,-20.987608,-24.122004)"
-     style="stroke-width:0.731035">
+     paint-order="stroke fill markers"
+     id="g11"
+     transform="matrix(1.3072464,0,0,1.3084059,-26.009421,-15.801319)"
+     style="fill:none;stroke:#00ff00;stroke-width:2.29388309;stroke-linejoin:round;stroke-dasharray:none">
     <g
-       id="g9"
-       transform="translate(0,19.955433)">
+       transform="matrix(1,0,0,1.002,50.227,-219.795)"
+       id="g3"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
       <path
-         id="path2"
-         style="fill:#00ff00;stroke-width:5.52593;stroke-linecap:round;paint-order:stroke fill markers"
-         d="M 33.519713,28.643347 V 48.618445 H 67.036157 V 35.476291 l 10.00486,-6.832944 h -7.560226 v -2.837926 h -6.847534 v 2.837926 h -5.78915 v -2.837926 h -6.847533 v 2.837926 h -5.78915 v -2.837926 h -6.847533 v 2.837926 z m 8.125453,6.512341 c 1.721534,-9.92e-4 3.117766,1.481289 3.118327,3.310508 7.06e-4,1.83017 -1.395897,3.313936 -3.118327,3.312943 -1.721505,-3.98e-4 -3.116664,-1.483756 -3.115959,-3.312943 5.62e-4,-1.828236 1.39535,-3.31011 3.115959,-3.310508 z m 8.635185,0 c 1.721534,-9.91e-4 3.117765,1.481289 3.118326,3.310508 7.06e-4,1.83017 -1.395896,3.313935 -3.118326,3.312943 -1.721505,-3.98e-4 -3.116665,-1.483756 -3.11596,-3.312943 5.62e-4,-1.828237 1.39535,-3.310111 3.11596,-3.310508 z m 8.635185,0 c 1.720609,3.98e-4 3.115398,1.482272 3.115959,3.310508 7.05e-4,1.829187 -1.394454,3.312545 -3.115959,3.312943 -1.721505,-3.98e-4 -3.116665,-1.483756 -3.11596,-3.312943 5.62e-4,-1.828237 1.39535,-3.310111 3.11596,-3.310508 z"
-         sodipodi:nodetypes="ccccccccccccccccccccccccccccccccc" />
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
+         id="path3"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         ry="3"
+         rx="4"
+         cy="265.233"
+         cx="-8.2639999"
+         fill="#00d000"
+         id="ellipse3"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.002,60.223,-225.805)"
+       id="g4"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
       <path
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
+         id="path4"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         cx="-8.2639999"
+         cy="265.233"
+         rx="4"
+         ry="3"
+         fill="#00d000"
+         id="ellipse4"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.002,70.219,-231.815)"
+       id="g5"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
+      <path
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
+         id="path5"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         ry="3"
+         rx="4"
+         cy="265.233"
+         cx="-8.2639999"
+         fill="#00d000"
+         id="ellipse5"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.002,80.215,-237.825)"
+       id="g6"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
+      <path
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
          id="path6"
-         style="fill:#008000;stroke-width:5.52593;stroke-linecap:round;paint-order:stroke fill markers"
-         d="M 60.717438,8.6879137 V 28.663012 H 27.200993 V 15.520859 L 17.196134,8.6879137 H 24.75636 V 5.8499871 h 6.847534 v 2.8379266 h 5.78915 V 5.8499871 h 6.847533 v 2.8379266 h 5.789149 V 5.8499871 h 6.847533 v 2.8379266 z m -8.125453,6.5123423 c -1.721534,-9.93e-4 -3.117767,1.481288 -3.118328,3.310507 -7.06e-4,1.83017 1.395898,3.313936 3.118328,3.312943 1.721504,-3.98e-4 3.116664,-1.483755 3.115958,-3.312943 -5.61e-4,-1.828236 -1.39535,-3.310109 -3.115958,-3.310507 z m -8.635186,0 c -1.721534,-9.92e-4 -3.117765,1.481288 -3.118326,3.310507 -7.05e-4,1.83017 1.395897,3.313935 3.118326,3.312943 1.721505,-3.98e-4 3.116666,-1.483755 3.11596,-3.312943 -5.61e-4,-1.828237 -1.395349,-3.310111 -3.11596,-3.310507 z m -8.635185,0 c -1.720609,3.98e-4 -3.115397,1.482271 -3.115958,3.310507 -7.06e-4,1.829188 1.394453,3.312545 3.115958,3.312943 1.721505,-3.98e-4 3.116666,-1.483755 3.11596,-3.312943 -5.61e-4,-1.828237 -1.39535,-3.310111 -3.11596,-3.310507 z"
-         sodipodi:nodetypes="ccccccccccccccccccccccccccccccccc" />
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         cx="-8.2639999"
+         cy="265.233"
+         rx="4"
+         ry="3"
+         fill="#00d000"
+         id="ellipse6"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.002,40.23,-225.805)"
+       id="g7"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
+      <path
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
+         id="path7"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         cx="-8.2639999"
+         cy="265.233"
+         rx="4"
+         ry="3"
+         fill="#00d000"
+         id="ellipse7"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.002,50.227,-231.815)"
+       id="g8"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
+      <path
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
+         id="path8"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         ry="3"
+         rx="4"
+         cy="265.233"
+         cx="-8.2639999"
+         fill="#00d000"
+         id="ellipse8"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.002,60.223,-237.825)"
+       id="g9"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
+      <path
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
+         id="path9"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         cx="-8.2639999"
+         cy="265.233"
+         rx="4"
+         ry="3"
+         fill="#00d000"
+         id="ellipse9"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.002,70.219,-243.835)"
+       id="g10"
+       style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none">
+      <path
+         d="m -12.264,265.233 v 2.12 c 0,1.656 1.79,3 4,3 2.21,0 4,-1.344 4,-3 v -2.12 c 0,1.656 -1.791,3 -4,3 -2.209,0 -4,-1.344 -4,-3 z"
+         fill="#00a000"
+         id="path10"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
+      <ellipse
+         ry="3"
+         rx="4"
+         cy="265.233"
+         cx="-8.2639999"
+         fill="#00d000"
+         id="ellipse10"
+         style="fill:none;stroke:#00ff00;stroke-width:2.29159265;stroke-linejoin:round;stroke-dasharray:none" />
     </g>
   </g>
+  <path
+     d="m 28.948526,75.787095 -0.06536,-20.968513 52.366987,-31.399125 -5.188464,8.59361 -0.01961,15.503301 z"
+     fill="#00a000"
+     id="path11"
+     style="fill:none;stroke:#00ff00;stroke-width:3;stroke-linejoin:round;stroke-dasharray:none" />
 </svg>
