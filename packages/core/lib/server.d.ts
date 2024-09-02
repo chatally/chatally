@@ -18,7 +18,7 @@ export interface Server extends EventEmitter<ServerEvents> {
    * The logger to use during runtime. Set this explicitly to false or NoLogger,
    * if the registered server shall not log, otherwise the application will
    * set a child logger during server registration, i.e. in the call to
-   * `application.use(server)`, the application will set a logger.
+   * `application.use(server)`.
    *
    * You probably want to implement a setter method, that passes this logger
    * down to child modules, if your server contains any.
@@ -27,14 +27,25 @@ export interface Server extends EventEmitter<ServerEvents> {
   set log(log: Logger | undefined)
 
   /**
-   * Starts the server.
+   * Start the server
    *
    * Called asynchronously (in background) when `listen()` is called on
    * ChatAlly application.
    */
   listen: () => void
 
+  /**
+   * Check if media asset belongs to this server
+   * @param url URL of media asset
+   * @returns true, if the media URL comes from this server
+   */
   canDownload: (url: string) => boolean
+
+  /**
+   * Download a media asset
+   * @param url URL of media asset
+   * @returns The binary data of the media asset
+   */
   download: (url: string) => Promise<Buffer>
 }
 

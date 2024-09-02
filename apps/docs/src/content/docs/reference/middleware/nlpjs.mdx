@@ -1,5 +1,7 @@
 ---
 title: nlp.js
+sidebar:
+  order: 3
 ---
 
 import ModuleLinks from '../../../../components/ModuleLinks.astro';
@@ -8,4 +10,71 @@ import ModuleLinks from '../../../../components/ModuleLinks.astro';
 
 **ChatAlly nlp.js Middleware** is a middleware wrapper around a trained nlp.js NLP module and provides a utility function to train an NLP module.
 
-[nlp.js](https://github.com/axa-group/nlp.js) is a FOSS chatbot library provided by the Axa insurance group.
+With the advent of Large Language Models (LLMs), Natural Language Processing (NLP) has become much easier recently. However, it is still inherently complex. [nlp.js](https://github.com/axa-group/nlp.js) is a FOSS chatbot library provided by the Axa insurance group that can be an easy entry point.
+
+## `trainNlp`: Create a trained NLP module
+
+```ts
+/**
+ * It is best practice to provide your NLP configuration as file 'conf.json' in
+ * your current working directory.
+ *
+ * For examples see
+ * https://github.com/jesus-seijas-sp/nlpjs-examples/tree/master/01.quickstart/03.config
+ *
+ * @param logger [Optional] Integrate it with your ChatAlly application by
+ *    passing in an application logger.
+ * @param configuration [Optional] Provide a configuration object
+ *    programmatically or an array of strings with path names pointing to your
+ *    training corpora.
+ * @returns The trained NLP module
+ */
+export declare function trainNlp(
+  logger?: Logger,
+  configuration?: Configuration | string[]
+): Promise<Nlp>
+```
+
+## `nlpjsMiddleware`: Create a middleware function for an NLP module
+
+```ts
+/**
+ * Create a ChatAlly middleware function for an nlp.js NLP module
+ *
+ * It will write the answer to the response only, if it is above the configured
+ * threshold. It will not end the response.
+ *
+ * @param nlp The trained NLP module
+ * @param options Options
+ * @returns a ChatAlly middleware function
+ */
+export function nlpjsMiddleware(
+  nlp: Nlp,
+  options?: {
+    /**
+     * [Optional] Name for the middleware [`default="nlp.js"`]
+     * NOTE: Result data from the NLP process will be put into the context under
+     *    this name.
+     */
+    name?: string
+    /**
+     * [Optional] Indicates, whether an answer above the threshold should end the
+     * response.
+     * [`default=false`]
+     */
+    end?: boolean
+    /**
+     * [Optional] Threshold for confidence score that must be reached before
+     * answering to the request, must be between 0 and 1.
+     * [`default=0.8`]
+     */
+    threshold?: number
+    /**
+     * [Optional] Indicate, whether NLP should only generate an answer if there
+     * is none, yet
+     * [`default=false`]
+     */
+    onlyEmptyResponse?: boolean
+  }
+): Middleware<unknown>
+```

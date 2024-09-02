@@ -1,5 +1,8 @@
 ---
 title: 🚀 Getting started
+sidebar:
+  order: 1
+  label: Getting Started
 ---
 
 If you are a web developer and know how to host a web application with Express and [node.js](https://nodejs.org), ChatAlly will only surprise you with it's ease of use.

@@ -1,5 +1,8 @@
 ---
 title: Examples
+sidebar:
+  order: 1
+  label: Overview
 ---
 
 For most people, also for us, it is easiest to understand concepts from

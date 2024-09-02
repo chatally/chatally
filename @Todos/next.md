@@ -4,12 +4,12 @@
 
 - WhatsApp Cloud
   - Example
-    - [ ] Image download
-    - [ ] Image upload
-    - [ ] Audio upload
-    - [ ] Markdown
-    - [ ] Publish
-  - [ ] Improve documentation
+    - [x] Image download
+    - [x] Image upload
+    - [x] Audio upload
+    - [x] Markdown
+    - [x] Publish
+  - [x] Improve documentation
 - Signal Server
   - [ ] General setup with libsignal
   - [ ] Device Registration

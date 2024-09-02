@@ -49,8 +49,8 @@ export interface Location {
 
 export interface Menu {
   readonly type: 'menu'
-  title: string
   content: string
+  title: string
   sections: Array<{
     title?: string
     actions: _Action[]

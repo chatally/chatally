@@ -11,7 +11,7 @@ export default defineConfig({
       description: 'Your toolbox for self-hosted chat services',
       favicon: '/favicon.svg',
       logo: {
-        alt: 'Two green shields looking like chat bubbles',
+        alt: 'Two green building blocks looking like chat bubbles',
         src: './public/logo.svg',
         replacesTitle: true,
       },
@@ -23,38 +23,25 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Guides',
-          items: [
-            { label: 'Getting Started', link: 'guides' },
-            { label: 'Writing Middleware', link: 'guides/middleware' },
-            { label: 'Writing Servers', link: 'guides/servers' },
-            { label: 'Deploy your Application', link: 'guides/deployment' },
-          ],
+          autogenerate: {
+            directory: 'guides',
+          },
         },
         {
           label: 'Reference',
+          collapsed: true,
           items: [
             {
               label: 'Core',
-              items: [
-                { label: 'Overview', link: 'reference/core' },
-                { label: 'Application', link: 'reference/core/application' },
-                { label: 'Servers', link: 'reference/core/servers' },
-                { label: 'Middleware', link: 'reference/core/middleware' },
-                {
-                  label: 'Context',
-                  link: 'reference/core/context',
-                },
-                { label: 'Messages', link: 'reference/core/messages' },
-                { label: 'Logger', link: 'reference/core/logger' },
-                { label: 'Utils', link: 'reference/core/utils' },
-              ],
+              autogenerate: {
+                directory: 'reference/core',
+              },
             },
             {
               label: 'Middleware',
               collapsed: true,
               autogenerate: {
                 directory: 'reference/middleware',
-                collapsed: true,
               },
             },
             {
@@ -62,7 +49,6 @@ export default defineConfig({
               collapsed: true,
               autogenerate: {
                 directory: 'reference/servers',
-                collapsed: true,
               },
             },
           ],
@@ -70,15 +56,9 @@ export default defineConfig({
         {
           label: 'Examples',
           collapsed: true,
-          items: [
-            { label: 'Overview', link: 'examples' },
-            { label: 'Console Chat', link: 'examples/console-chat' },
-            { label: 'nlp.js Web Chat', link: 'examples/nlpjs-web-chat' },
-            // {
-            //   label: "Group Moderation with TensorFlow",
-            //   link: "examples/group-moderation",
-            // },
-          ],
+          autogenerate: {
+            directory: 'examples',
+          },
         },
       ],
       plugins: [

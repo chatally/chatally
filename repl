@@ -1,0 +1,17 @@
+#!/usr/local/bin/node
+
+const chatally = '4915238033986'
+const me = '4917623975929'
+const demo = "Hi!"
+const recommend = `Checkout the demo from https://chatally.org.
+
+Send 'Hi!' to +${chatally}`
+
+function wa(number, text) {
+  return `https://signal.me/${number || ''}?text=${encodeURIComponent(text)}`
+}
+function signal(number, text) {
+  return `https://signal.me/#p/+${number || ''}?text=${encodeURIComponent(text)}`
+}
+
+console.log(signal(me, demo))
